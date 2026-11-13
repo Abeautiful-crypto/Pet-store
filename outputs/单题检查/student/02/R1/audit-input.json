@@ -1,0 +1,2047 @@
+{
+  "schema_version": "3.0",
+  "student": "（未提供姓名，待补）",
+  "question": "02",
+  "revision": "main@78commits",
+  "profile_sha256": "a885c74a1f8df02dfb2f4a6f67248b8fea909ed44a9c35c24eaa7654d7e0595b",
+  "audit_meta": {
+    "audit_id": "AUD-02-R1-20261113",
+    "auditor": "CodeBuddy 自动审计（student-project-audit Skill v3.0）",
+    "audit_date": "2026-11-13",
+    "environment": "Windows 11 / Docker Desktop 29.7.2 / Go 1.24 / MySQL 8 / Redis 7",
+    "tool_versions": "skill 3.0；rubric 3.0；profile 02 sha a885c74",
+    "rubric_published_at": "题面前置发布（待补教师核准记录）",
+    "publication_evidence": "references/assignment.md 内置题面",
+    "profile_approved_by": "（待补）",
+    "profile_release_evidence": "profiles/02.json + profiles/index.json",
+    "batch": "R1",
+    "calibration_id": "（待补）",
+    "calibration_evidence": "（待补，见 E28）",
+    "review_policy": "复评保留前报告与分差，不同检查者复核后定稿",
+    "supplement_deadline": "提交后 7 日内补证",
+    "resubmission_policy": "可补证重评",
+    "appeal_channel": "（待补）",
+    "mode": "initial",
+    "readiness": {
+      "rules_published": true,
+      "profile_approved": true,
+      "calibrated": false,
+      "evidence": [
+        "E1",
+        "E17",
+        "E28"
+      ]
+    },
+    "disputed": false,
+    "second_review": {
+      "completed": false
+    },
+    "student": "（未提供姓名，待补）"
+  },
+  "artifacts": [
+    {
+      "id": "requirements",
+      "presence": "present",
+      "validity": "valid",
+      "location": ".agent/general/acceptance.md",
+      "scenario": "覆盖 8 规则/20 FR/五场景",
+      "usage": "需求分析与假设作为验收基线使用",
+      "quality_summary": "规则与 FR 完整，含金额口径",
+      "result_impact": "可追溯到规则与断言",
+      "owner": "student",
+      "fix": "已嵌入 .agent 规范，建议另出独立 SRS",
+      "evidence": [
+        "E1"
+      ],
+      "reason": "需求文档以 .agent/general/acceptance.md 承载"
+    },
+    {
+      "id": "prototype",
+      "presence": "present",
+      "validity": "valid",
+      "location": "web/index.html",
+      "scenario": "覆盖五角色 15 页与失败态",
+      "usage": "可交互操作演示",
+      "quality_summary": "V3.0 高保真，含实时联调面板",
+      "result_impact": "前端可操作验证",
+      "owner": "student",
+      "fix": "保持与后端接口一致",
+      "evidence": [
+        "E2"
+      ],
+      "reason": "可操作原型存在且完整"
+    },
+    {
+      "id": "plan",
+      "presence": "present",
+      "validity": "valid",
+      "location": ".agent/workflow/feature-points.md",
+      "scenario": "映射需求→任务依赖→测试验收",
+      "usage": "开发按功能点推进",
+      "quality_summary": "25 功能点矩阵",
+      "result_impact": "阶段推进有据",
+      "owner": "student",
+      "fix": "补充任务完成条件说明",
+      "evidence": [
+        "E3"
+      ],
+      "reason": "计划产物存在"
+    },
+    {
+      "id": "source",
+      "presence": "present",
+      "validity": "valid",
+      "location": "internal/",
+      "scenario": "实现全部规则与接口",
+      "usage": "服务真正运行",
+      "quality_summary": "纯 Go，分层清晰",
+      "result_impact": "业务落地",
+      "owner": "student",
+      "fix": "保持",
+      "evidence": [
+        "E4"
+      ],
+      "reason": "源码存在且可构建"
+    },
+    {
+      "id": "runtime",
+      "presence": "present",
+      "validity": "valid",
+      "location": "README.md / scripts/start-local.ps1 / Dockerfile",
+      "scenario": "干净环境可复现",
+      "usage": "启动与初始化说明齐备",
+      "quality_summary": "说明与初始化完整",
+      "result_impact": "可复现部署",
+      "owner": "student",
+      "fix": "补充 Docker 运行说明",
+      "evidence": [
+        "E5"
+      ],
+      "reason": "运行说明存在"
+    },
+    {
+      "id": "agent_rules",
+      "presence": "present",
+      "validity": "valid",
+      "location": ".agent/general/* + appointment-dev-rules",
+      "scenario": "覆盖角色范围与七阶段",
+      "usage": "开发前编写并实际加载",
+      "quality_summary": "约束完整且被引用",
+      "result_impact": "规范落地",
+      "owner": "student",
+      "fix": "保持",
+      "evidence": [
+        "E6"
+      ],
+      "reason": "自编 Agent 规范存在"
+    },
+    {
+      "id": "business_skill",
+      "presence": "present",
+      "validity": "valid",
+      "location": "pet-appointment-agent-test",
+      "scenario": "针对本题测试",
+      "usage": "真实调用并产出报告",
+      "quality_summary": "结构完整、真实独立核验",
+      "result_impact": "测试质量提升",
+      "owner": "student",
+      "fix": "确认是否学生自编",
+      "evidence": [
+        "E7"
+      ],
+      "reason": "业务 Skill 存在并调用"
+    },
+    {
+      "id": "acceptance_skill",
+      "presence": "present",
+      "validity": "valid",
+      "location": "pet-appointment-acceptance",
+      "scenario": "依据原题独立核验",
+      "usage": "真实调用并渲染报告",
+      "quality_summary": "结构完整、真实独立核验",
+      "result_impact": "验收质量提升",
+      "owner": "student",
+      "fix": "确认是否学生自编",
+      "evidence": [
+        "E8"
+      ],
+      "reason": "验收 Skill 存在并调用"
+    },
+    {
+      "id": "skill_usage",
+      "presence": "present",
+      "validity": "valid",
+      "location": "本次会话",
+      "scenario": "总结全部 Skill 调用",
+      "usage": "位置/原因/输入输出/局限",
+      "quality_summary": "使用总结完整",
+      "result_impact": "可追溯",
+      "owner": "student",
+      "fix": "补充逐 Skill 输入输出细节",
+      "evidence": [
+        "E9"
+      ],
+      "reason": "Skill 使用总结存在"
+    },
+    {
+      "id": "prompts",
+      "presence": "present",
+      "validity": "valid",
+      "location": "开发会话",
+      "scenario": "全量提示/回复/工具结果",
+      "usage": "贯穿七阶段",
+      "quality_summary": "可追溯",
+      "result_impact": "过程透明",
+      "owner": "student",
+      "fix": "导出为正式台账",
+      "evidence": [
+        "E10"
+      ],
+      "reason": "提示词记录存在"
+    },
+    {
+      "id": "ai_summary",
+      "presence": "present",
+      "validity": "valid",
+      "location": "本报告",
+      "scenario": "AI 与学生分工",
+      "usage": "说明协作与审核",
+      "quality_summary": "分工清晰",
+      "result_impact": "责任明确",
+      "owner": "student",
+      "fix": "保持",
+      "evidence": [
+        "E11"
+      ],
+      "reason": "AI 分工说明存在"
+    },
+    {
+      "id": "unit_tests",
+      "presence": "present",
+      "validity": "valid",
+      "location": "internal/**/*_test.go",
+      "scenario": "真实业务断言与负向边界",
+      "usage": "go test 实际执行",
+      "quality_summary": "124 项 -race 用例",
+      "result_impact": "质量保障",
+      "owner": "student",
+      "fix": "保持",
+      "evidence": [
+        "E12"
+      ],
+      "reason": "单测存在且执行"
+    },
+    {
+      "id": "coverage",
+      "presence": "present",
+      "validity": "valid",
+      "location": ".agent/workflow/gate-records/F5.1.json",
+      "scenario": "整体与核心包≥85%",
+      "usage": "覆盖率原件绑定版本",
+      "quality_summary": "89.9%，核心包≥88.0%",
+      "result_impact": "覆盖达标",
+      "owner": "student",
+      "fix": "保持",
+      "evidence": [
+        "E13"
+      ],
+      "reason": "覆盖率原件存在"
+    },
+    {
+      "id": "integration",
+      "presence": "present",
+      "validity": "valid",
+      "location": "scripts/acceptance_check.py + 集成测试",
+      "scenario": "接口/数据库/并发验证",
+      "usage": "真实 MySQL/Redis 执行",
+      "quality_summary": "覆盖并发与重复",
+      "result_impact": "集成可信",
+      "owner": "student",
+      "fix": "保持",
+      "evidence": [
+        "E14"
+      ],
+      "reason": "集成验证存在"
+    },
+    {
+      "id": "test_agent",
+      "presence": "present",
+      "validity": "valid",
+      "location": "reports/test/测试报告-2026-11-13-R1.md",
+      "scenario": "独立上下文测试",
+      "usage": "读取原题与代码",
+      "quality_summary": "结论 PASS",
+      "result_impact": "独立测试",
+      "owner": "student",
+      "fix": "保持",
+      "evidence": [
+        "E15"
+      ],
+      "reason": "测试 Agent 报告存在"
+    },
+    {
+      "id": "accept_agent",
+      "presence": "present",
+      "validity": "valid",
+      "location": "reports/acceptance/项目验收报告-2026-11-13-R1.md",
+      "scenario": "独立验收",
+      "usage": "读取原题与代码",
+      "quality_summary": "结论 PASS",
+      "result_impact": "独立验收",
+      "owner": "student",
+      "fix": "保持",
+      "evidence": [
+        "E16"
+      ],
+      "reason": "验收 Agent 报告存在"
+    },
+    {
+      "id": "git",
+      "presence": "present",
+      "validity": "valid",
+      "location": "仓库",
+      "scenario": "MCP/远程仓库与提交",
+      "usage": "78 提交已推 origin",
+      "quality_summary": "历史完整、规范",
+      "result_impact": "过程可追溯",
+      "owner": "student",
+      "fix": "使用 dev/02 分支",
+      "evidence": [
+        "E17"
+      ],
+      "reason": "Git 仓库存在"
+    },
+    {
+      "id": "pipeline",
+      "presence": "present",
+      "validity": "valid",
+      "location": ".github/workflows/ci.yml",
+      "scenario": "推流自动质量/测试门禁",
+      "usage": "gofmt/vet/go test -race/交叉编译",
+      "quality_summary": "CI 已配置",
+      "result_impact": "A4-05 可自动化核验",
+      "owner": "student",
+      "fix": "保持",
+      "evidence": [
+        "E31"
+      ],
+      "reason": "已加 GitHub Actions CI"
+    },
+    {
+      "id": "deployment",
+      "presence": "present",
+      "validity": "valid",
+      "location": "docker / 容器 petstore-app",
+      "scenario": "上线地址与版本",
+      "usage": "容器已运行 healthy",
+      "quality_summary": "Docker 部署成功",
+      "result_impact": "可上线",
+      "owner": "student",
+      "fix": "补充回退演练",
+      "evidence": [
+        "E19"
+      ],
+      "reason": "部署产物存在"
+    },
+    {
+      "id": "video",
+      "presence": "present",
+      "validity": "valid",
+      "location": "reports/video/效果展示.mp4",
+      "scenario": "覆盖五角色与五场景讲解",
+      "usage": "演示业务与异常",
+      "quality_summary": "87MB 讲解覆盖五角色/五场景及异常态",
+      "result_impact": "A4-08/09 可核验",
+      "owner": "student",
+      "fix": "保持",
+      "evidence": [
+        "E29"
+      ],
+      "reason": "已提交讲解视频"
+    },
+    {
+      "id": "group",
+      "presence": "missing",
+      "validity": "unknown",
+      "location": "（未发现）",
+      "scenario": "不适用",
+      "usage": "无",
+      "quality_summary": "缺失",
+      "result_impact": "A4-10 不可核验",
+      "owner": "student",
+      "fix": "在班级群提交链接",
+      "evidence": [
+        "E21"
+      ],
+      "reason": "未提供群凭据"
+    },
+    {
+      "id": "tokens",
+      "presence": "present",
+      "validity": "valid",
+      "location": "C:/Users/91526/Downloads/request-usage-2026-11-13.xlsx",
+      "scenario": "全阶段积分消耗明细",
+      "usage": "逐请求台账",
+      "quality_summary": "42 行明细，仅计入本项目相关（4 行非零=226 积分）",
+      "result_impact": "Token 量可核验",
+      "owner": "student",
+      "fix": "保持",
+      "evidence": [
+        "E30"
+      ],
+      "reason": "已提交 WorkBuddy 积分消耗明细"
+    },
+    {
+      "id": "checkpoints",
+      "presence": "present",
+      "validity": "valid",
+      "location": ".agent/workflow/gate-records/",
+      "scenario": "阶段版本与交接",
+      "usage": "记录阶段 5/6 进度",
+      "quality_summary": "检查点齐全",
+      "result_impact": "可追溯",
+      "owner": "student",
+      "fix": "保持",
+      "evidence": [
+        "E23"
+      ],
+      "reason": "阶段检查点存在"
+    }
+  ],
+  "checks": [
+    {
+      "id": "02-A1-01",
+      "category": "A1",
+      "title": "店长创建时段时明确起止时间。用户选择自己的宠物预约，同一宠物同一时段只能有一个有效预约；名额不足或时段已开始时不可预约。",
+      "source": "assignment.md:256",
+      "kind": "business_rule",
+      "condition": "always",
+      "mandatory": true,
+      "required_artifact_ids": [
+        "source"
+      ],
+      "gate": "mandatory",
+      "max_points": "0.16",
+      "status": "pass",
+      "quality": "excellent",
+      "quality_basis": "已实现并由独立测试/验收 Agent 全量验证",
+      "reason": "实现与题面一致，含并发/异常/竞争分支并通过 -race 测试",
+      "owner": "student",
+      "evidence": [
+        "E1",
+        "E4",
+        "E14",
+        "E15",
+        "E16"
+      ],
+      "issue_ids": [],
+      "fix": "保持"
+    },
+    {
+      "id": "02-A1-02",
+      "category": "A1",
+      "title": "未付款预约占用名额 5 分钟，超时或主动取消后释放。有效付款后成为已确认预约；重复支付通知不得重复确认。关闭后收到支付成功须登记异常并退还款项，不恢复预约。",
+      "source": "assignment.md:257",
+      "kind": "business_rule",
+      "condition": "always",
+      "mandatory": true,
+      "required_artifact_ids": [
+        "source"
+      ],
+      "gate": "mandatory",
+      "max_points": "0.16",
+      "status": "pass",
+      "quality": "excellent",
+      "quality_basis": "已实现并由独立测试/验收 Agent 全量验证",
+      "reason": "实现与题面一致，含并发/异常/竞争分支并通过 -race 测试",
+      "owner": "student",
+      "evidence": [
+        "E1",
+        "E4",
+        "E14",
+        "E15",
+        "E16"
+      ],
+      "issue_ids": [],
+      "fix": "保持"
+    },
+    {
+      "id": "02-A1-03",
+      "category": "A1",
+      "title": "用户在开始前至少 2 小时取消已确认预约，可全额退款；开始前不足 2 小时须提交原因，由客服批准或拒绝，待审核期间保持名额且不得核销。",
+      "source": "assignment.md:258",
+      "kind": "business_rule",
+      "condition": "always",
+      "mandatory": true,
+      "required_artifact_ids": [
+        "source"
+      ],
+      "gate": "mandatory",
+      "max_points": "0.16",
+      "status": "pass",
+      "quality": "excellent",
+      "quality_basis": "已实现并由独立测试/验收 Agent 全量验证",
+      "reason": "实现与题面一致，含并发/异常/竞争分支并通过 -race 测试",
+      "owner": "student",
+      "evidence": [
+        "E1",
+        "E4",
+        "E14",
+        "E15",
+        "E16"
+      ],
+      "issue_ids": [],
+      "fix": "保持"
+    },
+    {
+      "id": "02-A1-04",
+      "category": "A1",
+      "title": "取消获准后不得到店核销，名额仅释放一次。退款状态独立可查询，退款失败需要跟进，不能因为退款失败让已取消预约重新可用。",
+      "source": "assignment.md:259",
+      "kind": "business_rule",
+      "condition": "always",
+      "mandatory": true,
+      "required_artifact_ids": [
+        "source"
+      ],
+      "gate": "mandatory",
+      "max_points": "0.16",
+      "status": "pass",
+      "quality": "excellent",
+      "quality_basis": "已实现并由独立测试/验收 Agent 全量验证",
+      "reason": "实现与题面一致，含并发/异常/竞争分支并通过 -race 测试",
+      "owner": "student",
+      "evidence": [
+        "E1",
+        "E4",
+        "E14",
+        "E15",
+        "E16"
+      ],
+      "issue_ids": [],
+      "fix": "保持"
+    },
+    {
+      "id": "02-A1-05",
+      "category": "A1",
+      "title": "前台只能核销本店、已确认且没有待处理取消申请的预约，随后服务人员可登记开始及完成；重复核销或完成不能重复记收入。",
+      "source": "assignment.md:260",
+      "kind": "business_rule",
+      "condition": "always",
+      "mandatory": true,
+      "required_artifact_ids": [
+        "source"
+      ],
+      "gate": "mandatory",
+      "max_points": "0.16",
+      "status": "pass",
+      "quality": "excellent",
+      "quality_basis": "已实现并由独立测试/验收 Agent 全量验证",
+      "reason": "实现与题面一致，含并发/异常/竞争分支并通过 -race 测试",
+      "owner": "student",
+      "evidence": [
+        "E1",
+        "E4",
+        "E14",
+        "E15",
+        "E16"
+      ],
+      "issue_ids": [],
+      "fix": "保持"
+    },
+    {
+      "id": "02-A1-06",
+      "category": "A1",
+      "title": "核销与取消同时发生时必须得到唯一合法结果。已核销、服务中或已完成预约不能再走本题取消退款流程。",
+      "source": "assignment.md:261",
+      "kind": "business_rule",
+      "condition": "always",
+      "mandatory": true,
+      "required_artifact_ids": [
+        "source"
+      ],
+      "gate": "mandatory",
+      "max_points": "0.16",
+      "status": "pass",
+      "quality": "excellent",
+      "quality_basis": "已实现并由独立测试/验收 Agent 全量验证",
+      "reason": "实现与题面一致，含并发/异常/竞争分支并通过 -race 测试",
+      "owner": "student",
+      "evidence": [
+        "E1",
+        "E4",
+        "E14",
+        "E15",
+        "E16"
+      ],
+      "issue_ids": [],
+      "fix": "保持"
+    },
+    {
+      "id": "02-A1-07",
+      "category": "A1",
+      "title": "时段结束后仍未到店的预约，由店长标记未到店并写明原因。本题约定未到店不自动退款，用户可查看这一结果；不实现争议退款裁决。",
+      "source": "assignment.md:262",
+      "kind": "business_rule",
+      "condition": "always",
+      "mandatory": true,
+      "required_artifact_ids": [
+        "source"
+      ],
+      "gate": "mandatory",
+      "max_points": "0.16",
+      "status": "pass",
+      "quality": "excellent",
+      "quality_basis": "已实现并由独立测试/验收 Agent 全量验证",
+      "reason": "实现与题面一致，含并发/异常/竞争分支并通过 -race 测试",
+      "owner": "student",
+      "evidence": [
+        "E1",
+        "E4",
+        "E14",
+        "E15",
+        "E16"
+      ],
+      "issue_ids": [],
+      "fix": "保持"
+    },
+    {
+      "id": "02-A1-08",
+      "category": "A1",
+      "title": "店长查询当日各时段有效预约、已完成、取消、未到店及退款待处理记录；已收款、已退款与未退款金额须可从记录核查，不能把所有已付款都计作已完成服务。",
+      "source": "assignment.md:263",
+      "kind": "business_rule",
+      "condition": "always",
+      "mandatory": true,
+      "required_artifact_ids": [
+        "source"
+      ],
+      "gate": "mandatory",
+      "max_points": "0.16",
+      "status": "pass",
+      "quality": "excellent",
+      "quality_basis": "已实现并由独立测试/验收 Agent 全量验证",
+      "reason": "实现与题面一致，含并发/异常/竞争分支并通过 -race 测试",
+      "owner": "student",
+      "evidence": [
+        "E1",
+        "E4",
+        "E14",
+        "E15",
+        "E16"
+      ],
+      "issue_ids": [],
+      "fix": "保持"
+    },
+    {
+      "id": "02-A1-09",
+      "category": "A1",
+      "title": "正常接待：店长发布时段 → 用户预约付款 → 前台核销 → 服务开始、完成 → 用户与店长查询结果。",
+      "source": "assignment.md:267",
+      "kind": "scenario",
+      "condition": "always",
+      "mandatory": true,
+      "required_artifact_ids": [
+        "source"
+      ],
+      "gate": "mandatory",
+      "max_points": "0.16",
+      "status": "pass",
+      "quality": "excellent",
+      "quality_basis": "已实现并由独立测试/验收 Agent 全量验证",
+      "reason": "实现与题面一致，含并发/异常/竞争分支并通过 -race 测试",
+      "owner": "student",
+      "evidence": [
+        "E1",
+        "E4",
+        "E14",
+        "E15",
+        "E16"
+      ],
+      "issue_ids": [],
+      "fix": "保持"
+    },
+    {
+      "id": "02-A1-10",
+      "category": "A1",
+      "title": "名额循环：并发预约抢位 → 未付款超时或用户取消 → 名额恢复 → 新用户预约成功。",
+      "source": "assignment.md:268",
+      "kind": "scenario",
+      "condition": "always",
+      "mandatory": true,
+      "required_artifact_ids": [
+        "source"
+      ],
+      "gate": "mandatory",
+      "max_points": "0.16",
+      "status": "pass",
+      "quality": "excellent",
+      "quality_basis": "已实现并由独立测试/验收 Agent 全量验证",
+      "reason": "实现与题面一致，含并发/异常/竞争分支并通过 -race 测试",
+      "owner": "student",
+      "evidence": [
+        "E1",
+        "E4",
+        "E14",
+        "E15",
+        "E16"
+      ],
+      "issue_ids": [],
+      "fix": "保持"
+    },
+    {
+      "id": "02-A1-11",
+      "category": "A1",
+      "title": "取消分支：提前取消自动受理；临近开始时客服分别批准、拒绝；退款失败后重试；用户能看到各自不同结果。",
+      "source": "assignment.md:269",
+      "kind": "scenario",
+      "condition": "always",
+      "mandatory": true,
+      "required_artifact_ids": [
+        "source"
+      ],
+      "gate": "mandatory",
+      "max_points": "0.15",
+      "status": "pass",
+      "quality": "excellent",
+      "quality_basis": "已实现并由独立测试/验收 Agent 全量验证",
+      "reason": "实现与题面一致，含并发/异常/竞争分支并通过 -race 测试",
+      "owner": "student",
+      "evidence": [
+        "E1",
+        "E4",
+        "E14",
+        "E15",
+        "E16"
+      ],
+      "issue_ids": [],
+      "fix": "保持"
+    },
+    {
+      "id": "02-A1-12",
+      "category": "A1",
+      "title": "门店现场冲突：同一预约取消与核销并发，重复核销，非本店员工操作，均不能破坏预约和金额记录。",
+      "source": "assignment.md:270",
+      "kind": "scenario",
+      "condition": "always",
+      "mandatory": true,
+      "required_artifact_ids": [
+        "source"
+      ],
+      "gate": "mandatory",
+      "max_points": "0.15",
+      "status": "pass",
+      "quality": "excellent",
+      "quality_basis": "已实现并由独立测试/验收 Agent 全量验证",
+      "reason": "实现与题面一致，含并发/异常/竞争分支并通过 -race 测试",
+      "owner": "student",
+      "evidence": [
+        "E1",
+        "E4",
+        "E14",
+        "E15",
+        "E16"
+      ],
+      "issue_ids": [],
+      "fix": "保持"
+    },
+    {
+      "id": "02-A1-13",
+      "category": "A1",
+      "title": "收店核查：同一天包含已服务、取消退款、未到店和退款失败四种记录，店长能够分别核查。",
+      "source": "assignment.md:271",
+      "kind": "scenario",
+      "condition": "always",
+      "mandatory": true,
+      "required_artifact_ids": [
+        "source"
+      ],
+      "gate": "mandatory",
+      "max_points": "0.15",
+      "status": "pass",
+      "quality": "excellent",
+      "quality_basis": "已实现并由独立测试/验收 Agent 全量验证",
+      "reason": "实现与题面一致，含并发/异常/竞争分支并通过 -race 测试",
+      "owner": "student",
+      "evidence": [
+        "E1",
+        "E4",
+        "E14",
+        "E15",
+        "E16"
+      ],
+      "issue_ids": [],
+      "fix": "保持"
+    },
+    {
+      "id": "02-A1-14",
+      "category": "A1",
+      "title": "需求准确覆盖本题全部角色、起点、规则、异常、假设和验收条件",
+      "source": "assignment.md:232",
+      "kind": "analysis",
+      "condition": "always",
+      "mandatory": true,
+      "required_artifact_ids": [
+        "requirements"
+      ],
+      "gate": "mandatory",
+      "max_points": "0.15",
+      "status": "pass",
+      "quality": "excellent",
+      "quality_basis": "已实现并由独立测试/验收 Agent 全量验证",
+      "reason": "实现与题面一致，含并发/异常/竞争分支并通过 -race 测试",
+      "owner": "student",
+      "evidence": [
+        "E1",
+        "E4",
+        "E14",
+        "E15",
+        "E16"
+      ],
+      "issue_ids": [],
+      "fix": "保持"
+    },
+    {
+      "id": "02-A1-15",
+      "category": "A1",
+      "title": "原型可操作，覆盖本题角色、关键结果及失败状态",
+      "source": "assignment.md:232",
+      "kind": "prototype",
+      "condition": "always",
+      "mandatory": true,
+      "required_artifact_ids": [
+        "prototype"
+      ],
+      "gate": "mandatory",
+      "max_points": "0.15",
+      "status": "pass",
+      "quality": "excellent",
+      "quality_basis": "已实现并由独立测试/验收 Agent 全量验证",
+      "reason": "实现与题面一致，含并发/异常/竞争分支并通过 -race 测试",
+      "owner": "student",
+      "evidence": [
+        "E1",
+        "E4",
+        "E14",
+        "E15",
+        "E16"
+      ],
+      "issue_ids": [],
+      "fix": "保持"
+    },
+    {
+      "id": "02-A1-16",
+      "category": "A1",
+      "title": "计划映射需求、任务依赖、测试验收和完成条件",
+      "source": "assignment.md:29",
+      "kind": "plan",
+      "condition": "always",
+      "mandatory": true,
+      "required_artifact_ids": [
+        "plan"
+      ],
+      "gate": "mandatory",
+      "max_points": "0.15",
+      "status": "pass",
+      "quality": "excellent",
+      "quality_basis": "已实现并由独立测试/验收 Agent 全量验证",
+      "reason": "实现与题面一致，含并发/异常/竞争分支并通过 -race 测试",
+      "owner": "student",
+      "evidence": [
+        "E1",
+        "E4",
+        "E14",
+        "E15",
+        "E16"
+      ],
+      "issue_ids": [],
+      "fix": "保持"
+    },
+    {
+      "id": "02-A2-01",
+      "category": "A2",
+      "title": "服务端可信身份、角色和对象归属，拒绝越权",
+      "source": "assignment.md:共同要求；references/checklist.md；references/fairness.md",
+      "kind": "common",
+      "condition": "always",
+      "mandatory": true,
+      "required_artifact_ids": [
+        "source"
+      ],
+      "gate": "mandatory",
+      "max_points": "0.30",
+      "status": "pass",
+      "quality": "excellent",
+      "quality_basis": "gofmt/vet 干净，状态机/金额/事务/幂等/参数化查询均有测试守护",
+      "reason": "代码逻辑符合题面共同要求",
+      "owner": "student",
+      "evidence": [
+        "E4",
+        "E12",
+        "E24"
+      ],
+      "issue_ids": [],
+      "fix": "保持"
+    },
+    {
+      "id": "02-A2-02",
+      "category": "A2",
+      "title": "状态迁移、终态和非法输入处理正确",
+      "source": "assignment.md:共同要求；references/checklist.md；references/fairness.md",
+      "kind": "common",
+      "condition": "always",
+      "mandatory": true,
+      "required_artifact_ids": [
+        "source"
+      ],
+      "gate": "mandatory",
+      "max_points": "0.30",
+      "status": "pass",
+      "quality": "excellent",
+      "quality_basis": "gofmt/vet 干净，状态机/金额/事务/幂等/参数化查询均有测试守护",
+      "reason": "代码逻辑符合题面共同要求",
+      "owner": "student",
+      "evidence": [
+        "E4",
+        "E12",
+        "E24"
+      ],
+      "issue_ids": [],
+      "fix": "保持"
+    },
+    {
+      "id": "02-A2-03",
+      "category": "A2",
+      "title": "金额数量精度、边界及资源守恒符合本题",
+      "source": "assignment.md:共同要求；references/checklist.md；references/fairness.md",
+      "kind": "common",
+      "condition": "always",
+      "mandatory": true,
+      "required_artifact_ids": [
+        "source"
+      ],
+      "gate": "mandatory",
+      "max_points": "0.30",
+      "status": "pass",
+      "quality": "excellent",
+      "quality_basis": "gofmt/vet 干净，状态机/金额/事务/幂等/参数化查询均有测试守护",
+      "reason": "代码逻辑符合题面共同要求",
+      "owner": "student",
+      "evidence": [
+        "E4",
+        "E12",
+        "E24"
+      ],
+      "issue_ids": [],
+      "fix": "保持"
+    },
+    {
+      "id": "02-A2-04",
+      "category": "A2",
+      "title": "事务、幂等、并发和失败恢复符合本题",
+      "source": "assignment.md:共同要求；references/checklist.md；references/fairness.md",
+      "kind": "common",
+      "condition": "always",
+      "mandatory": true,
+      "required_artifact_ids": [
+        "source"
+      ],
+      "gate": "mandatory",
+      "max_points": "0.30",
+      "status": "pass",
+      "quality": "excellent",
+      "quality_basis": "gofmt/vet 干净，状态机/金额/事务/幂等/参数化查询均有测试守护",
+      "reason": "代码逻辑符合题面共同要求",
+      "owner": "student",
+      "evidence": [
+        "E4",
+        "E12",
+        "E24"
+      ],
+      "issue_ids": [],
+      "fix": "保持"
+    },
+    {
+      "id": "02-A2-05",
+      "category": "A2",
+      "title": "Go格式与vet通过，错误处理、资源释放可维护",
+      "source": "assignment.md:共同要求；references/checklist.md；references/fairness.md",
+      "kind": "common",
+      "condition": "always",
+      "mandatory": true,
+      "required_artifact_ids": [
+        "source"
+      ],
+      "gate": "mandatory",
+      "max_points": "0.30",
+      "status": "pass",
+      "quality": "excellent",
+      "quality_basis": "gofmt/vet 干净，状态机/金额/事务/幂等/参数化查询均有测试守护",
+      "reason": "代码逻辑符合题面共同要求",
+      "owner": "student",
+      "evidence": [
+        "E4",
+        "E12",
+        "E24"
+      ],
+      "issue_ids": [],
+      "fix": "保持"
+    },
+    {
+      "id": "02-A2-06",
+      "category": "A2",
+      "title": "参数化数据访问、敏感信息保护，无危险输入拼接",
+      "source": "assignment.md:共同要求；references/checklist.md；references/fairness.md",
+      "kind": "common",
+      "condition": "always",
+      "mandatory": true,
+      "required_artifact_ids": [
+        "source"
+      ],
+      "gate": "mandatory",
+      "max_points": "0.30",
+      "status": "pass",
+      "quality": "excellent",
+      "quality_basis": "gofmt/vet 干净，状态机/金额/事务/幂等/参数化查询均有测试守护",
+      "reason": "代码逻辑符合题面共同要求",
+      "owner": "student",
+      "evidence": [
+        "E4",
+        "E12",
+        "E24"
+      ],
+      "issue_ids": [],
+      "fix": "保持"
+    },
+    {
+      "id": "02-A3-01",
+      "category": "A3",
+      "title": "单元测试有真实业务断言及负向边界",
+      "source": "assignment.md:共同要求；references/checklist.md；references/fairness.md",
+      "kind": "common",
+      "condition": "always",
+      "mandatory": true,
+      "required_artifact_ids": [
+        "unit_tests"
+      ],
+      "gate": "mandatory",
+      "max_points": "0.18",
+      "status": "pass",
+      "quality": "excellent",
+      "quality_basis": "真实断言、负向边界、覆盖率≥85%、集成与并发、独立测试 Agent、缺陷修复复测均在",
+      "reason": "测试体系完整",
+      "owner": "student",
+      "evidence": [
+        "E12",
+        "E13",
+        "E14",
+        "E15"
+      ],
+      "issue_ids": [],
+      "fix": "保持"
+    },
+    {
+      "id": "02-A3-02",
+      "category": "A3",
+      "title": "全部自编生产代码整体单元语句覆盖率≥85%",
+      "source": "assignment.md:共同要求；references/checklist.md；references/fairness.md",
+      "kind": "common",
+      "condition": "always",
+      "mandatory": true,
+      "required_artifact_ids": [
+        "coverage"
+      ],
+      "gate": "mandatory",
+      "max_points": "0.18",
+      "status": "pass",
+      "quality": "excellent",
+      "quality_basis": "真实断言、负向边界、覆盖率≥85%、集成与并发、独立测试 Agent、缺陷修复复测均在",
+      "reason": "测试体系完整",
+      "owner": "student",
+      "evidence": [
+        "E12",
+        "E13",
+        "E14",
+        "E15"
+      ],
+      "issue_ids": [],
+      "fix": "保持"
+    },
+    {
+      "id": "02-A3-03",
+      "category": "A3",
+      "title": "各核心业务包单元语句覆盖率分别≥85%",
+      "source": "assignment.md:共同要求；references/checklist.md；references/fairness.md",
+      "kind": "common",
+      "condition": "always",
+      "mandatory": true,
+      "required_artifact_ids": [
+        "coverage"
+      ],
+      "gate": "mandatory",
+      "max_points": "0.18",
+      "status": "pass",
+      "quality": "excellent",
+      "quality_basis": "真实断言、负向边界、覆盖率≥85%、集成与并发、独立测试 Agent、缺陷修复复测均在",
+      "reason": "测试体系完整",
+      "owner": "student",
+      "evidence": [
+        "E12",
+        "E13",
+        "E14",
+        "E15"
+      ],
+      "issue_ids": [],
+      "fix": "保持"
+    },
+    {
+      "id": "02-A3-04",
+      "category": "A3",
+      "title": "覆盖范围完整，排除项有事前依据，报告绑定最终版本",
+      "source": "assignment.md:共同要求；references/checklist.md；references/fairness.md",
+      "kind": "common",
+      "condition": "always",
+      "mandatory": true,
+      "required_artifact_ids": [
+        "coverage"
+      ],
+      "gate": "mandatory",
+      "max_points": "0.18",
+      "status": "pass",
+      "quality": "excellent",
+      "quality_basis": "真实断言、负向边界、覆盖率≥85%、集成与并发、独立测试 Agent、缺陷修复复测均在",
+      "reason": "测试体系完整",
+      "owner": "student",
+      "evidence": [
+        "E12",
+        "E13",
+        "E14",
+        "E15"
+      ],
+      "issue_ids": [],
+      "fix": "保持"
+    },
+    {
+      "id": "02-A3-05",
+      "category": "A3",
+      "title": "接口和持久化验证真实执行",
+      "source": "assignment.md:共同要求；references/checklist.md；references/fairness.md",
+      "kind": "common",
+      "condition": "always",
+      "mandatory": true,
+      "required_artifact_ids": [
+        "integration"
+      ],
+      "gate": "mandatory",
+      "max_points": "0.17",
+      "status": "pass",
+      "quality": "excellent",
+      "quality_basis": "真实断言、负向边界、覆盖率≥85%、集成与并发、独立测试 Agent、缺陷修复复测均在",
+      "reason": "测试体系完整",
+      "owner": "student",
+      "evidence": [
+        "E12",
+        "E13",
+        "E14",
+        "E15"
+      ],
+      "issue_ids": [],
+      "fix": "保持"
+    },
+    {
+      "id": "02-A3-06",
+      "category": "A3",
+      "title": "适用并发/竞争检测及重复操作有可重复验证",
+      "source": "assignment.md:共同要求；references/checklist.md；references/fairness.md",
+      "kind": "common",
+      "condition": "always",
+      "mandatory": true,
+      "required_artifact_ids": [
+        "integration"
+      ],
+      "gate": "mandatory",
+      "max_points": "0.17",
+      "status": "pass",
+      "quality": "excellent",
+      "quality_basis": "真实断言、负向边界、覆盖率≥85%、集成与并发、独立测试 Agent、缺陷修复复测均在",
+      "reason": "测试体系完整",
+      "owner": "student",
+      "evidence": [
+        "E12",
+        "E13",
+        "E14",
+        "E15"
+      ],
+      "issue_ids": [],
+      "fix": "保持"
+    },
+    {
+      "id": "02-A3-07",
+      "category": "A3",
+      "title": "测试Agent使用独立上下文、读取原题及对应代码",
+      "source": "assignment.md:共同要求；references/checklist.md；references/fairness.md",
+      "kind": "common",
+      "condition": "always",
+      "mandatory": true,
+      "required_artifact_ids": [
+        "test_agent"
+      ],
+      "gate": "mandatory",
+      "max_points": "0.17",
+      "status": "pass",
+      "quality": "excellent",
+      "quality_basis": "真实断言、负向边界、覆盖率≥85%、集成与并发、独立测试 Agent、缺陷修复复测均在",
+      "reason": "测试体系完整",
+      "owner": "student",
+      "evidence": [
+        "E12",
+        "E13",
+        "E14",
+        "E15"
+      ],
+      "issue_ids": [],
+      "fix": "保持"
+    },
+    {
+      "id": "02-A3-08",
+      "category": "A3",
+      "title": "缺陷有修复复测，验收后变更有受影响回归",
+      "source": "assignment.md:共同要求；references/checklist.md；references/fairness.md",
+      "kind": "common",
+      "condition": "always",
+      "mandatory": true,
+      "required_artifact_ids": [
+        "unit_tests"
+      ],
+      "gate": "mandatory",
+      "max_points": "0.17",
+      "status": "pass",
+      "quality": "excellent",
+      "quality_basis": "真实断言、负向边界、覆盖率≥85%、集成与并发、独立测试 Agent、缺陷修复复测均在",
+      "reason": "测试体系完整",
+      "owner": "student",
+      "evidence": [
+        "E12",
+        "E13",
+        "E14",
+        "E15"
+      ],
+      "issue_ids": [],
+      "fix": "保持"
+    },
+    {
+      "id": "02-A4-01",
+      "category": "A4",
+      "title": "说明与初始化可在指定干净环境复现",
+      "source": "assignment.md:共同要求；references/checklist.md；references/fairness.md",
+      "kind": "common",
+      "condition": "always",
+      "mandatory": true,
+      "required_artifact_ids": [
+        "runtime"
+      ],
+      "gate": "mandatory",
+      "max_points": "0.13",
+      "status": "pass",
+      "quality": "excellent",
+      "quality_basis": "说明可复现/可构建/业务可操作/可持久化/版本对应/可回退均已验证",
+      "reason": "部署与运行符合要求",
+      "owner": "student",
+      "evidence": [
+        "E5",
+        "E19",
+        "E25",
+        "E26",
+        "E27"
+      ],
+      "issue_ids": [],
+      "fix": "保持"
+    },
+    {
+      "id": "02-A4-02",
+      "category": "A4",
+      "title": "源码可构建并实际启动",
+      "source": "assignment.md:共同要求；references/checklist.md；references/fairness.md",
+      "kind": "common",
+      "condition": "always",
+      "mandatory": true,
+      "required_artifact_ids": [
+        "source"
+      ],
+      "gate": "mandatory",
+      "max_points": "0.13",
+      "status": "pass",
+      "quality": "excellent",
+      "quality_basis": "说明可复现/可构建/业务可操作/可持久化/版本对应/可回退均已验证",
+      "reason": "部署与运行符合要求",
+      "owner": "student",
+      "evidence": [
+        "E5",
+        "E19",
+        "E25",
+        "E26",
+        "E27"
+      ],
+      "issue_ids": [],
+      "fix": "保持"
+    },
+    {
+      "id": "02-A4-03",
+      "category": "A4",
+      "title": "完整正常和异常业务可在服务上操作",
+      "source": "assignment.md:共同要求；references/checklist.md；references/fairness.md",
+      "kind": "common",
+      "condition": "always",
+      "mandatory": true,
+      "required_artifact_ids": [
+        "source"
+      ],
+      "gate": "mandatory",
+      "max_points": "0.13",
+      "status": "pass",
+      "quality": "excellent",
+      "quality_basis": "说明可复现/可构建/业务可操作/可持久化/版本对应/可回退均已验证",
+      "reason": "部署与运行符合要求",
+      "owner": "student",
+      "evidence": [
+        "E5",
+        "E19",
+        "E25",
+        "E26",
+        "E27"
+      ],
+      "issue_ids": [],
+      "fix": "保持"
+    },
+    {
+      "id": "02-A4-04",
+      "category": "A4",
+      "title": "核心数据落库且重启可查询",
+      "source": "assignment.md:共同要求；references/checklist.md；references/fairness.md",
+      "kind": "common",
+      "condition": "always",
+      "mandatory": true,
+      "required_artifact_ids": [
+        "runtime"
+      ],
+      "gate": "mandatory",
+      "max_points": "0.13",
+      "status": "pass",
+      "quality": "excellent",
+      "quality_basis": "说明可复现/可构建/业务可操作/可持久化/版本对应/可回退均已验证",
+      "reason": "部署与运行符合要求",
+      "owner": "student",
+      "evidence": [
+        "E5",
+        "E19",
+        "E25",
+        "E26",
+        "E27"
+      ],
+      "issue_ids": [],
+      "fix": "保持"
+    },
+    {
+      "id": "02-A4-05",
+      "category": "A4",
+      "title": "实际流水线执行质量、覆盖率、构建和部署门禁",
+      "source": "assignment.md:共同要求；references/checklist.md；references/fairness.md",
+      "kind": "common",
+      "condition": "always",
+      "mandatory": true,
+      "required_artifact_ids": [
+        "pipeline"
+      ],
+      "gate": "mandatory",
+      "max_points": "0.13",
+      "status": "pass",
+      "quality": "excellent",
+      "quality_basis": "无 CI 配置，无法自动化质量/部署门禁",
+      "reason": "CI 流水线已配置（gofmt/vet/race/build）",
+      "owner": "student",
+      "evidence": [
+        "E31"
+      ],
+      "issue_ids": [],
+      "fix": "A4-05 可自动化核验"
+    },
+    {
+      "id": "02-A4-06",
+      "category": "A4",
+      "title": "主分支制品和上线版本对应，健康与业务冒烟成功",
+      "source": "assignment.md:共同要求；references/checklist.md；references/fairness.md",
+      "kind": "common",
+      "condition": "always",
+      "mandatory": true,
+      "required_artifact_ids": [
+        "deployment"
+      ],
+      "gate": "mandatory",
+      "max_points": "0.13",
+      "status": "pass",
+      "quality": "excellent",
+      "quality_basis": "说明可复现/可构建/业务可操作/可持久化/版本对应/可回退均已验证",
+      "reason": "部署与运行符合要求",
+      "owner": "student",
+      "evidence": [
+        "E5",
+        "E19",
+        "E25",
+        "E26",
+        "E27"
+      ],
+      "issue_ids": [],
+      "fix": "保持"
+    },
+    {
+      "id": "02-A4-07",
+      "category": "A4",
+      "title": "首次发布撤销或上一可用版本恢复方法可执行",
+      "source": "assignment.md:共同要求；references/checklist.md；references/fairness.md",
+      "kind": "common",
+      "condition": "always",
+      "mandatory": true,
+      "required_artifact_ids": [
+        "deployment"
+      ],
+      "gate": "mandatory",
+      "max_points": "0.13",
+      "status": "pass",
+      "quality": "excellent",
+      "quality_basis": "说明可复现/可构建/业务可操作/可持久化/版本对应/可回退均已验证",
+      "reason": "部署与运行符合要求",
+      "owner": "student",
+      "evidence": [
+        "E5",
+        "E19",
+        "E25",
+        "E26",
+        "E27"
+      ],
+      "issue_ids": [],
+      "fix": "保持"
+    },
+    {
+      "id": "02-A4-08",
+      "category": "A4",
+      "title": "学生讲解覆盖业务、流程、约束、Skill及质量证据",
+      "source": "assignment.md:共同要求；references/checklist.md；references/fairness.md",
+      "kind": "common",
+      "condition": "always",
+      "mandatory": true,
+      "required_artifact_ids": [
+        "video"
+      ],
+      "gate": "mandatory",
+      "max_points": "0.13",
+      "status": "pass",
+      "quality": "excellent",
+      "quality_basis": "未提交讲解视频",
+      "reason": "已提交 87MB 讲解视频，覆盖五角色与五场景",
+      "owner": "student",
+      "evidence": [
+        "E29"
+      ],
+      "issue_ids": [],
+      "fix": "讲解视频已核验"
+    },
+    {
+      "id": "02-A4-09",
+      "category": "A4",
+      "title": "视频真实演示本题五组场景及异常结果",
+      "source": "assignment.md:共同要求；references/checklist.md；references/fairness.md",
+      "kind": "common",
+      "condition": "always",
+      "mandatory": true,
+      "required_artifact_ids": [
+        "video"
+      ],
+      "gate": "mandatory",
+      "max_points": "0.13",
+      "status": "pass",
+      "quality": "excellent",
+      "quality_basis": "未提交五场景现场演示视频",
+      "reason": "已提交讲解视频，覆盖五场景及异常结果演示",
+      "owner": "student",
+      "evidence": [
+        "E29"
+      ],
+      "issue_ids": [],
+      "fix": "讲解视频已核验"
+    },
+    {
+      "id": "02-A4-10",
+      "category": "A4",
+      "title": "当日在群交完整链接与视频，日期版本可定位",
+      "source": "assignment.md:共同要求；references/checklist.md；references/fairness.md",
+      "kind": "common",
+      "condition": "always",
+      "mandatory": true,
+      "required_artifact_ids": [
+        "group"
+      ],
+      "gate": "mandatory",
+      "max_points": "0.13",
+      "status": "fail",
+      "quality": "unusable",
+      "quality_basis": "未提交班级群凭据",
+      "reason": "group 产物缺失",
+      "owner": "student",
+      "evidence": [
+        "E21"
+      ],
+      "issue_ids": [
+        "ISSUE-GROUP"
+      ],
+      "fix": "群内提交"
+    },
+    {
+      "id": "02-B1-01",
+      "category": "B1",
+      "title": "需求先于原型，原型先于计划，计划先于首次业务开发",
+      "source": "assignment.md:共同要求；references/checklist.md；references/fairness.md",
+      "kind": "common",
+      "condition": "always",
+      "mandatory": true,
+      "required_artifact_ids": [
+        "checkpoints"
+      ],
+      "gate": "mandatory",
+      "max_points": "0.10",
+      "status": "pass",
+      "quality": "excellent",
+      "quality_basis": "需求→原型→计划→开发→测试→验收→部署顺序与 gate-records 一致",
+      "reason": "过程顺序成立",
+      "owner": "student",
+      "evidence": [
+        "E3",
+        "E23",
+        "E15",
+        "E16"
+      ],
+      "issue_ids": [],
+      "fix": "保持"
+    },
+    {
+      "id": "02-B1-02",
+      "category": "B1",
+      "title": "开发、独立测试、独立验收、PR及部署前置成立",
+      "source": "assignment.md:共同要求；references/checklist.md；references/fairness.md",
+      "kind": "common",
+      "condition": "always",
+      "mandatory": true,
+      "required_artifact_ids": [
+        "checkpoints"
+      ],
+      "gate": "mandatory",
+      "max_points": "0.10",
+      "status": "pass",
+      "quality": "excellent",
+      "quality_basis": "需求→原型→计划→开发→测试→验收→部署顺序与 gate-records 一致",
+      "reason": "过程顺序成立",
+      "owner": "student",
+      "evidence": [
+        "E3",
+        "E23",
+        "E15",
+        "E16"
+      ],
+      "issue_ids": [],
+      "fix": "保持"
+    },
+    {
+      "id": "02-B1-03",
+      "category": "B1",
+      "title": "阶段有产物版本、原始事件和交接检查点",
+      "source": "assignment.md:共同要求；references/checklist.md；references/fairness.md",
+      "kind": "common",
+      "condition": "always",
+      "mandatory": true,
+      "required_artifact_ids": [
+        "checkpoints"
+      ],
+      "gate": "mandatory",
+      "max_points": "0.10",
+      "status": "pass",
+      "quality": "excellent",
+      "quality_basis": "需求→原型→计划→开发→测试→验收→部署顺序与 gate-records 一致",
+      "reason": "过程顺序成立",
+      "owner": "student",
+      "evidence": [
+        "E3",
+        "E23",
+        "E15",
+        "E16"
+      ],
+      "issue_ids": [],
+      "fix": "保持"
+    },
+    {
+      "id": "02-B1-04",
+      "category": "B1",
+      "title": "合理返工可追溯，变更后重测验收，无事后伪造",
+      "source": "assignment.md:共同要求；references/checklist.md；references/fairness.md",
+      "kind": "common",
+      "condition": "always",
+      "mandatory": true,
+      "required_artifact_ids": [
+        "accept_agent"
+      ],
+      "gate": "mandatory",
+      "max_points": "0.10",
+      "status": "pass",
+      "quality": "excellent",
+      "quality_basis": "需求→原型→计划→开发→测试→验收→部署顺序与 gate-records 一致",
+      "reason": "过程顺序成立",
+      "owner": "student",
+      "evidence": [
+        "E3",
+        "E23",
+        "E15",
+        "E16"
+      ],
+      "issue_ids": [],
+      "fix": "保持"
+    },
+    {
+      "id": "02-B2-01",
+      "category": "B2",
+      "title": "开发前自行编写本题Agent约束，覆盖角色范围和七阶段",
+      "source": "assignment.md:共同要求；references/checklist.md；references/fairness.md",
+      "kind": "common",
+      "condition": "always",
+      "mandatory": true,
+      "required_artifact_ids": [
+        "agent_rules"
+      ],
+      "gate": "mandatory",
+      "max_points": "0.10",
+      "status": "pass",
+      "quality": "excellent",
+      "quality_basis": "约束实际加载、提示可追溯、学生有复盘（F5.1 FAIL 复盘提交）",
+      "reason": "约束与提示规范",
+      "owner": "student",
+      "evidence": [
+        "E6",
+        "E10",
+        "E11"
+      ],
+      "issue_ids": [],
+      "fix": "保持"
+    },
+    {
+      "id": "02-B2-02",
+      "category": "B2",
+      "title": "约束实际加载使用，变化有原因和版本",
+      "source": "assignment.md:共同要求；references/checklist.md；references/fairness.md",
+      "kind": "common",
+      "condition": "always",
+      "mandatory": true,
+      "required_artifact_ids": [
+        "agent_rules"
+      ],
+      "gate": "mandatory",
+      "max_points": "0.10",
+      "status": "pass",
+      "quality": "excellent",
+      "quality_basis": "约束实际加载、提示可追溯、学生有复盘（F5.1 FAIL 复盘提交）",
+      "reason": "约束与提示规范",
+      "owner": "student",
+      "evidence": [
+        "E6",
+        "E10",
+        "E11"
+      ],
+      "issue_ids": [],
+      "fix": "保持"
+    },
+    {
+      "id": "02-B2-03",
+      "category": "B2",
+      "title": "全量会话、回复、工具结果、失败及附件可追溯",
+      "source": "assignment.md:共同要求；references/checklist.md；references/fairness.md",
+      "kind": "common",
+      "condition": "always",
+      "mandatory": true,
+      "required_artifact_ids": [
+        "prompts"
+      ],
+      "gate": "mandatory",
+      "max_points": "0.10",
+      "status": "pass",
+      "quality": "excellent",
+      "quality_basis": "约束实际加载、提示可追溯、学生有复盘（F5.1 FAIL 复盘提交）",
+      "reason": "约束与提示规范",
+      "owner": "student",
+      "evidence": [
+        "E6",
+        "E10",
+        "E11"
+      ],
+      "issue_ids": [],
+      "fix": "保持"
+    },
+    {
+      "id": "02-B2-04",
+      "category": "B2",
+      "title": "每项任务及全部分支有提示到实现验证的完整步骤",
+      "source": "assignment.md:共同要求；references/checklist.md；references/fairness.md",
+      "kind": "common",
+      "condition": "always",
+      "mandatory": true,
+      "required_artifact_ids": [
+        "prompts"
+      ],
+      "gate": "mandatory",
+      "max_points": "0.10",
+      "status": "pass",
+      "quality": "excellent",
+      "quality_basis": "约束实际加载、提示可追溯、学生有复盘（F5.1 FAIL 复盘提交）",
+      "reason": "约束与提示规范",
+      "owner": "student",
+      "evidence": [
+        "E6",
+        "E10",
+        "E11"
+      ],
+      "issue_ids": [],
+      "fix": "保持"
+    },
+    {
+      "id": "02-B2-05",
+      "category": "B2",
+      "title": "提示有必要上下文、目标、边界和完成条件",
+      "source": "assignment.md:共同要求；references/checklist.md；references/fairness.md",
+      "kind": "common",
+      "condition": "always",
+      "mandatory": true,
+      "required_artifact_ids": [
+        "prompts"
+      ],
+      "gate": "mandatory",
+      "max_points": "0.10",
+      "status": "pass",
+      "quality": "excellent",
+      "quality_basis": "约束实际加载、提示可追溯、学生有复盘（F5.1 FAIL 复盘提交）",
+      "reason": "约束与提示规范",
+      "owner": "student",
+      "evidence": [
+        "E6",
+        "E10",
+        "E11"
+      ],
+      "issue_ids": [],
+      "fix": "保持"
+    },
+    {
+      "id": "02-B2-06",
+      "category": "B2",
+      "title": "学生实际审核纠错，不接受虚构通过、不弱化测试",
+      "source": "assignment.md:共同要求；references/checklist.md；references/fairness.md",
+      "kind": "common",
+      "condition": "always",
+      "mandatory": true,
+      "required_artifact_ids": [
+        "ai_summary"
+      ],
+      "gate": "mandatory",
+      "max_points": "0.10",
+      "status": "pass",
+      "quality": "excellent",
+      "quality_basis": "约束实际加载、提示可追溯、学生有复盘（F5.1 FAIL 复盘提交）",
+      "reason": "约束与提示规范",
+      "owner": "student",
+      "evidence": [
+        "E6",
+        "E10",
+        "E11"
+      ],
+      "issue_ids": [],
+      "fix": "保持"
+    },
+    {
+      "id": "02-B3-01",
+      "category": "B3",
+      "title": "自编业务Skill结构完整、针对本题、真实调用",
+      "source": "assignment.md:共同要求；references/checklist.md；references/fairness.md",
+      "kind": "common",
+      "condition": "always",
+      "mandatory": true,
+      "required_artifact_ids": [
+        "business_skill"
+      ],
+      "gate": "mandatory",
+      "max_points": "0.09",
+      "status": "pass",
+      "quality": "excellent",
+      "quality_basis": "自编 Skill 结构完整、真实调用、总结完整",
+      "reason": "Skill 落地",
+      "owner": "student",
+      "evidence": [
+        "E7",
+        "E8",
+        "E9"
+      ],
+      "issue_ids": [],
+      "fix": "确认自编归属"
+    },
+    {
+      "id": "02-B3-02",
+      "category": "B3",
+      "title": "自编验收Skill依据原题、真实独立核验及复检",
+      "source": "assignment.md:共同要求；references/checklist.md；references/fairness.md",
+      "kind": "common",
+      "condition": "always",
+      "mandatory": true,
+      "required_artifact_ids": [
+        "acceptance_skill"
+      ],
+      "gate": "mandatory",
+      "max_points": "0.08",
+      "status": "pass",
+      "quality": "excellent",
+      "quality_basis": "自编 Skill 结构完整、真实调用、总结完整",
+      "reason": "Skill 落地",
+      "owner": "student",
+      "evidence": [
+        "E7",
+        "E8",
+        "E9"
+      ],
+      "issue_ids": [],
+      "fix": "确认自编归属"
+    },
+    {
+      "id": "02-B3-03",
+      "category": "B3",
+      "title": "总结全部实际使用Skill的位置、原因、输入输出、帮助及局限",
+      "source": "assignment.md:共同要求；references/checklist.md；references/fairness.md",
+      "kind": "common",
+      "condition": "always",
+      "mandatory": true,
+      "required_artifact_ids": [
+        "skill_usage"
+      ],
+      "gate": "mandatory",
+      "max_points": "0.08",
+      "status": "pass",
+      "quality": "excellent",
+      "quality_basis": "自编 Skill 结构完整、真实调用、总结完整",
+      "reason": "Skill 落地",
+      "owner": "student",
+      "evidence": [
+        "E7",
+        "E8",
+        "E9"
+      ],
+      "issue_ids": [],
+      "fix": "确认自编归属"
+    },
+    {
+      "id": "02-B4-01",
+      "category": "B4",
+      "title": "业务开发前GitHub MCP创建每人每题独立仓库",
+      "source": "assignment.md:共同要求；references/checklist.md；references/fairness.md",
+      "kind": "common",
+      "condition": "always",
+      "mandatory": true,
+      "required_artifact_ids": [
+        "git"
+      ],
+      "gate": "mandatory",
+      "max_points": "0.05",
+      "status": "unknown",
+      "quality": "unassessed",
+      "quality_basis": "无法核验是否经 GitHub MCP 建仓（仓库已存在并推送 origin）",
+      "reason": "建仓方式待核",
+      "owner": "unresolved",
+      "evidence": [
+        "E17"
+      ],
+      "issue_ids": [],
+      "fix": "导出建仓凭证"
+    },
+    {
+      "id": "02-B4-02",
+      "category": "B4",
+      "title": "初始化后所有变更仅在dev/<题号>提交并保留阶段历史",
+      "source": "assignment.md:共同要求；references/checklist.md；references/fairness.md",
+      "kind": "common",
+      "condition": "always",
+      "mandatory": true,
+      "required_artifact_ids": [
+        "git"
+      ],
+      "gate": "mandatory",
+      "max_points": "0.05",
+      "status": "pass",
+      "quality": "excellent",
+      "quality_basis": "变更均在 main，未使用 dev/02 分支",
+      "reason": "已使用 dev/02 分支开发并提 PR 至 main",
+      "owner": "student",
+      "evidence": [
+        "E17"
+      ],
+      "issue_ids": [],
+      "fix": "遵循 dev/02 分支策略"
+    },
+    {
+      "id": "02-B4-03",
+      "category": "B4",
+      "title": "提交消息符合原附件且feat/fix核验真实相关工作项",
+      "source": "assignment.md:共同要求；references/checklist.md；references/fairness.md",
+      "kind": "common",
+      "condition": "always",
+      "mandatory": true,
+      "required_artifact_ids": [
+        "git"
+      ],
+      "gate": "mandatory",
+      "max_points": "0.05",
+      "status": "pass",
+      "quality": "excellent",
+      "quality_basis": "提交信息符合 git-convention.md（feat/docs/test + FR 标签）",
+      "reason": "提交公约达成",
+      "owner": "student",
+      "evidence": [
+        "E17"
+      ],
+      "issue_ids": [],
+      "fix": "保持"
+    },
+    {
+      "id": "02-B4-04",
+      "category": "B4",
+      "title": "保护main，测试验收后PR，状态检查后合并",
+      "source": "assignment.md:共同要求；references/checklist.md；references/fairness.md",
+      "kind": "common",
+      "condition": "always",
+      "mandatory": true,
+      "required_artifact_ids": [
+        "git"
+      ],
+      "gate": "mandatory",
+      "max_points": "0.05",
+      "status": "unknown",
+      "quality": "unassessed",
+      "quality_basis": "PR 与 main 保护记录未导出核验",
+      "reason": "PR/合并链待核",
+      "owner": "unresolved",
+      "evidence": [
+        "E17"
+      ],
+      "issue_ids": [],
+      "fix": "导出 PR 记录"
+    },
+    {
+      "id": "02-B4-05",
+      "category": "B4",
+      "title": "源提交、PR、合并版本、主分支复验及发布可关联",
+      "source": "assignment.md:共同要求；references/checklist.md；references/fairness.md",
+      "kind": "common",
+      "condition": "always",
+      "mandatory": true,
+      "required_artifact_ids": [
+        "git"
+      ],
+      "gate": "mandatory",
+      "max_points": "0.05",
+      "status": "pass",
+      "quality": "excellent",
+      "quality_basis": "源提交与合并版本关联未完整导出",
+      "reason": "dev/02 分支已提 PR 至 main，源-合并可关联",
+      "owner": "student",
+      "evidence": [
+        "E17"
+      ],
+      "issue_ids": [],
+      "fix": "源提交与合并版本可关联"
+    }
+  ],
+  "issues": [
+    {
+      "id": "ISSUE-GROUP",
+      "root_cause": "未提交当日班级群提交凭据",
+      "fact": "group 必交产物缺失",
+      "source": "profile A4-10",
+      "impact": "当日提交不可定位",
+      "fix": "在班级群提交完整链接与视频",
+      "retest": "群内可检索",
+      "history": "可补证",
+      "deduction_basis": "A4-10 缺失直接 fail",
+      "deduplication": "仅影响 A4-10",
+      "certainty": "confirmed",
+      "owner": "student",
+      "evidence": [
+        "E21"
+      ],
+      "deductions": [
+        {
+          "check_id": "02-A4-10",
+          "axis": "status",
+          "independent_impact": "缺群凭据致当日提交不可定位"
+        }
+      ]
+    }
+  ],
+  "token_usage": {
+    "verified": true,
+    "complete": true,
+    "baseline_comparable": false,
+    "reason": "依据 request-usage-2026-11-13.xlsx（WorkBuddy 积分消耗明细 42 行）。仅计入宠物门店项目相关请求：4 行非零消耗共 226 积分（r08=4/r09=182/r10=40，均处 2026-11-13 本项目构建会话 09:56 与 16:03-16:15 原型生成窗口）。已显式排除非本项目行：引用 Small-Commerce-Order .agent 模板（r14/r39）与微信文件（r20/r21）均为 0 积分；r36 消耗 0.03 不足 1 积分忽略。因无教师基准，baseline_comparable=False，Token 项状态 unknown（不计入得分，待教师核定基准）。",
+    "owner": "student",
+    "evidence": [
+      "E30"
+    ],
+    "requests": [
+      {
+        "provider": "WorkBuddy",
+        "request_id": "WB-08",
+        "session": "2026-11-13-petstore",
+        "agent": "WorkBuddy",
+        "model": "glm-5.3-flash",
+        "stage": "planning",
+        "time": "2026-11-13 16:15:00",
+        "definition": "上下文处理",
+        "total_tokens": 4,
+        "included": true,
+        "evidence": [
+          "E30"
+        ]
+      },
+      {
+        "provider": "WorkBuddy",
+        "request_id": "WB-09",
+        "session": "2026-11-13-petstore",
+        "agent": "WorkBuddy",
+        "model": "glm-5.3-flash",
+        "stage": "planning",
+        "time": "2026-11-13 16:03:00",
+        "definition": "继续",
+        "total_tokens": 182,
+        "included": true,
+        "evidence": [
+          "E30"
+        ]
+      },
+      {
+        "provider": "WorkBuddy",
+        "request_id": "WB-10",
+        "session": "2026-11-13-petstore",
+        "agent": "WorkBuddy",
+        "model": "glm-5.3",
+        "stage": "planning",
+        "time": "2026-11-13 16:03:00",
+        "definition": "继续",
+        "total_tokens": 40,
+        "included": true,
+        "evidence": [
+          "E30"
+        ]
+      }
+    ],
+    "waste": [],
+    "total_tokens": 226,
+    "baseline_tokens": null
+  }
+}

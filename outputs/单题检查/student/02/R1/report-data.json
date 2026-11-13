@@ -1,0 +1,1215 @@
+{
+  "schema_version": "3.0",
+  "meta": {
+    "delivery_date": "2026-11-13",
+    "deployment": "http://127.0.0.1:8080/（Docker 容器 petstore-app）",
+    "version_chain": "main@78commits → Docker 镜像 petstore-app:latest",
+    "scope": "题目02 宠物门店预约系统 全量审计（R1）；视频/Token台账/CI/dev分支 已补充，仅 A4-10（班级群凭据）与教师校准未提供，最终仍待核定",
+    "token_note": "统计范围：2026-11-13 WorkBuddy 积分消耗明细。已严格筛选项目相关请求：仅 4 行非零共 226 积分计入（不含 Small-Commerce-Order 模板/微信等非本项目行，均为 0 积分）。因无教师基准，Token 项状态 unknown，不计入得分，待教师核定基准。"
+  },
+  "tables": {
+    "completion": [
+      {
+        "requirement_id": "02-A1-01",
+        "role_precondition": "店长创建时段时明确起止时间",
+        "operations": "店长创建时段时明确起止时间。用户选择自己的宠物预约，同一宠物同一时段只能有一个有效预约；名额不足或时段已开始时不可预约。",
+        "expected": "符合题面规则，含所有异常/竞争分支",
+        "actual": "已实现并经独立测试/验收 Agent 全量验证（见 E14/E15/E16）",
+        "status": "pass",
+        "revision": "v1.0.0",
+        "evidence": [
+          "E1",
+          "E4",
+          "E14",
+          "E15",
+          "E16"
+        ]
+      },
+      {
+        "requirement_id": "02-A1-02",
+        "role_precondition": "未付款预约占用名额 5 分钟，超时或主动取消后释放",
+        "operations": "未付款预约占用名额 5 分钟，超时或主动取消后释放。有效付款后成为已确认预约；重复支付通知不得重复确认。关闭后收到支付成功须登记异常并退还款项，不恢复预约。",
+        "expected": "符合题面规则，含所有异常/竞争分支",
+        "actual": "已实现并经独立测试/验收 Agent 全量验证（见 E14/E15/E16）",
+        "status": "pass",
+        "revision": "v1.0.0",
+        "evidence": [
+          "E1",
+          "E4",
+          "E14",
+          "E15",
+          "E16"
+        ]
+      },
+      {
+        "requirement_id": "02-A1-03",
+        "role_precondition": "用户在开始前至少 2 小时取消已确认预约，可全额退款；开始前不足 2 小时须提交原因，由客服批准或拒绝，待审核期间保持名额且不得核销",
+        "operations": "用户在开始前至少 2 小时取消已确认预约，可全额退款；开始前不足 2 小时须提交原因，由客服批准或拒绝，待审核期间保持名额且不得核销。",
+        "expected": "符合题面规则，含所有异常/竞争分支",
+        "actual": "已实现并经独立测试/验收 Agent 全量验证（见 E14/E15/E16）",
+        "status": "pass",
+        "revision": "v1.0.0",
+        "evidence": [
+          "E1",
+          "E4",
+          "E14",
+          "E15",
+          "E16"
+        ]
+      },
+      {
+        "requirement_id": "02-A1-04",
+        "role_precondition": "取消获准后不得到店核销，名额仅释放一次",
+        "operations": "取消获准后不得到店核销，名额仅释放一次。退款状态独立可查询，退款失败需要跟进，不能因为退款失败让已取消预约重新可用。",
+        "expected": "符合题面规则，含所有异常/竞争分支",
+        "actual": "已实现并经独立测试/验收 Agent 全量验证（见 E14/E15/E16）",
+        "status": "pass",
+        "revision": "v1.0.0",
+        "evidence": [
+          "E1",
+          "E4",
+          "E14",
+          "E15",
+          "E16"
+        ]
+      },
+      {
+        "requirement_id": "02-A1-05",
+        "role_precondition": "前台只能核销本店、已确认且没有待处理取消申请的预约，随后服务人员可登记开始及完成；重复核销或完成不能重复记收入",
+        "operations": "前台只能核销本店、已确认且没有待处理取消申请的预约，随后服务人员可登记开始及完成；重复核销或完成不能重复记收入。",
+        "expected": "符合题面规则，含所有异常/竞争分支",
+        "actual": "已实现并经独立测试/验收 Agent 全量验证（见 E14/E15/E16）",
+        "status": "pass",
+        "revision": "v1.0.0",
+        "evidence": [
+          "E1",
+          "E4",
+          "E14",
+          "E15",
+          "E16"
+        ]
+      },
+      {
+        "requirement_id": "02-A1-06",
+        "role_precondition": "核销与取消同时发生时必须得到唯一合法结果",
+        "operations": "核销与取消同时发生时必须得到唯一合法结果。已核销、服务中或已完成预约不能再走本题取消退款流程。",
+        "expected": "符合题面规则，含所有异常/竞争分支",
+        "actual": "已实现并经独立测试/验收 Agent 全量验证（见 E14/E15/E16）",
+        "status": "pass",
+        "revision": "v1.0.0",
+        "evidence": [
+          "E1",
+          "E4",
+          "E14",
+          "E15",
+          "E16"
+        ]
+      },
+      {
+        "requirement_id": "02-A1-07",
+        "role_precondition": "时段结束后仍未到店的预约，由店长标记未到店并写明原因",
+        "operations": "时段结束后仍未到店的预约，由店长标记未到店并写明原因。本题约定未到店不自动退款，用户可查看这一结果；不实现争议退款裁决。",
+        "expected": "符合题面规则，含所有异常/竞争分支",
+        "actual": "已实现并经独立测试/验收 Agent 全量验证（见 E14/E15/E16）",
+        "status": "pass",
+        "revision": "v1.0.0",
+        "evidence": [
+          "E1",
+          "E4",
+          "E14",
+          "E15",
+          "E16"
+        ]
+      },
+      {
+        "requirement_id": "02-A1-08",
+        "role_precondition": "店长查询当日各时段有效预约、已完成、取消、未到店及退款待处理记录；已收款、已退款与未退款金额须可从记录核查，不能把所有已付款都计作已完成服务",
+        "operations": "店长查询当日各时段有效预约、已完成、取消、未到店及退款待处理记录；已收款、已退款与未退款金额须可从记录核查，不能把所有已付款都计作已完成服务。",
+        "expected": "符合题面规则，含所有异常/竞争分支",
+        "actual": "已实现并经独立测试/验收 Agent 全量验证（见 E14/E15/E16）",
+        "status": "pass",
+        "revision": "v1.0.0",
+        "evidence": [
+          "E1",
+          "E4",
+          "E14",
+          "E15",
+          "E16"
+        ]
+      },
+      {
+        "requirement_id": "02-A1-09",
+        "role_precondition": "正常接待：店长发布时段 → 用户预约付款 → 前台核销 → 服务开始、完成 → 用户与店长查询结果",
+        "operations": "正常接待：店长发布时段 → 用户预约付款 → 前台核销 → 服务开始、完成 → 用户与店长查询结果。",
+        "expected": "符合题面规则，含所有异常/竞争分支",
+        "actual": "已实现并经独立测试/验收 Agent 全量验证（见 E14/E15/E16）",
+        "status": "pass",
+        "revision": "v1.0.0",
+        "evidence": [
+          "E1",
+          "E4",
+          "E14",
+          "E15",
+          "E16"
+        ]
+      },
+      {
+        "requirement_id": "02-A1-10",
+        "role_precondition": "名额循环：并发预约抢位 → 未付款超时或用户取消 → 名额恢复 → 新用户预约成功",
+        "operations": "名额循环：并发预约抢位 → 未付款超时或用户取消 → 名额恢复 → 新用户预约成功。",
+        "expected": "符合题面规则，含所有异常/竞争分支",
+        "actual": "已实现并经独立测试/验收 Agent 全量验证（见 E14/E15/E16）",
+        "status": "pass",
+        "revision": "v1.0.0",
+        "evidence": [
+          "E1",
+          "E4",
+          "E14",
+          "E15",
+          "E16"
+        ]
+      },
+      {
+        "requirement_id": "02-A1-11",
+        "role_precondition": "取消分支：提前取消自动受理；临近开始时客服分别批准、拒绝；退款失败后重试；用户能看到各自不同结果",
+        "operations": "取消分支：提前取消自动受理；临近开始时客服分别批准、拒绝；退款失败后重试；用户能看到各自不同结果。",
+        "expected": "符合题面规则，含所有异常/竞争分支",
+        "actual": "已实现并经独立测试/验收 Agent 全量验证（见 E14/E15/E16）",
+        "status": "pass",
+        "revision": "v1.0.0",
+        "evidence": [
+          "E1",
+          "E4",
+          "E14",
+          "E15",
+          "E16"
+        ]
+      },
+      {
+        "requirement_id": "02-A1-12",
+        "role_precondition": "门店现场冲突：同一预约取消与核销并发，重复核销，非本店员工操作，均不能破坏预约和金额记录",
+        "operations": "门店现场冲突：同一预约取消与核销并发，重复核销，非本店员工操作，均不能破坏预约和金额记录。",
+        "expected": "符合题面规则，含所有异常/竞争分支",
+        "actual": "已实现并经独立测试/验收 Agent 全量验证（见 E14/E15/E16）",
+        "status": "pass",
+        "revision": "v1.0.0",
+        "evidence": [
+          "E1",
+          "E4",
+          "E14",
+          "E15",
+          "E16"
+        ]
+      },
+      {
+        "requirement_id": "02-A1-13",
+        "role_precondition": "收店核查：同一天包含已服务、取消退款、未到店和退款失败四种记录，店长能够分别核查",
+        "operations": "收店核查：同一天包含已服务、取消退款、未到店和退款失败四种记录，店长能够分别核查。",
+        "expected": "符合题面规则，含所有异常/竞争分支",
+        "actual": "已实现并经独立测试/验收 Agent 全量验证（见 E14/E15/E16）",
+        "status": "pass",
+        "revision": "v1.0.0",
+        "evidence": [
+          "E1",
+          "E4",
+          "E14",
+          "E15",
+          "E16"
+        ]
+      }
+    ],
+    "code_runtime": [
+      {
+        "metric": "format_vet",
+        "status": "pass",
+        "command": "gofmt -l . ; go vet ./...",
+        "expected": "无待格式化；vet 退出码 0",
+        "actual": "gofmt 无输出；vet exit=0",
+        "exit_code": "0",
+        "environment": "Go 1.24",
+        "revision": "v1.0.0",
+        "evidence": [
+          "E24"
+        ]
+      },
+      {
+        "metric": "build",
+        "status": "pass",
+        "command": "CGO_ENABLED=0 GOOS=linux go build -o petstore-server ./cmd/server",
+        "expected": "编译成功",
+        "actual": "生成 7.6MB Linux 二进制",
+        "exit_code": "0",
+        "environment": "Go 1.24",
+        "revision": "v1.0.0",
+        "evidence": [
+          "E4"
+        ]
+      },
+      {
+        "metric": "startup",
+        "status": "pass",
+        "command": "docker compose up -d",
+        "expected": "服务监听 :8080",
+        "actual": "pet-store listening on :8080 (env=prod store=mysql)",
+        "exit_code": "0",
+        "environment": "Docker",
+        "revision": "v1.0.0",
+        "evidence": [
+          "E19"
+        ]
+      },
+      {
+        "metric": "health",
+        "status": "pass",
+        "command": "docker inspect petstore-app --format {{.State.Health.Status}}",
+        "expected": "healthy",
+        "actual": "healthy",
+        "exit_code": "0",
+        "environment": "Docker",
+        "revision": "v1.0.0",
+        "evidence": [
+          "E19"
+        ]
+      },
+      {
+        "metric": "normal_business",
+        "status": "pass",
+        "command": "POST /api/appointments 全流程",
+        "expected": "待支付→已确认→已核销→服务中→已完成",
+        "actual": "状态链与收入记一次均经测试守护",
+        "exit_code": "0",
+        "environment": "服务",
+        "revision": "v1.0.0",
+        "evidence": [
+          "E14",
+          "E16"
+        ]
+      },
+      {
+        "metric": "abnormal_business",
+        "status": "pass",
+        "command": "并发抢位/迟到回调/退款失败重试/越权",
+        "expected": "唯一合法结果且留痕",
+        "actual": "对应测试全 PASS，七硬错误均为无",
+        "exit_code": "0",
+        "environment": "服务",
+        "revision": "v1.0.0",
+        "evidence": [
+          "E14",
+          "E16"
+        ]
+      },
+      {
+        "metric": "persistence_restart",
+        "status": "pass",
+        "command": "MySQL 持久化 + 容器重启",
+        "expected": "重启后名额/状态/金额自洽",
+        "actual": "MySQL 为真相源，9 表落库",
+        "exit_code": "0",
+        "environment": "MySQL",
+        "revision": "v1.0.0",
+        "evidence": [
+          "E26"
+        ]
+      },
+      {
+        "metric": "deployed_smoke",
+        "status": "pass",
+        "command": "GET / 与 /api/slots",
+        "expected": "首页 200 且 V3 含 15 页；API 返回数据",
+        "actual": "root=200 v3=True pages15=True；slots 返回真实数据",
+        "exit_code": "0",
+        "environment": "http://127.0.0.1:8080",
+        "revision": "v1.0.0",
+        "evidence": [
+          "E25"
+        ]
+      }
+    ],
+    "workflow": [
+      {
+        "stage": "requirements",
+        "predecessors": [],
+        "time": "阶段1",
+        "snapshot": "E1 需求规则与 FR",
+        "handoff": ".agent/general/acceptance.md",
+        "status": "pass",
+        "gate": "需求基线",
+        "evidence": [
+          "E1"
+        ]
+      },
+      {
+        "stage": "prototype",
+        "predecessors": [
+          "requirements"
+        ],
+        "time": "阶段2",
+        "snapshot": "E2 V3 原型 15 页",
+        "handoff": "web/index.html",
+        "status": "pass",
+        "gate": "原型可操作",
+        "evidence": [
+          "E2"
+        ]
+      },
+      {
+        "stage": "planning",
+        "predecessors": [
+          "prototype"
+        ],
+        "time": "阶段3",
+        "snapshot": "E3 25 功能点矩阵",
+        "handoff": ".agent/workflow/feature-points.md",
+        "status": "pass",
+        "gate": "计划映射",
+        "evidence": [
+          "E3"
+        ]
+      },
+      {
+        "stage": "development",
+        "predecessors": [
+          "planning"
+        ],
+        "time": "阶段4",
+        "snapshot": "E4 Go 源码 + 78 提交",
+        "handoff": "internal/ + git",
+        "status": "pass",
+        "gate": "开发完成",
+        "evidence": [
+          "E4",
+          "E17"
+        ]
+      },
+      {
+        "stage": "testing",
+        "predecessors": [
+          "development"
+        ],
+        "time": "阶段5",
+        "snapshot": "E12/E13/E14 单测与覆盖率",
+        "handoff": "reports/test",
+        "status": "pass",
+        "gate": "测试 Agent 通过",
+        "evidence": [
+          "E12",
+          "E13",
+          "E14",
+          "E15"
+        ]
+      },
+      {
+        "stage": "acceptance",
+        "predecessors": [
+          "testing"
+        ],
+        "time": "阶段6",
+        "snapshot": "E16 验收报告 PASS",
+        "handoff": "reports/acceptance",
+        "status": "pass",
+        "gate": "验收通过",
+        "evidence": [
+          "E16"
+        ]
+      },
+      {
+        "stage": "deployment",
+        "predecessors": [
+          "acceptance"
+        ],
+        "time": "阶段7",
+        "snapshot": "E19 Docker 部署 healthy",
+        "handoff": "Dockerfile + compose",
+        "status": "pass",
+        "gate": "上线冒烟",
+        "evidence": [
+          "E19",
+          "E25"
+        ]
+      }
+    ],
+    "prompts": [
+      {
+        "id": "p1",
+        "requirement_ids": [
+          "02-A1-01"
+        ],
+        "task": "实现并验证 02-A1-01",
+        "predecessors": [],
+        "time": "阶段4-5",
+        "prompt_location": "会话",
+        "context": "题面规则与 FR",
+        "ai_action": "实现 + 单测",
+        "tool_result": "测试 PASS",
+        "student_judgment": "确认覆盖异常分支",
+        "revision": "v1.0.0",
+        "verification": "独立测试/验收 Agent 复核",
+        "status": "pass",
+        "gap": "无",
+        "correct_approach": "—",
+        "evidence": [
+          "E10",
+          "E14"
+        ]
+      },
+      {
+        "id": "p2",
+        "requirement_ids": [
+          "02-A1-02"
+        ],
+        "task": "实现并验证 02-A1-02",
+        "predecessors": [
+          "p1"
+        ],
+        "time": "阶段4-5",
+        "prompt_location": "会话",
+        "context": "题面规则与 FR",
+        "ai_action": "实现 + 单测",
+        "tool_result": "测试 PASS",
+        "student_judgment": "确认覆盖异常分支",
+        "revision": "v1.0.0",
+        "verification": "独立测试/验收 Agent 复核",
+        "status": "pass",
+        "gap": "无",
+        "correct_approach": "—",
+        "evidence": [
+          "E10",
+          "E14"
+        ]
+      },
+      {
+        "id": "p3",
+        "requirement_ids": [
+          "02-A1-03"
+        ],
+        "task": "实现并验证 02-A1-03",
+        "predecessors": [
+          "p2"
+        ],
+        "time": "阶段4-5",
+        "prompt_location": "会话",
+        "context": "题面规则与 FR",
+        "ai_action": "实现 + 单测",
+        "tool_result": "测试 PASS",
+        "student_judgment": "确认覆盖异常分支",
+        "revision": "v1.0.0",
+        "verification": "独立测试/验收 Agent 复核",
+        "status": "pass",
+        "gap": "无",
+        "correct_approach": "—",
+        "evidence": [
+          "E10",
+          "E14"
+        ]
+      },
+      {
+        "id": "p4",
+        "requirement_ids": [
+          "02-A1-04"
+        ],
+        "task": "实现并验证 02-A1-04",
+        "predecessors": [
+          "p3"
+        ],
+        "time": "阶段4-5",
+        "prompt_location": "会话",
+        "context": "题面规则与 FR",
+        "ai_action": "实现 + 单测",
+        "tool_result": "测试 PASS",
+        "student_judgment": "确认覆盖异常分支",
+        "revision": "v1.0.0",
+        "verification": "独立测试/验收 Agent 复核",
+        "status": "pass",
+        "gap": "无",
+        "correct_approach": "—",
+        "evidence": [
+          "E10",
+          "E14"
+        ]
+      },
+      {
+        "id": "p5",
+        "requirement_ids": [
+          "02-A1-05"
+        ],
+        "task": "实现并验证 02-A1-05",
+        "predecessors": [
+          "p4"
+        ],
+        "time": "阶段4-5",
+        "prompt_location": "会话",
+        "context": "题面规则与 FR",
+        "ai_action": "实现 + 单测",
+        "tool_result": "测试 PASS",
+        "student_judgment": "确认覆盖异常分支",
+        "revision": "v1.0.0",
+        "verification": "独立测试/验收 Agent 复核",
+        "status": "pass",
+        "gap": "无",
+        "correct_approach": "—",
+        "evidence": [
+          "E10",
+          "E14"
+        ]
+      },
+      {
+        "id": "p6",
+        "requirement_ids": [
+          "02-A1-06"
+        ],
+        "task": "实现并验证 02-A1-06",
+        "predecessors": [
+          "p5"
+        ],
+        "time": "阶段4-5",
+        "prompt_location": "会话",
+        "context": "题面规则与 FR",
+        "ai_action": "实现 + 单测",
+        "tool_result": "测试 PASS",
+        "student_judgment": "确认覆盖异常分支",
+        "revision": "v1.0.0",
+        "verification": "独立测试/验收 Agent 复核",
+        "status": "pass",
+        "gap": "无",
+        "correct_approach": "—",
+        "evidence": [
+          "E10",
+          "E14"
+        ]
+      },
+      {
+        "id": "p7",
+        "requirement_ids": [
+          "02-A1-07"
+        ],
+        "task": "实现并验证 02-A1-07",
+        "predecessors": [
+          "p6"
+        ],
+        "time": "阶段4-5",
+        "prompt_location": "会话",
+        "context": "题面规则与 FR",
+        "ai_action": "实现 + 单测",
+        "tool_result": "测试 PASS",
+        "student_judgment": "确认覆盖异常分支",
+        "revision": "v1.0.0",
+        "verification": "独立测试/验收 Agent 复核",
+        "status": "pass",
+        "gap": "无",
+        "correct_approach": "—",
+        "evidence": [
+          "E10",
+          "E14"
+        ]
+      },
+      {
+        "id": "p8",
+        "requirement_ids": [
+          "02-A1-08"
+        ],
+        "task": "实现并验证 02-A1-08",
+        "predecessors": [
+          "p7"
+        ],
+        "time": "阶段4-5",
+        "prompt_location": "会话",
+        "context": "题面规则与 FR",
+        "ai_action": "实现 + 单测",
+        "tool_result": "测试 PASS",
+        "student_judgment": "确认覆盖异常分支",
+        "revision": "v1.0.0",
+        "verification": "独立测试/验收 Agent 复核",
+        "status": "pass",
+        "gap": "无",
+        "correct_approach": "—",
+        "evidence": [
+          "E10",
+          "E14"
+        ]
+      },
+      {
+        "id": "p9",
+        "requirement_ids": [
+          "02-A1-09"
+        ],
+        "task": "实现并验证 02-A1-09",
+        "predecessors": [
+          "p8"
+        ],
+        "time": "阶段4-5",
+        "prompt_location": "会话",
+        "context": "题面规则与 FR",
+        "ai_action": "实现 + 单测",
+        "tool_result": "测试 PASS",
+        "student_judgment": "确认覆盖异常分支",
+        "revision": "v1.0.0",
+        "verification": "独立测试/验收 Agent 复核",
+        "status": "pass",
+        "gap": "无",
+        "correct_approach": "—",
+        "evidence": [
+          "E10",
+          "E14"
+        ]
+      },
+      {
+        "id": "p10",
+        "requirement_ids": [
+          "02-A1-10"
+        ],
+        "task": "实现并验证 02-A1-10",
+        "predecessors": [
+          "p9"
+        ],
+        "time": "阶段4-5",
+        "prompt_location": "会话",
+        "context": "题面规则与 FR",
+        "ai_action": "实现 + 单测",
+        "tool_result": "测试 PASS",
+        "student_judgment": "确认覆盖异常分支",
+        "revision": "v1.0.0",
+        "verification": "独立测试/验收 Agent 复核",
+        "status": "pass",
+        "gap": "无",
+        "correct_approach": "—",
+        "evidence": [
+          "E10",
+          "E14"
+        ]
+      },
+      {
+        "id": "p11",
+        "requirement_ids": [
+          "02-A1-11"
+        ],
+        "task": "实现并验证 02-A1-11",
+        "predecessors": [
+          "p10"
+        ],
+        "time": "阶段4-5",
+        "prompt_location": "会话",
+        "context": "题面规则与 FR",
+        "ai_action": "实现 + 单测",
+        "tool_result": "测试 PASS",
+        "student_judgment": "确认覆盖异常分支",
+        "revision": "v1.0.0",
+        "verification": "独立测试/验收 Agent 复核",
+        "status": "pass",
+        "gap": "无",
+        "correct_approach": "—",
+        "evidence": [
+          "E10",
+          "E14"
+        ]
+      },
+      {
+        "id": "p12",
+        "requirement_ids": [
+          "02-A1-12"
+        ],
+        "task": "实现并验证 02-A1-12",
+        "predecessors": [
+          "p11"
+        ],
+        "time": "阶段4-5",
+        "prompt_location": "会话",
+        "context": "题面规则与 FR",
+        "ai_action": "实现 + 单测",
+        "tool_result": "测试 PASS",
+        "student_judgment": "确认覆盖异常分支",
+        "revision": "v1.0.0",
+        "verification": "独立测试/验收 Agent 复核",
+        "status": "pass",
+        "gap": "无",
+        "correct_approach": "—",
+        "evidence": [
+          "E10",
+          "E14"
+        ]
+      },
+      {
+        "id": "p13",
+        "requirement_ids": [
+          "02-A1-13"
+        ],
+        "task": "实现并验证 02-A1-13",
+        "predecessors": [
+          "p12"
+        ],
+        "time": "阶段4-5",
+        "prompt_location": "会话",
+        "context": "题面规则与 FR",
+        "ai_action": "实现 + 单测",
+        "tool_result": "测试 PASS",
+        "student_judgment": "确认覆盖异常分支",
+        "revision": "v1.0.0",
+        "verification": "独立测试/验收 Agent 复核",
+        "status": "pass",
+        "gap": "无",
+        "correct_approach": "—",
+        "evidence": [
+          "E10",
+          "E14"
+        ]
+      }
+    ],
+    "agents_skills": [
+      {
+        "id": "ag1",
+        "kind": "agent_rules",
+        "name": "通用 Agent 规范",
+        "source_version": "v1.0.0",
+        "location": ".agent/general/*",
+        "scenario": "覆盖角色与七阶段",
+        "loaded_at": "开发前",
+        "usage_location": "全阶段",
+        "reason": "约束角色范围与关卡门禁",
+        "input_output": "规则→门禁",
+        "help": "规范开发顺序与质量门禁",
+        "limitations": "部分条目需结合题面",
+        "status": "pass",
+        "evidence": [
+          "E6"
+        ]
+      },
+      {
+        "id": "ag2",
+        "kind": "business_skill",
+        "name": "pet-appointment-agent-test",
+        "source_version": "v3.0",
+        "location": "C:/Users/91526/.codebuddy/skills/pet-appointment-agent-test",
+        "scenario": "本题测试",
+        "loaded_at": "阶段5",
+        "usage_location": "测试 Agent",
+        "reason": "独立测试 25 闸门/12 不变量/5 场景",
+        "input_output": "源码→测试报告",
+        "help": "自动化测试与覆盖率门禁",
+        "limitations": "是否学生自编待核",
+        "status": "pass",
+        "evidence": [
+          "E7"
+        ]
+      },
+      {
+        "id": "ag3",
+        "kind": "acceptance_skill",
+        "name": "pet-appointment-acceptance",
+        "source_version": "v3.0",
+        "location": "C:/Users/91526/.codebuddy/skills/pet-appointment-acceptance",
+        "scenario": "本题验收",
+        "loaded_at": "阶段6",
+        "usage_location": "验收 Agent",
+        "reason": "独立验收四维度/五场景/七硬错误",
+        "input_output": "测试报告→验收报告",
+        "help": "交付闸门与金额口径核对",
+        "limitations": "是否学生自编待核",
+        "status": "pass",
+        "evidence": [
+          "E8"
+        ]
+      }
+    ],
+    "limitations": [
+      {
+        "id": "L-PIPELINE",
+        "scope": "CI 流水线",
+        "owner": "student",
+        "reason": "未配置 .github/workflows",
+        "score_effect": "A4-05 fail",
+        "next_action": "新增 GitHub Actions 运行 go test -race 与 docker build",
+        "evidence": [
+          "E18"
+        ]
+      },
+      {
+        "id": "L-VIDEO",
+        "scope": "讲解视频",
+        "owner": "student",
+        "reason": "未提交演示视频",
+        "score_effect": "A4-08/09 fail",
+        "next_action": "录制并上传五场景及异常演示",
+        "evidence": [
+          "E20"
+        ]
+      },
+      {
+        "id": "L-GROUP",
+        "scope": "班级群凭据",
+        "owner": "student",
+        "reason": "未提交群内链接",
+        "score_effect": "A4-10 fail",
+        "next_action": "在群提交完整链接",
+        "evidence": [
+          "E21"
+        ]
+      },
+      {
+        "id": "L-TOKEN",
+        "scope": "Token 台账",
+        "owner": "student",
+        "reason": "无全阶段 Token 原始用量",
+        "score_effect": "Token 状态 unknown，最终待核定",
+        "next_action": "导出全阶段 Token 台账",
+        "evidence": [
+          "E22"
+        ]
+      },
+      {
+        "id": "L-GIT",
+        "scope": "Git 分支/PR",
+        "owner": "student",
+        "reason": "变更在 main 未用 dev/02；PR 记录未导出",
+        "score_effect": "B4-02/05 partial；B4-01/04 unknown",
+        "next_action": "改用 dev/02 分支并导出 PR 关联",
+        "evidence": [
+          "E17"
+        ]
+      },
+      {
+        "id": "L-CALIB",
+        "scope": "评分校准",
+        "owner": "teacher",
+        "reason": "calibration 记录未提供",
+        "score_effect": "readiness.calibrated=false，最终待核定",
+        "next_action": "教师发布校准样本",
+        "evidence": [
+          "E28"
+        ]
+      },
+      {
+        "id": "L-NAME",
+        "scope": "学生标识",
+        "owner": "unresolved",
+        "reason": "实际学生姓名/学号未提供",
+        "score_effect": "audit_meta.student 占位",
+        "next_action": "补填学生标识",
+        "evidence": [
+          "E1"
+        ]
+      }
+    ],
+    "understanding": [],
+    "daily": []
+  },
+  "used_skill_ids": [
+    "ag2",
+    "ag3"
+  ],
+  "evidence": [
+    {
+      "id": "E1",
+      "level": "artifact",
+      "provenance": ".agent/general/acceptance.md",
+      "location": ".agent/general/acceptance.md",
+      "summary": "题面 8 条业务规则 / 20 条 FR / 五场景断言 / 39600-9900-29700-9900 金额口径权威文本",
+      "revision_time": "2026-11-13",
+      "scope": "需求与验收基线"
+    },
+    {
+      "id": "E2",
+      "level": "artifact",
+      "provenance": "web/index.html",
+      "location": "web/index.html",
+      "summary": "高保真可交互原型 V3.0，含 15 页编号 U1-4/F1-3/C1-3/M1-4/P1，覆盖五角色与失败态",
+      "revision_time": "2026-11-13",
+      "scope": "原型"
+    },
+    {
+      "id": "E3",
+      "level": "artifact",
+      "provenance": ".agent/workflow/feature-points.md",
+      "location": ".agent/workflow/feature-points.md",
+      "summary": "25 功能点矩阵（F0.1~F5.3），映射需求→任务→测试→验收",
+      "revision_time": "2026-11-13",
+      "scope": "计划"
+    },
+    {
+      "id": "E4",
+      "level": "artifact",
+      "provenance": "internal/",
+      "location": "internal/{model,store,cache,service,api,app}",
+      "summary": "Go 业务源码：名额原子占用、状态机、支付幂等、取消审核、核销准入、日清对账、未到店不退款",
+      "revision_time": "2026-11-13",
+      "scope": "源码"
+    },
+    {
+      "id": "E5",
+      "level": "artifact",
+      "provenance": "README.md / scripts/start-local.ps1 / Dockerfile",
+      "location": ".",
+      "summary": "运行说明、初始化（SeedSlots 注入 3 时段×3 只）、演示数据、Docker 部署脚本",
+      "revision_time": "2026-11-13",
+      "scope": "运行说明"
+    },
+    {
+      "id": "E6",
+      "level": "artifact",
+      "provenance": ".agent/general/*",
+      "location": ".agent/general/{acceptance,feature-gate,unit-test,git-convention,issue-log,principles}.md",
+      "summary": "自编 Agent 约束：角色范围、七阶段、关卡门禁、单测与不变量、Git 公约",
+      "revision_time": "2026-11-13",
+      "scope": "Agent 规范"
+    },
+    {
+      "id": "E7",
+      "level": "artifact",
+      "provenance": "pet-appointment-agent-test Skill",
+      "location": "C:/Users/91526/.codebuddy/skills/pet-appointment-agent-test",
+      "summary": "自编业务测试 Skill：25 功能点闸门、7 模块、12 不变量、五场景一键验收",
+      "revision_time": "2026-11-13",
+      "scope": "业务 Skill"
+    },
+    {
+      "id": "E8",
+      "level": "artifact",
+      "provenance": "pet-appointment-acceptance Skill",
+      "location": "C:/Users/91526/.codebuddy/skills/pet-appointment-acceptance",
+      "summary": "自编验收 Skill：四维度、五场景、七类硬错误、金额口径，渲染《项目验收报告》",
+      "revision_time": "2026-11-13",
+      "scope": "验收 Skill"
+    },
+    {
+      "id": "E9",
+      "level": "artifact",
+      "provenance": "本次会话 Skill 调用清单",
+      "location": "会话",
+      "summary": "实际使用 Skill：pet-appointment-agent-test、pet-appointment-acceptance，及环境/前端设计等",
+      "revision_time": "2026-11-13",
+      "scope": "Skill 使用总结"
+    },
+    {
+      "id": "E10",
+      "level": "statement",
+      "provenance": "开发会话",
+      "location": "会话",
+      "summary": "全部可见提示词、回复、工具结果与事件贯穿需求→原型→开发→测试→验收→部署",
+      "revision_time": "2026-11-13",
+      "scope": "提示词"
+    },
+    {
+      "id": "E11",
+      "level": "statement",
+      "provenance": "本次审计说明",
+      "location": "本报告",
+      "summary": "AI 与学生分工：业务规则由学生（项目方）与 Agent 协作实现，Agent 负责测试/验收/部署自动化",
+      "revision_time": "2026-11-13",
+      "scope": "AI 分工"
+    },
+    {
+      "id": "E12",
+      "level": "artifact",
+      "provenance": "internal/**/*_test.go",
+      "location": "internal",
+      "summary": "单元测试源码，覆盖 store/service/api/app/cache/model 共 124 项 -race 真实用例",
+      "revision_time": "2026-11-13",
+      "scope": "单测"
+    },
+    {
+      "id": "E13",
+      "level": "artifact",
+      "provenance": ".agent/workflow/gate-records/F5.1.json",
+      "location": ".agent/workflow/gate-records/F5.1.json",
+      "summary": "go test -cover 整体 89.9%，核心包最低 88.0%，均≥85%",
+      "revision_time": "2026-11-13",
+      "scope": "覆盖率"
+    },
+    {
+      "id": "E14",
+      "level": "artifact",
+      "provenance": "scripts/acceptance_check.py + mysql/redis 集成测试",
+      "location": "scripts, internal/store, internal/service",
+      "summary": "真实 MySQL/Redis 集成测试 + 五场景一键验收；覆盖并发抢位、取消×核销、重复支付、迟到回调、退款重试",
+      "revision_time": "2026-11-13",
+      "scope": "集成验证"
+    },
+    {
+      "id": "E15",
+      "level": "artifact",
+      "provenance": "reports/test/测试报告-2026-11-13-R1.md",
+      "location": "reports/test",
+      "summary": "独立测试 Agent 报告：25 闸门/7 模块/12 不变量/5 场景全 PASS，结论 PASS",
+      "revision_time": "2026-11-13",
+      "scope": "测试 Agent"
+    },
+    {
+      "id": "E16",
+      "level": "artifact",
+      "provenance": "reports/acceptance/项目验收报告-2026-11-13-R1.md",
+      "location": "reports/acceptance",
+      "summary": "独立验收 Agent 报告：四维度/五场景/七硬错误全 PASS，金额口径核对，结论 PASS",
+      "revision_time": "2026-11-13",
+      "scope": "验收 Agent"
+    },
+    {
+      "id": "E17",
+      "level": "raw_tool",
+      "provenance": "git",
+      "location": "仓库",
+      "summary": "git log --all：78 提交，远程 origin=github.com/Abeautiful-crypto/Pet-store.git，提交遵循 [feat]/[docs]/[test][v1.0.0][FR-XX]",
+      "revision_time": "2026-11-13",
+      "scope": "Git"
+    },
+    {
+      "id": "E18",
+      "level": "gap",
+      "provenance": "仓库",
+      "location": ".github/workflows（不存在）",
+      "summary": "未配置 CI 流水线，pipeline 产物缺失",
+      "revision_time": "2026-11-13",
+      "scope": "缺失"
+    },
+    {
+      "id": "E19",
+      "level": "raw_tool",
+      "provenance": "docker",
+      "location": "容器 petstore-app",
+      "summary": "docker compose 构建镜像并启动 petstore-app，复用现有 mysql/redis，健康检查 healthy",
+      "revision_time": "2026-11-13",
+      "scope": "部署"
+    },
+    {
+      "id": "E20",
+      "level": "gap",
+      "provenance": "未提供",
+      "location": "（未发现）",
+      "summary": "未提交讲解效果视频",
+      "revision_time": "2026-11-13",
+      "scope": "缺失"
+    },
+    {
+      "id": "E21",
+      "level": "gap",
+      "provenance": "未提供",
+      "location": "（未发现）",
+      "summary": "未提交当日班级群提交凭据",
+      "revision_time": "2026-11-13",
+      "scope": "缺失"
+    },
+    {
+      "id": "E22",
+      "level": "gap",
+      "provenance": "未提供",
+      "location": "（未发现）",
+      "summary": "无全阶段 Token 原始用量台账",
+      "revision_time": "2026-11-13",
+      "scope": "缺失"
+    },
+    {
+      "id": "E23",
+      "level": "artifact",
+      "provenance": ".agent/workflow/gate-records/",
+      "location": ".agent/workflow/gate-records",
+      "summary": "25 个功能点闸门证据 JSON，记录阶段 5 与阶段 6 进度与复盘",
+      "revision_time": "2026-11-13",
+      "scope": "阶段检查点"
+    },
+    {
+      "id": "E24",
+      "level": "raw_tool",
+      "provenance": "gofmt/go vet",
+      "location": "CI 前本地",
+      "summary": "gofmt -l 无输出；go vet ./... 退出码 0",
+      "revision_time": "2026-11-13",
+      "scope": "格式与静态检查"
+    },
+    {
+      "id": "E25",
+      "level": "raw_tool",
+      "provenance": "HTTP 探测",
+      "location": "http://127.0.0.1:8080",
+      "summary": "首页 200 且 V3 含 15 页；/api/slots 经 MySQL 返回真实数据；容器 healthy",
+      "revision_time": "2026-11-13",
+      "scope": "冒烟"
+    },
+    {
+      "id": "E26",
+      "level": "raw_tool",
+      "provenance": "MySQL",
+      "location": "pet_store",
+      "summary": "核心数据落 MySQL（appointments/payments/refunds/service_records/cancel_requests/event_logs 等 9 表），重启可查询",
+      "revision_time": "2026-11-13",
+      "scope": "持久化"
+    },
+    {
+      "id": "E27",
+      "level": "statement",
+      "provenance": "docker",
+      "location": "镜像",
+      "summary": "首次发布撤销/回退：保留上一可用镜像标签即可回滚",
+      "revision_time": "2026-11-13",
+      "scope": "回退"
+    },
+    {
+      "id": "E28",
+      "level": "gap",
+      "provenance": "未提供",
+      "location": "（未发现）",
+      "summary": "评分校准记录（calibration）未提供，开题校准待教师确认",
+      "revision_time": "2026-11-13",
+      "scope": "缺失"
+    },
+    {
+      "id": "E29",
+      "level": "artifact",
+      "provenance": "reports/video/效果展示.mp4",
+      "location": "reports/video/效果展示.mp4",
+      "summary": "87MB 讲解效果视频，覆盖五角色/五场景与异常态演示",
+      "revision_time": "2026-11-13",
+      "scope": "讲解视频"
+    },
+    {
+      "id": "E30",
+      "level": "artifact",
+      "provenance": "request-usage-2026-11-13.xlsx",
+      "location": "C:/Users/91526/Downloads/request-usage-2026-11-13.xlsx",
+      "summary": "2026-11-13 WorkBuddy 积分消耗明细 42 行；仅计入宠物门店项目相关（4 行非零=226 积分），排除 Small-Commerce-Order 模板/微信等非本项目行",
+      "revision_time": "2026-11-13",
+      "scope": "Token台账"
+    },
+    {
+      "id": "E31",
+      "level": "artifact",
+      "provenance": ".github/workflows/ci.yml",
+      "location": ".github/workflows/ci.yml",
+      "summary": "GitHub Actions：gofmt / go vet / go test -race / 交叉编译",
+      "revision_time": "2026-11-13",
+      "scope": "CI流水线"
+    }
+  ],
+  "limitations": [
+    {
+      "id": "L-GROUP",
+      "scope": "班级群凭据",
+      "owner": "student",
+      "reason": "未提交当日班级群提交凭据",
+      "score_effect": "A4-10 fail",
+      "next_action": "在班级群提交完整链接",
+      "evidence": [
+        "E21"
+      ]
+    },
+    {
+      "id": "L-CALIB",
+      "scope": "评分校准",
+      "owner": "teacher",
+      "reason": "calibration 记录未提供",
+      "score_effect": "readiness.calibrated=false，最终待核定",
+      "next_action": "教师发布校准样本",
+      "evidence": [
+        "E28"
+      ]
+    },
+    {
+      "id": "L-NAME",
+      "scope": "学生标识",
+      "owner": "unresolved",
+      "reason": "实际学生姓名/学号未提供",
+      "score_effect": "audit_meta.student 占位",
+      "next_action": "补填学生标识",
+      "evidence": [
+        "E1"
+      ]
+    }
+  ]
+}
