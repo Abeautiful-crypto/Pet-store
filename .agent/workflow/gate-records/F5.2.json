@@ -1,0 +1,92 @@
+{
+  "feature": "F5.2",
+  "result": "PASS",
+  "at": "2026-11-13T14:08:15+08:00",
+  "checks": [
+    {
+      "name": "S1 前置 F5.1 已通过",
+      "cmd": "read .agent\\workflow\\gate-records\\F5.1.json",
+      "exit": 0,
+      "detail": "",
+      "result": "PASS",
+      "tests_hit": 0
+    },
+    {
+      "name": "SC-01 正常接待",
+      "cmd": "go test -race -count=1 -v -run TestService_ServiceProgressIsIdempotent|TestAPI_AppointmentOutcomesVisible ./internal/service ./internal/api",
+      "exit": 0,
+      "detail": "命中顶层 PASS 测试 2 个；go test exit=0",
+      "result": "PASS",
+      "tests_hit": 2
+    },
+    {
+      "name": "SC-02 名额循环",
+      "cmd": "go test -race -count=1 -v -run TestService_ConcurrentLastSlotExactlyOneSucceeds|TestService_ExpiredSlotCanBeRebooked|TestStore_ConcurrentLastSlotOnlyOneSucceeds ./internal/service ./internal/store",
+      "exit": 0,
+      "detail": "命中顶层 PASS 测试 3 个；go test exit=0",
+      "result": "PASS",
+      "tests_hit": 3
+    },
+    {
+      "name": "SC-03 取消分支",
+      "cmd": "go test -race -count=1 -v -run TestService_EarlyCancelAutoApprovesFullRefund|TestService_NearCancelCreatesReviewAndKeepsSlot|TestService_ReviewCancelApprove|TestService_ReviewCancelReject|TestService_RefundFailureThenRetrySucceeds ./internal/service",
+      "exit": 0,
+      "detail": "命中顶层 PASS 测试 5 个；go test exit=0",
+      "result": "PASS",
+      "tests_hit": 5
+    },
+    {
+      "name": "SC-04 门店现场冲突",
+      "cmd": "go test -race -count=1 -v -run TestService_ConcurrentCancelAndVerifyOnlyOneWinner|TestService_CancelledCannotBeVerified|TestAPI_ThreeKindsOfOverreachDoNotBreakRecords ./internal/service ./internal/api",
+      "exit": 0,
+      "detail": "命中顶层 PASS 测试 3 个；go test exit=0",
+      "result": "PASS",
+      "tests_hit": 3
+    },
+    {
+      "name": "SC-05 收店核查",
+      "cmd": "go test -race -count=1 -v -run TestService_DailySettlementAmountsAndCategories|TestAPI_SettlementMatchesLedger|TestAPI_AppointmentOutcomesVisible ./internal/service ./internal/api",
+      "exit": 0,
+      "detail": "命中顶层 PASS 测试 3 个；go test exit=0",
+      "result": "PASS",
+      "tests_hit": 3
+    },
+    {
+      "name": "硬错误：无超卖",
+      "cmd": "go test -race -count=1 -v -run TestStore_ConcurrentLastSlotOnlyOneSucceeds|TestService_ConcurrentLastSlotExactlyOneSucceeds ./internal/store ./internal/service",
+      "exit": 0,
+      "detail": "命中顶层 PASS 测试 2 个；go test exit=0",
+      "result": "PASS",
+      "tests_hit": 2
+    },
+    {
+      "name": "硬错误：无重复收款",
+      "cmd": "go test -race -count=1 -v -run TestService_ConfirmPaymentIsIdempotent|TestService_ConcurrentDuplicateNotifyOnlyOneConfirm ./internal/service",
+      "exit": 0,
+      "detail": "命中顶层 PASS 测试 2 个；go test exit=0",
+      "result": "PASS",
+      "tests_hit": 2
+    },
+    {
+      "name": "硬错误：无重复释放",
+      "cmd": "go test -race -count=1 -v -run TestStore_ReleaseSlotExactlyOnce|TestService_ApprovedCancelReleasesSlotOnce ./internal/store ./internal/service",
+      "exit": 0,
+      "detail": "命中顶层 PASS 测试 2 个；go test exit=0",
+      "result": "PASS",
+      "tests_hit": 2
+    },
+    {
+      "name": "硬错误：无越权",
+      "cmd": "go test -race -count=1 -v -run TestAPI_ThreeKindsOfOverreachDoNotBreakRecords|TestAPI_WrongStoreVerifyDoesNotChangeRecord ./internal/api",
+      "exit": 0,
+      "detail": "命中顶层 PASS 测试 1 个；go test exit=0",
+      "result": "PASS",
+      "tests_hit": 1
+    }
+  ],
+  "tests_hit": 23,
+  "requires": [
+    "F5.1"
+  ],
+  "notes": "SC-01~05 断言 + 四类硬错误（无超卖/无重复收款/无重复释放/无越权）逐项 PASS；SC-05 同时核对 A1~A4 四类记录齐备与 39600/9900/29700/9900 金额口径。"
+}
