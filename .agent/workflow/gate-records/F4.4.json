@@ -1,0 +1,47 @@
+{
+  "feature": "F4.4",
+  "result": "PASS",
+  "at": "2026-11-13T13:54:33+08:00",
+  "checks": [
+    {
+      "name": "S1 前置 F4.1 已通过",
+      "cmd": "read .agent\\workflow\\gate-records\\F4.1.json",
+      "exit": 0,
+      "detail": "",
+      "result": "PASS"
+    },
+    {
+      "name": "S2/S3 单测文件 internal/api/server_test.go",
+      "cmd": "test -s internal/api/server_test.go",
+      "exit": 0,
+      "detail": "",
+      "result": "PASS"
+    },
+    {
+      "name": "S4 gofmt -l 无输出",
+      "cmd": "gofmt -l .",
+      "exit": 0,
+      "detail": "",
+      "result": "PASS"
+    },
+    {
+      "name": "S4 go vet ./...",
+      "cmd": "go vet ./...",
+      "exit": 0,
+      "detail": "",
+      "result": "PASS"
+    },
+    {
+      "name": "S5 功能点专项单测",
+      "cmd": "go test -race -count=1 -v -run TestAPI_SettlementMatches ./internal/api",
+      "exit": 0,
+      "detail": "命中顶层 PASS 测试 1 个",
+      "result": "PASS"
+    }
+  ],
+  "tests_hit": 1,
+  "requires": [
+    "F4.1"
+  ],
+  "notes": "F4.4 店长日清四指标与逐笔对账表一致，已完成服务收入可由服务记录反查。"
+}
