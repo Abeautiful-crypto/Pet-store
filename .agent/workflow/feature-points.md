@@ -91,3 +91,15 @@ go test -race -count=1 -run '<本功能点正则>' ./internal/<模块>
 1. 新增模块 → 先在清单加功能点（含模块、必写单测、断言、前置），再写实现。
 2. 新增测试 → 同步更新该功能点的正则，保证闸门能命中。
 3. **禁止**为让闸门变绿而删功能点、放宽断言、跳过依赖或调低覆盖率阈值；规则变更走 `issue-log.md` → 更新约束文件的闭环。
+
+## 五、阶段 6 · 高保真前端与本地外部依赖接入（2026-11-13 追加）
+
+> 需求：以 `毛球驿站-宠物门店预约系统-高保真原型.html` 为视觉基准生成前端页面，并接入本机 MySQL 8（真相源）与 Redis 7（缓存/去重）。
+> 阶段出口：F6.1~F6.4 闸门 PASS，覆盖率仍 ≥85%，五场景重跑全绿。
+
+| ID | 功能点 | 规则锚点 | 模块 | 必写单测 | 断言 | 前置 |
+| --- | --- | --- | --- | --- | --- | --- |
+| F6.1 | 高保真 15 页前端生成与 API 联调 | `frontend/*.md`、FR-01~20 | `web/`、`internal/api` | `internal/api/frontend_test.go`、`scripts/pages_check.py` | 新原型 15 页编号齐备且被静态托管；`requireRole` 守卫覆盖写操作；金额只做分→元格式化；API 数据驱动面板可读写 | F5.3 |
+| F6.2 | 本地 MySQL 真相源接入 | `backend/tech-stack.md §1` | `internal/store`、`internal/app`、`cmd/server` | `internal/app/deps_test.go`、`internal/store/mysql_integration_test.go` | DSN 必填守卫；迁移可执行；真实 MySQL 上名额原子条件更新不超卖、`uk_pet_slot_active` 唯一索引生效 | F5.3 |
+| F6.3 | 本地 Redis 缓存/去重/会话与降级 | `backend/tech-stack.md §2` | `internal/cache` | `internal/cache/redis_test.go` | Cache-Aside 读、SETNX TTL、写失效、Redis 不可用降级为不阻塞业务 | F5.3 |
+| F6.4 | 外部依赖接入后的回归与覆盖率复查 | `general/acceptance.md §1`、`unit-test.md T8` | `scripts/` | `scripts/coverage_check.py`、`scripts/acceptance_check.py`、`scripts/regression_check.py` | 全部闸门 PASS；核心包每包 ≥85%；SC-01~05 重跑全绿；`gofmt`/`go vet`/`-race` 全绿 | F6.1/F6.2/F6.3 |

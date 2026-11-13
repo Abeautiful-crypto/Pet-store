@@ -2,7 +2,7 @@
 -- 真相源：MySQL 8.0+；金额一律 BIGINT「分」；名额占用/释放走条件更新。
 -- 约束锚点：.agent/backend/tech-stack.md §1.1、SRS 5.2 / 5.4 / 8 章。
 
-CREATE TABLE slots (
+CREATE TABLE IF NOT EXISTS slots (
     slot_id          VARCHAR(64)  PRIMARY KEY,
     store_id         VARCHAR(64)  NOT NULL,
     service_item_id  VARCHAR(64)  NOT NULL,
@@ -14,7 +14,7 @@ CREATE TABLE slots (
     CHECK (occupied_count >= 0 AND occupied_count <= capacity)
 ) ENGINE=InnoDB;
 
-CREATE TABLE appointments (
+CREATE TABLE IF NOT EXISTS appointments (
     appointment_id     VARCHAR(64)  PRIMARY KEY,
     store_id           VARCHAR(64)  NOT NULL,
     slot_id            VARCHAR(64)  NOT NULL,
@@ -32,7 +32,7 @@ CREATE TABLE appointments (
     KEY idx_appointment_slot (slot_id)
 ) ENGINE=InnoDB;
 
-CREATE TABLE payments (
+CREATE TABLE IF NOT EXISTS payments (
     payment_id         VARCHAR(64)  PRIMARY KEY,
     appointment_id     VARCHAR(64)  NOT NULL,
     amount_fen         BIGINT       NOT NULL,
@@ -43,7 +43,7 @@ CREATE TABLE payments (
     UNIQUE KEY uk_notify_key (notify_key)
 ) ENGINE=InnoDB;
 
-CREATE TABLE cancel_requests (
+CREATE TABLE IF NOT EXISTS cancel_requests (
     request_id         VARCHAR(64)  PRIMARY KEY,
     appointment_id     VARCHAR(64)  NOT NULL,
     reason             TEXT         NOT NULL,
@@ -55,7 +55,7 @@ CREATE TABLE cancel_requests (
     reviewed_at        DATETIME(6)  DEFAULT NULL
 ) ENGINE=InnoDB;
 
-CREATE TABLE refunds (
+CREATE TABLE IF NOT EXISTS refunds (
     refund_id          VARCHAR(64)  PRIMARY KEY,
     appointment_id     VARCHAR(64)  NOT NULL,
     payment_id         VARCHAR(64)  NOT NULL,
@@ -67,7 +67,7 @@ CREATE TABLE refunds (
     finished_at        DATETIME(6)  DEFAULT NULL
 ) ENGINE=InnoDB;
 
-CREATE TABLE service_records (
+CREATE TABLE IF NOT EXISTS service_records (
     record_id          VARCHAR(64)  PRIMARY KEY,
     appointment_id     VARCHAR(64)  NOT NULL UNIQUE,
     verify_by          VARCHAR(64)  DEFAULT NULL,
@@ -79,7 +79,7 @@ CREATE TABLE service_records (
 ) ENGINE=InnoDB;
 
 -- 只增不改的事件流水，支撑并发冲突/越权/异常留痕与日清反查。
-CREATE TABLE event_logs (
+CREATE TABLE IF NOT EXISTS event_logs (
     event_id           VARCHAR(64)  PRIMARY KEY,
     appointment_id     VARCHAR(64)  NOT NULL,
     action             VARCHAR(64)  NOT NULL,

@@ -72,7 +72,7 @@ def main():
     record(checks, "S4 go vet ./...", "go vet ./...", rc, out)
 
     # S5 功能点专项单测（-race -count=1，且至少命中 1 个测试）
-    cmd = ["go", "test", "-race", "-count=1", "-v", "-run", args.run, args.pkg]
+    cmd = ["go", "test", "-race", "-count=1", "-v", "-run", args.run] + args.pkg.split()
     rc, out = run(cmd)
     hits = len(re.findall(r"^--- PASS: ", out, re.M))
     record(checks, "S5 功能点专项单测", " ".join(cmd), 0 if rc == 0 and hits > 0 else 1,

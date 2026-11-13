@@ -32,9 +32,34 @@ func main() {
 		os.Exit(1)
 	}
 
-	// 演示原型期使用内存回退存储；生产模式由 app.Validate 拒绝内存存储。
-	st := store.NewMemoryStore()
-	st.SetInvalidator(cache.NewMemoryCache(nil))
+	// 按配置装配真相源：STORE_DRIVER=mysql 时连接本地 MySQL 并执行版本化迁移；
+	// dev 允许内存回退，生产模式由 app.Validate 拒绝内存存储。
+	st, db, err := app.OpenStore(cfg)
+	if err != nil {
+		log.Fatalf("装配真相源失败: %v", err)
+	}
+	if db != nil {
+		defer db.Close()
+		if _, err := app.Migrate(context.Background(), db, "migrations"); err != nil {
+			log.Fatalf("执行迁移失败: %v", err)
+		}
+	}
+	var slotCache store.SlotCacheInvalidator
+	if cfg.RedisAddr != "" {
+		redisCache := cache.NewRedisCache(cfg.RedisAddr)
+		defer redisCache.Close()
+		slotCache = redisCache
+		if !redisCache.Available() {
+			log.Printf("Redis %s 不可用，缓存已降级（真相源仍为 MySQL）", cfg.RedisAddr)
+		}
+	} else {
+		slotCache = cache.NewMemoryCache(nil)
+	}
+	if setter, ok := st.(interface {
+		SetInvalidator(store.SlotCacheInvalidator)
+	}); ok {
+		setter.SetInvalidator(slotCache)
+	}
 
 	pets := map[string]string{}
 	for i := 1; i <= 9; i++ {
@@ -48,25 +73,31 @@ func main() {
 		},
 	})
 
-	// 预置 3 个未来时段（SRS 3.3 / 题目 2.4）。
-	base := time.Now().Add(4 * time.Hour).Truncate(time.Hour)
-	for i := 1; i <= 3; i++ {
-		start := base.Add(time.Duration(i) * time.Hour)
-		if err := svc.PublishSlot(context.Background(), model.Slot{
-			ID:            fmt.Sprintf("SL%d", i),
-			StoreID:       model.StoreID,
-			ServiceItemID: model.ServiceItemID,
-			StartAt:       start,
-			EndAt:         start.Add(time.Hour),
-			Capacity:      model.SlotCapacity,
-		}); err != nil {
-			log.Fatalf("预置时段失败: %v", err)
+	// 预置 3 个未来时段（SRS 3.3 / 题目 2.4）；MySQL 库内已有时段时不重复写入。
+	existing, err := svc.ListSlots(context.Background())
+	if err != nil {
+		log.Fatalf("读取时段失败: %v", err)
+	}
+	if len(existing) == 0 {
+		base := time.Now().Add(4 * time.Hour).Truncate(time.Hour)
+		for i := 1; i <= 3; i++ {
+			start := base.Add(time.Duration(i) * time.Hour)
+			if err := svc.PublishSlot(context.Background(), model.Slot{
+				ID:            fmt.Sprintf("SL%d", i),
+				StoreID:       model.StoreID,
+				ServiceItemID: model.ServiceItemID,
+				StartAt:       start,
+				EndAt:         start.Add(time.Hour),
+				Capacity:      model.SlotCapacity,
+			}); err != nil {
+				log.Fatalf("预置时段失败: %v", err)
+			}
 		}
 	}
 
 	mux := http.NewServeMux()
 	mux.Handle("/api/", api.New(svc).Handler())
-	mux.Handle("/", http.FileServer(http.Dir("web")))
+	mux.Handle("/", api.Static("web"))
 
 	log.Printf("pet-store listening on %s (env=%s store=%s)", cfg.HTTPAddr, cfg.Env, cfg.StoreDriver)
 	if err := http.ListenAndServe(cfg.HTTPAddr, mux); err != nil {
