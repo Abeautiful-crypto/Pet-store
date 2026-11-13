@@ -94,3 +94,12 @@
 - 解决：按 `unit-test.md T8` 只补测试（不改实现、不改断言、不调低 85% 阈值）：新增 store/api/service 三个 `coverage_test.go`，覆盖查询路径、错误分支与默认装配，重跑原闸门。
 - 是否上升为约束：否
 - 关联需求：`unit-test.md T8`、`feature-gate.md` 第 6 节 / 功能点 F5.1
+
+### [2026-11-13] F6.1 闸门 FAIL：静态托管测试把 /index.html 的 301 写成 200
+- 分类标签：（#静态托管 #闸门 #测试场景）
+- 现象：`TestFrontend_HighFidelityPagesServed` 断言 `/index.html` 返回 200，实际 301；F6.1 闸门 S5 FAIL。
+- 复现步骤：`go test ./internal/api -run TestFrontend_HighFidelityPagesServed`。
+- 根因：Go `http.FileServer` 对 `/index.html` 统一 301 重定向到 `./`，属标准行为，资源本身可访问；测试把"可静态访问"误写成"必须 200"。
+- 解决：把 `/` 与 `/app.js` 保留 200 断言，对 `/index.html` 单独断言 301 且 `Location: ./`；断言强度不变，实现不改，重跑原闸门。
+- 是否上升为约束：否
+- 关联需求：功能点 F6.1 / `general/feature-gate.md` 第 6 节
