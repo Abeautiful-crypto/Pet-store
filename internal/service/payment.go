@@ -10,9 +10,20 @@ import (
 	"github.com/Abeautiful-crypto/Pet-store/internal/store"
 )
 
+// payDedupTTL 是支付通知去重键在缓存（Redis/Memory）中的保留时长；
+// 远长于单次支付链路，覆盖并发重复回调与短时重试（FR-05 / 规则 2）。
+const payDedupTTL = 24 * time.Hour
+
 // ConfirmPayment 处理模拟渠道的支付成功通知（FR-05、FR-06 / 规则 2）。
 // 幂等键为 notify_key：重复通知只记一条流水，不重复确认、不重复记收入。
+// 缓存去重（SETNX+TTL）是第一道闸，MySQL 唯一索引是最终兜底。
 func (s *Service) ConfirmPayment(ctx context.Context, appointmentID, notifyKey, channelTradeNo string) error {
+	if s.deduper != nil {
+		// 重复通知：缓存已占用该 notify_key，直接幂等命中（不重复占名额、不重复记收入）。
+		if acquired, err := s.deduper.Dedup(ctx, notifyKey, payDedupTTL); err == nil && !acquired {
+			return nil
+		}
+	}
 	if _, exists := s.ledger.PaymentByNotify(notifyKey); exists {
 		return nil
 	}

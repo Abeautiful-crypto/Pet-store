@@ -41,6 +41,7 @@
 | 6 | F6.2 | 本地 MySQL 真相源接入 | 已通过 | gate-records/F6.2.json | 2026-11-13 14:30:46+08:00 | 0bf8095 |
 | 6 | F6.3 | 本地 Redis 缓存与降级 | 已通过 | gate-records/F6.3.json | 2026-11-13 14:34:12+08:00 | 0bf8095 |
 | 6 | F6.4 | 依赖接入后回归与覆盖率复查 | 已通过 | gate-records/F6.4.json | 2026-11-13 14:43:00+08:00 | 0bf8095 |
+| 6 | F6.5 | 业务单据落库 MySQL + 支付去重接入 Redis | 已通过 | gate-records/F6.5.json | 2026-11-13 15:24:22+08:00 | F6.5 |
 
 ## 闸门记录模板（`workflow/gate-records/<ID>.json`）
 

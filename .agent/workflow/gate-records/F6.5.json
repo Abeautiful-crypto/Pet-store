@@ -1,0 +1,54 @@
+{
+  "feature": "F6.5",
+  "result": "PASS",
+  "at": "2026-11-13T15:24:22+08:00",
+  "checks": [
+    {
+      "name": "S1 前置 F6.4 已通过",
+      "cmd": "read .agent\\workflow\\gate-records\\F6.4.json",
+      "exit": 0,
+      "detail": "",
+      "result": "PASS"
+    },
+    {
+      "name": "S2/S3 单测文件 internal/service/ledger_mysql_test.go",
+      "cmd": "test -s internal/service/ledger_mysql_test.go",
+      "exit": 0,
+      "detail": "",
+      "result": "PASS"
+    },
+    {
+      "name": "S2/S3 单测文件 internal/service/payment_dedup_test.go",
+      "cmd": "test -s internal/service/payment_dedup_test.go",
+      "exit": 0,
+      "detail": "",
+      "result": "PASS"
+    },
+    {
+      "name": "S4 gofmt -l 无输出",
+      "cmd": "gofmt -l .",
+      "exit": 0,
+      "detail": "",
+      "result": "PASS"
+    },
+    {
+      "name": "S4 go vet ./...",
+      "cmd": "go vet ./...",
+      "exit": 0,
+      "detail": "",
+      "result": "PASS"
+    },
+    {
+      "name": "S5 功能点专项单测",
+      "cmd": "go test -race -count=1 -v -run TestMySQLLedger|TestService_ConfirmPaymentDedup ./internal/service",
+      "exit": 0,
+      "detail": "命中顶层 PASS 测试 4 个",
+      "result": "PASS"
+    }
+  ],
+  "tests_hit": 4,
+  "requires": [
+    "F6.4"
+  ],
+  "notes": "F6.5 闭合 F6 技术债：Ledger 接口化，新增 MySQLLedger 把支付/退款/取消/服务/异常单据落库到 pet_store 的 payments/refunds/cancel_requests/service_records（及 refund_events/exceptions 新增表）；ConfirmPayment 接入 Redis SETNX 去重作为第一道闸、MySQL notify_key 唯一索引兜底；真实 MySQL 集成测试覆盖幂等/反查/upsert/端到端，单测覆盖去重前置拦截与降级兜底；端到端冒烟确认 payments/refunds/service_records/cancel_requests 真落 MySQL。"
+}

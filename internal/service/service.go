@@ -13,6 +13,12 @@ import (
 	"github.com/Abeautiful-crypto/Pet-store/internal/store"
 )
 
+// Deduper 是支付通知去重的抽象；Redis/Memory 缓存实现都满足（SETNX + TTL 语义）。
+// 重复通知只放行一次；缓存不可用时返回 (true, nil) 由 MySQL 唯一索引兜底。
+type Deduper interface {
+	Dedup(ctx context.Context, key string, ttl time.Duration) (bool, error)
+}
+
 var (
 	// ErrPetNotOwned 表示用户试图为他人宠物预约（FR-02）。
 	ErrPetNotOwned = errors.New("不能为他人宠物预约")
@@ -21,17 +27,21 @@ var (
 )
 
 // Config 装配业务服务；Now 注入服务端时钟，便于测试 2 小时线/5 分钟占位。
+// Ledger/Deduper 为可选依赖：未注入时 Ledger 回退内存、Deduper 为 nil（不接入缓存去重）。
 type Config struct {
 	Store   store.StateStore
 	Now     func() time.Time
 	NewID   func(prefix string) string
 	OwnsPet func(userID, petID string) bool
+	Ledger  Ledger
+	Deduper Deduper
 }
 
 // Service 编排预约、支付、取消、退款、核销、履约、未到店与日清。
 type Service struct {
 	store    store.StateStore
-	ledger   *Ledger
+	ledger   Ledger
+	deduper  Deduper
 	now      func() time.Time
 	newID    func(prefix string) string
 	ownsPet  func(userID, petID string) bool
@@ -41,9 +51,14 @@ type Service struct {
 
 // New 创建业务服务；未注入的时钟/ID/宠物归属使用安全默认值。
 func New(cfg Config) *Service {
+	ledger := cfg.Ledger
+	if ledger == nil {
+		ledger = NewLedger()
+	}
 	s := &Service{
 		store:   cfg.Store,
-		ledger:  NewLedger(),
+		ledger:  ledger,
+		deduper: cfg.Deduper,
 		now:     cfg.Now,
 		newID:   cfg.NewID,
 		ownsPet: cfg.OwnsPet,

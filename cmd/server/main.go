@@ -45,15 +45,19 @@ func main() {
 		}
 	}
 	var slotCache store.SlotCacheInvalidator
+	var deduper service.Deduper
 	if cfg.RedisAddr != "" {
 		redisCache := cache.NewRedisCache(cfg.RedisAddr)
 		defer redisCache.Close()
 		slotCache = redisCache
+		deduper = redisCache
 		if !redisCache.Available() {
-			log.Printf("Redis %s 不可用，缓存已降级（真相源仍为 MySQL）", cfg.RedisAddr)
+			log.Printf("Redis %s 不可用，缓存已降级（真相源仍为 MySQL，支付去重由 notify_key 唯一索引兜底）", cfg.RedisAddr)
 		}
 	} else {
-		slotCache = cache.NewMemoryCache(nil)
+		memoryCache := cache.NewMemoryCache(nil)
+		slotCache = memoryCache
+		deduper = memoryCache
 	}
 	if setter, ok := st.(interface {
 		SetInvalidator(store.SlotCacheInvalidator)
@@ -61,13 +65,23 @@ func main() {
 		setter.SetInvalidator(slotCache)
 	}
 
+	// 业务单据账本：MySQL 模式落库为真相源（F6.5），否则回退内存。
+	var ledger service.Ledger
+	if db != nil {
+		ledger = service.NewMySQLLedger(db)
+	} else {
+		ledger = service.NewLedger()
+	}
+
 	pets := map[string]string{}
 	for i := 1; i <= 9; i++ {
 		pets[fmt.Sprintf("P%d", i)] = "U1"
 	}
 	svc := service.New(service.Config{
-		Store: st,
-		Now:   time.Now,
+		Store:   st,
+		Now:     time.Now,
+		Ledger:  ledger,
+		Deduper: deduper,
 		OwnsPet: func(userID, petID string) bool {
 			return pets[petID] == userID && pets[petID] != ""
 		},

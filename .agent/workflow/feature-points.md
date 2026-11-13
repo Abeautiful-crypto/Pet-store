@@ -95,7 +95,7 @@ go test -race -count=1 -run '<本功能点正则>' ./internal/<模块>
 ## 五、阶段 6 · 高保真前端与本地外部依赖接入（2026-11-13 追加）
 
 > 需求：以 `毛球驿站-宠物门店预约系统-高保真原型.html` 为视觉基准生成前端页面，并接入本机 MySQL 8（真相源）与 Redis 7（缓存/去重）。
-> 阶段出口：F6.1~F6.4 闸门 PASS，覆盖率仍 ≥85%，五场景重跑全绿。
+> 阶段出口：F6.1~F6.5 闸门 PASS，覆盖率仍 ≥85%，五场景重跑全绿。
 
 | ID | 功能点 | 规则锚点 | 模块 | 必写单测 | 断言 | 前置 |
 | --- | --- | --- | --- | --- | --- | --- |
@@ -103,3 +103,4 @@ go test -race -count=1 -run '<本功能点正则>' ./internal/<模块>
 | F6.2 | 本地 MySQL 真相源接入 | `backend/tech-stack.md §1` | `internal/store`、`internal/app`、`cmd/server` | `internal/app/deps_test.go`、`internal/store/mysql_integration_test.go` | DSN 必填守卫；迁移可执行；真实 MySQL 上名额原子条件更新不超卖、`uk_pet_slot_active` 唯一索引生效 | F5.3 |
 | F6.3 | 本地 Redis 缓存/去重/会话与降级 | `backend/tech-stack.md §2` | `internal/cache` | `internal/cache/redis_test.go` | Cache-Aside 读、SETNX TTL、写失效、Redis 不可用降级为不阻塞业务 | F5.3 |
 | F6.4 | 外部依赖接入后的回归与覆盖率复查 | `general/acceptance.md §1`、`unit-test.md T8` | `scripts/` | `scripts/coverage_check.py`、`scripts/acceptance_check.py`、`scripts/regression_check.py` | 全部闸门 PASS；核心包每包 ≥85%；SC-01~05 重跑全绿；`gofmt`/`go vet`/`-race` 全绿 | F6.1/F6.2/F6.3 |
+| F6.5 | 业务单据落库 MySQL + 支付去重接入 Redis（闭合技术债） | `backend/tech-stack.md §1.1`、规则 2 / FR-05 | `internal/service`、`cmd/server`、`migrations` | `internal/service/ledger_mysql_test.go`、`internal/service/payment_dedup_test.go` | `Ledger` 接口化；`MySQLLedger` 落支付/退款/取消/服务/异常四表（`payments`/`refunds`/`cancel_requests`/`service_records` + `refund_events`/`exceptions`）；`ConfirmPayment` 经 Redis SETNX 去重前置拦截重复通知、MySQL `notify_key` 唯一索引兜底；端到端支付/退款/服务记录真落 MySQL | F6.4 |
