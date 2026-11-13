@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<title>毛球驿站 · 宠物门店预约系统 高保真原型</title>
+<title>毛球驿站 · 宠物门店预约系统 可交互原型</title>
 <style>
 :root{
   --bg:#F2F5FB;--card:#FFFFFF;--ink:#1A2444;--ink2:#44516E;--muted:#8893AA;
@@ -140,7 +140,7 @@ button{font-family:inherit}
 .stage{display:grid;grid-template-columns:minmax(0,1fr) 300px;gap:16px;align-items:start}
 .preview{padding:16px;display:flex;justify-content:center;align-items:flex-start;min-height:400px;background:linear-gradient(160deg,#FBFCFF,#F0F3FB);position:relative;overflow:hidden}
 .preview::before{content:"";position:absolute;inset:0;background-image:radial-gradient(#D8E0F0 1px,transparent 1px);background-size:18px 18px;opacity:.45}
-.preview::after{content:"设备内页面可滚动";position:absolute;left:50%;transform:translateX(-50%);bottom:1px;font-size:9.5px;color:#A6B0C4;z-index:2;pointer-events:none}
+.preview::after{content:"设备内页面可操作 · 状态为真实共享数据";position:absolute;left:50%;transform:translateX(-50%);bottom:1px;font-size:9.5px;color:#A6B0C4;z-index:2;pointer-events:none}
 .preview>*{position:relative;z-index:1}
 .spec{padding:16px}
 .spec h4{margin:0 0 9px;font-size:12px;display:flex;align-items:center;gap:6px;color:var(--ink)}
@@ -250,7 +250,6 @@ button{font-family:inherit}
 .d-side .mi{display:flex;align-items:center;gap:7px;font-size:10.5px;padding:6px 8px;border-radius:8px;white-space:nowrap}
 .d-side .mi .ic{width:13px;height:13px}
 .d-side .mi.on{background:rgba(255,255,255,.13);color:#fff;font-weight:650}
-.d-side .mi.on::before{content:"";position:absolute}
 .d-side .foot{margin-top:auto;font-size:9px;color:#6C7BA3;padding:8px;border-top:1px solid rgba(255,255,255,.09);line-height:1.5}
 .d-main{flex:1;min-width:0;display:flex;flex-direction:column}
 .d-top{height:46px;flex:none;background:#fff;border-bottom:1px solid var(--line);display:flex;align-items:center;justify-content:space-between;padding:0 16px}
@@ -342,10 +341,46 @@ button{font-family:inherit}
 .gal .cap b{font-size:11.5px;display:block;line-height:1.35}
 .gal .cap small{font-size:10px;color:var(--muted)}
 
+/* ---------- interactive v3 additions ---------- */
+.act{cursor:pointer!important}
+.m-btn.act:hover,.d-btn.act:hover,.pet-opt.act:hover,.m-slot.act:hover{filter:brightness(1.05);transform:translateY(-1px)}
+.m-btn.act:active,.d-btn.act:active{transform:none;filter:none}
+.pet-pick{display:flex;gap:8px}
+.pet-opt{flex:1;border:1.5px solid var(--line);border-radius:12px;padding:8px 4px;text-align:center;background:#fff;transition:.15s}
+.pet-opt.on{border-color:var(--brand);background:#FFF9F5;box-shadow:0 3px 10px rgba(255,106,61,.12)}
+.pet-opt .m-avatar{margin:0 auto 4px;width:32px;height:32px;font-size:15px}
+.pet-opt b{font-size:11px;display:block}
+.pet-opt small{font-size:9px;color:var(--muted)}
+.pulse{animation:pulse 1.5s infinite}
+@keyframes pulse{0%{box-shadow:0 0 0 0 rgba(255,122,69,.55)}70%{box-shadow:0 0 0 10px rgba(255,122,69,0)}100%{box-shadow:0 0 0 0 rgba(255,122,69,0)}}
+.hintbar{display:none;align-items:center;gap:10px;background:linear-gradient(100deg,#1B2647,#2B3A6E);color:#EAF0FF;border-radius:14px;padding:10px 16px;margin-bottom:14px;font-size:12.5px;box-shadow:var(--shadow);flex-wrap:wrap}
+.hintbar.on{display:flex}
+.hintbar .st{flex:none;background:rgba(255,255,255,.14);border:1px solid rgba(255,255,255,.25);border-radius:8px;padding:2px 9px;font-size:11px;font-weight:700}
+.hintbar b{color:#FFC49B}
+.hintbar button{border:0;background:#FF7A45;color:#fff;border-radius:9px;padding:6px 13px;font-size:11.5px;font-weight:700;cursor:pointer;flex:none}
+.hintbar button.ghost{background:transparent;border:1px solid rgba(255,255,255,.35);color:#EAF0FF}
+.clockbar{display:flex;align-items:center;gap:6px;flex-wrap:wrap;background:#fff;border:1px solid var(--line);border-radius:12px;padding:5px 9px;box-shadow:var(--shadow);font-size:11px}
+.clockbar>b{font-variant-numeric:tabular-nums;color:var(--ink);font-size:12.5px}
+.clockbar button{border:1px solid var(--line);background:#F8FAFE;border-radius:7px;font-size:10.5px;padding:3px 8px;cursor:pointer;color:var(--ink2)}
+.clockbar button:hover{border-color:var(--indigo);color:var(--indigo)}
+.clockbar .lb{color:var(--muted)}
+.toast{position:fixed;top:16px;right:16px;z-index:99;display:flex;flex-direction:column;gap:8px;pointer-events:none}
+.toast div{background:#1B2647;color:#fff;border-radius:12px;padding:10px 15px;font-size:12.5px;box-shadow:0 12px 30px rgba(16,22,44,.3);animation:tIn .25s ease;max-width:320px;line-height:1.5}
+.toast div.ok{background:#0C7A55}.toast div.bad{background:#B3373C}.toast div.warn{background:#8A5B00}
+@keyframes tIn{from{opacity:0;transform:translateX(20px)}to{opacity:1;transform:none}}
+.sel{background:#F8FAFE;border:1px solid var(--line);border-radius:8px;padding:5px 8px;font-size:10.5px;color:var(--ink)}
+textarea.mta{width:100%;border:1px solid var(--line);background:#F8FAFE;border-radius:10px;padding:8px 10px;font-size:11px;font-family:inherit;color:var(--ink);min-height:40px;resize:vertical;outline:none}
+textarea.mta:focus{border-color:var(--brand)}
+.mini-oc{display:flex;align-items:center;gap:7px;margin-bottom:8px}
+.mini-oc .bar{flex:1;height:6px;border-radius:6px;background:#EDF1F8;overflow:hidden}
+.mini-oc .bar i{display:block;height:100%;border-radius:6px;background:linear-gradient(90deg,#6E9BFF,#4C5BD4)}
+.mini-oc .bar i.full{background:#B9C2D4}
+.mini-oc small{font-size:10px;color:var(--muted);width:78px;flex:none}
+
 footer{text-align:center;color:var(--muted);font-size:11px;padding:6px 20px 26px}
 @media(max-width:1180px){.stage{grid-template-columns:1fr}.spec{display:grid;grid-template-columns:repeat(2,1fr);gap:14px}.spec h4:not(:first-child){margin-top:0;padding-top:0;border-top:0}}
 @media(max-width:900px){.shell{grid-template-columns:1fr}.rail{position:static;display:flex;flex-wrap:wrap;gap:6px;align-items:center}.rail-cap,.rail-sep,.rail-tip,.rail-pages{display:none}.rail-item{padding:7px 9px}.rail-num{display:none}.kpi4,.money-grid{grid-template-columns:repeat(2,1fr)}}
-@media print{.hero{background:#182449!important;-webkit-print-color-adjust:exact;print-color-adjust:exact}*{-webkit-print-color-adjust:exact;print-color-adjust:exact}.rail,.viewbar,.page-nav,.scenes{display:none!important}.shell{display:block;padding:0}.view{display:block!important;page-break-after:always}.preview{background:#fff}.gal .zoom{transform:scale(.30)}}
+@media print{.hero{background:#182449!important;-webkit-print-color-adjust:exact;print-color-adjust:exact}*{-webkit-print-color-adjust:exact;print-color-adjust:exact}.rail,.viewbar,.page-nav,.scenes,.clockbar,.toast,.hintbar{display:none!important}.shell{display:block;padding:0}.view{display:block!important;page-break-after:always}.preview{background:#fff}.gal .zoom{transform:scale(.30)}}
 </style>
 </head>
 <body>
@@ -382,19 +417,20 @@ footer{text-align:center;color:var(--muted);font-size:11px;padding:6px 20px 26px
 <symbol id="i-wifi" viewBox="0 0 24 24"><path d="M2 9a15 15 0 0 1 20 0M5 13a10 10 0 0 1 14 0M9 17a4 4 0 0 1 6 0"/><circle cx="12" cy="20" r="1" fill="currentColor" stroke="none"/></symbol>
 <symbol id="i-battery" viewBox="0 0 24 24"><rect x="2" y="7" width="18" height="10" rx="2"/><path d="M22 10v4"/><rect x="4" y="9" width="12" height="6" rx="1" fill="currentColor" stroke="none"/></symbol>
 <symbol id="i-signal" viewBox="0 0 24 24"><path d="M3 19v-3M8 19v-7M13 19v-11M18 19V5"/></symbol>
+<symbol id="i-dbase" viewBox="0 0 24 24"><ellipse cx="12" cy="5" rx="8" ry="3"/><path d="M4 5v14c0 1.7 3.6 3 8 3s8-1.3 8-3V5"/><path d="M4 12c0 1.7 3.6 3 8 3s8-1.3 8-3"/></symbol>
 </defs></svg>
 
 <header class="hero">
   <div class="hero-in">
     <div class="logo"><svg class="ic"><use href="#i-paw"/></svg></div>
     <div>
-      <h1>毛球驿站 · 宠物门店预约系统 <span class="vtag">高保真原型 V2.0</span></h1>
-      <p>题目 02《宠物门店预约、接待、服务与取消退款》｜ 5 类角色 · 15 个页面 · 20 条 FR · 5 个必演场景 · 单店单日边界</p>
+      <h1>毛球驿站 · 宠物门店预约系统 <span class="vtag">可交互原型 V3.0</span></h1>
+      <p>题目 02《宠物门店预约、接待、服务与取消退款》｜ 全链路可点 · 共享业务状态 · 模拟时钟 · 5 个场景剧本可自动演示 · 单店单日边界</p>
     </div>
     <div class="hero-stats">
       <div class="hstat"><b>5</b><small>参与角色</small></div>
-      <div class="hstat"><b>15</b><small>分配页面</small></div>
-      <div class="hstat"><b>3×3</b><small>时段 · 名额</small></div>
+      <div class="hstat"><b>15</b><small>可操作页面</small></div>
+      <div class="hstat"><b>5</b><small>场景剧本</small></div>
       <div class="hstat"><b>9900</b><small>全款（分）</small></div>
     </div>
   </div>
@@ -407,19 +443,21 @@ footer{text-align:center;color:var(--muted);font-size:11px;padding:6px 20px 26px
     <div class="viewbar">
       <div class="seg" id="seg">
         <button data-view="overview" class="on"><svg class="ic sm"><use href="#i-grid"/></svg>分配总览</button>
-        <button data-view="detail"><svg class="ic sm"><use href="#i-desk"/></svg>页面详情</button>
+        <button data-view="detail"><svg class="ic sm"><use href="#i-desk"/></svg>页面操作</button>
         <button data-view="gallery"><svg class="ic sm"><use href="#i-spark"/></svg>全页画廊</button>
+        <button data-view="data"><svg class="ic sm"><use href="#i-dbase"/></svg>实时数据</button>
       </div>
       <div class="spacer"></div>
-      <div class="scenes" id="scenes"><label>场景演示</label></div>
+      <div class="clockbar" id="clockbar"></div>
+      <div class="scenes" id="scenes"><label>场景剧本</label></div>
     </div>
 
     <!-- ============ 总览 ============ -->
     <section class="view on" id="v-overview">
       <div class="card ov-hero">
         <div class="deco"></div>
-        <h2>一套记录，五个视角</h2>
-        <p>每个角色只拿到完成其业务起点所需的最小页面集。用户 / 前台 / 客服 / 店长 / 模拟渠道围绕<b>同一条 appointment 记录</b>协作，状态变更只有一个写入点（乐观锁 version），因此四个端看到的进度、金额与退款状态必须一致。</p>
+        <h2>一套记录，五个视角，全部可点</h2>
+        <p>这不是静态效果图：右侧<b>「页面操作」</b>里每个按钮都作用于同一份共享业务记录（appointment · 乐观锁 version）。切到任意角色页面，点按钮、改状态、查结果；顶部<b>模拟时钟</b>可快进，复现 5 分钟占位超时与 2 小时取消线；<b>「实时数据」</b>页签随时核对四类记录与金额口径；<b>场景剧本</b>可一键自动演示 SC-01 ~ SC-05。</p>
         <div style="display:flex;gap:8px;flex-wrap:wrap;margin-top:12px">
           <span class="chip">不允许各角色各存一份状态</span><span class="chip">不做优惠 / 会员 / 排班优化 / 多店结算</span><span class="chip">不能只交名额抢占功能</span>
         </div>
@@ -431,7 +469,7 @@ footer{text-align:center;color:var(--muted);font-size:11px;padding:6px 20px 26px
         <div><b>12</b><small>必测业务不变量</small></div>
       </div>
 
-      <div class="sec-h"><svg class="ic lg"><use href="#i-grid"/></svg>角色 → 页面分配矩阵<small>点击卡片直接进入该角色第一页</small></div>
+      <div class="sec-h"><svg class="ic lg"><use href="#i-grid"/></svg>角色 → 页面分配矩阵<small>点击卡片直接进入该角色第一页（可操作）</small></div>
       <div class="role-grid" id="roleGrid"></div>
 
       <div class="sec-h"><svg class="ic lg"><use href="#i-arrow"/></svg>业务流转站点地图<small>每条箭头最终落在同一条 appointment 记录上</small></div>
@@ -443,7 +481,7 @@ footer{text-align:center;color:var(--muted);font-size:11px;padding:6px 20px 26px
         <div class="lane"><div class="who" style="--r-color:#64748B"><svg class="ic sm"><use href="#i-cloud"/></svg>模拟渠道</div><span class="node hi">P1 支付控制台</span><span class="arw">→</span><span class="node">重复通知 / 迟到回调 / 退款失败</span><span class="arw">→</span><span class="node">U2 · C2 · M4</span></div>
       </div>
 
-      <div class="sec-h"><svg class="ic lg"><use href="#i-card"/></svg>收店核查 · 金额口径<small>规则 8 的考点：已收款 ≠ 已完成服务收入</small></div>
+      <div class="sec-h"><svg class="ic lg"><use href="#i-card"/></svg>收店核查 · 金额口径<small>题目核算示例（SC-05 满配状态）；沙盒实时金额见「实时数据」页签</small></div>
       <div class="card">
         <div class="money-grid">
           <div><b>39600</b><small>已收款（4 笔 × 9900 分）</small></div>
@@ -473,10 +511,18 @@ footer{text-align:center;color:var(--muted);font-size:11px;padding:6px 20px 26px
           <tr><td><b>退款</b></td><td>U4 / C2 / P1 / M4</td><td>全额 9900 分、状态独立、失败可重试、失败不改变已取消终态</td><td>留痕并允许重试，预约不复活</td></tr>
         </tbody></table>
       </div>
+
+      <div class="sec-h"><svg class="ic lg"><use href="#i-play"/></svg>怎么玩<small>三种打开方式</small></div>
+      <div class="card" style="padding:16px;display:grid;grid-template-columns:repeat(auto-fit,minmax(260px,1fr));gap:12px">
+        <div class="note info" style="margin:0"><svg class="ic"><use href="#i-play"/></svg><span><b>① 一键自动演示：</b>点顶部任一场景剧本（SC-01~05），再点提示条上的「▶ 自动演示」，系统会自动切换角色页面并执行每一步，像看动画一样走完全流程。</span></div>
+        <div class="note ok" style="margin:0"><svg class="ic"><use href="#i-check"/></svg><span><b>② 自己动手：</b>进「页面操作」，从 U1 预约开始一路点下去：支付 → 到 P1 返回回调 → 前台核销 → 服务登记，所有规则（名额 / 5 分钟占位 / 2 小时线 / 禁止核销）都会真实拦截。</span></div>
+        <div class="note warn" style="margin:0"><svg class="ic"><use href="#i-clock"/></svg><span><b>③ 快进时间：</b>用顶部模拟时钟 +5分 / +2时 或「到闭店」，复现占位超时释放名额、临近取消转人工、时段结束后标记未到店。</span></div>
+      </div>
     </section>
 
-    <!-- ============ 详情 ============ -->
+    <!-- ============ 页面操作 ============ -->
     <section class="view" id="v-detail">
+      <div class="hintbar" id="hintbar"></div>
       <div class="card page-head" id="pageHead"></div>
       <div class="stage">
         <div class="card preview" id="preview"></div>
@@ -487,437 +533,25 @@ footer{text-align:center;color:var(--muted);font-size:11px;padding:6px 20px 26px
 
     <!-- ============ 画廊 ============ -->
     <section class="view" id="v-gallery">
-      <div class="sec-h" style="margin-top:0"><svg class="ic lg"><use href="#i-spark"/></svg>15 个页面一屏总览<small>点击任意缩略图进入该页详情</small></div>
+      <div class="sec-h" style="margin-top:0"><svg class="ic lg"><use href="#i-spark"/></svg>15 个页面一屏总览<small>缩略图为当前实时状态快照，点击任意卡片进入该页操作</small></div>
       <div class="gal-grid" id="galGrid"></div>
+    </section>
+
+    <!-- ============ 实时数据 ============ -->
+    <section class="view" id="v-data">
+      <div class="sec-h" style="margin-top:0"><svg class="ic lg"><use href="#i-dbase"/></svg>实时业务数据 · 同一份记录<small>全部角色操作落在下面这几张“表”上，随时核对</small></div>
+      <div id="dataBody"></div>
     </section>
   </main>
 </div>
 
-<footer>题目 02 · 宠物门店预约、接待、服务与取消退款 ｜ 高保真角色页面原型 V2.0 ｜ 依据《软件需求规格说明书》FR-01~FR-20 与 5 个必演场景</footer>
-
-<div id="tpls" hidden>
-<!-- ==================== 宠物主人 U1–U4 ==================== -->
-<template id="t-U1">
-<div class="m-hero">
-  <div class="mh-top">‹ 返回　·　上海 · 徐汇店</div>
-  <h3>预约洗护服务</h3>
-  <p>3 个未来时段 · 每时段 3 只 · 全款 ¥99.00</p>
-</div>
-<div class="m-body">
-  <div class="m-card">
-    <div class="t">选择宠物 <small>仅自己名下 · 不做档案编辑</small></div>
-    <div class="m-row">
-      <span class="m-avatar"><svg class="ic lg"><use href="#i-paw"/></svg></span>
-      <div style="flex:1"><div class="m-lab">当前宠物</div><div class="m-val">豆豆 · 金毛 · 3 岁</div></div>
-      <svg class="ic sm" style="color:#B0BACC"><use href="#i-chev"/></svg>
-    </div>
-  </div>
-  <div class="m-card">
-    <div class="t">可预约时段 <small>2026-11-14 周六</small></div>
-    <div class="m-slot pick">
-      <div class="when"><b>时段 1　13:00–14:00</b><small>剩余 2 / 3 · 名额充足</small><div class="m-bar"><i style="width:33%"></i></div></div>
-      <span class="pill p-green">可预约</span>
-    </div>
-    <div class="m-slot">
-      <div class="when"><b>时段 2　14:00–15:00</b><small>剩余 1 / 3 · 紧张</small><div class="m-bar"><i class="low" style="width:67%"></i></div></div>
-      <span class="pill p-amber">仅剩 1</span>
-    </div>
-    <div class="m-slot off">
-      <div class="when"><b>时段 3　15:00–16:00</b><small>已满 3 / 3 · 名额不足</small><div class="m-bar"><i class="full" style="width:100%"></i></div></div>
-      <span class="pill p-grey">已满</span>
-    </div>
-  </div>
-  <div class="m-card">
-    <div class="t">服务项目 <small>单店 · 单项目</small></div>
-    <div class="m-line"><span>宠物洗护（全款）</span><b>¥99.00</b></div>
-    <div class="m-line"><span>优惠 / 会员价</span><span class="pill p-grey">本题不做</span></div>
-    <div class="m-note warn"><svg class="ic"><use href="#i-clock"/></svg><span>未付款预约占名额 <b>5 分钟</b>，超时自动释放；同一宠物同一时段只能有一个有效预约。</span></div>
-    <div class="m-btn pri"><svg class="ic sm"><use href="#i-check"/></svg>确认预约 · 占名额 5 分钟</div>
-  </div>
-</div>
-</template>
-
-<template id="t-U2">
-<div class="m-hero" style="background:linear-gradient(135deg,#FF7A45,#F9622F)">
-  <div class="mh-top">‹ 返回　·　订单确认</div>
-  <h3>确认并支付</h3>
-  <p>预约号 A-20261113-003</p>
-</div>
-<div class="m-body">
-  <div class="m-card">
-    <div class="t">订单摘要 <span class="pill p-orange">待支付 · 占位中</span></div>
-    <div class="m-row" style="margin-bottom:9px">
-      <span class="m-avatar blue"><svg class="ic lg"><use href="#i-scissor"/></svg></span>
-      <div style="flex:1"><div class="m-val">宠物洗护 · 全款</div><div class="m-lab">上海 · 徐汇店　时段 2　14:00–15:00</div></div>
-    </div>
-    <div class="m-line"><span>宠物</span><b>豆豆 · 金毛</b></div>
-    <div class="m-line"><span>服务金额（9900 分）</span><b>¥99.00</b></div>
-    <div class="m-line"><span>优惠 / 会员抵扣</span><span>无 · 本题不做</span></div>
-    <div class="m-price" style="margin-top:9px"><b>¥99.00</b><small>应付总额</small></div>
-  </div>
-  <div class="m-card">
-    <div class="m-count"><svg class="ic"><use href="#i-clock"/></svg>占位剩余 <b>04:59</b> · 超时名额自动释放</div>
-    <div class="m-row" style="padding:8px 10px;border:1.5px solid #FFD0BC;border-radius:10px;background:#FFF9F5;margin-bottom:9px">
-      <span class="m-avatar" style="width:28px;height:28px"><svg class="ic sm"><use href="#i-cloud"/></svg></span>
-      <div style="flex:1"><div class="m-val" style="font-size:11.5px">模拟支付渠道</div><div class="m-lab">用于复现支付 / 退款回调</div></div>
-      <span class="pill p-green">已选</span>
-    </div>
-    <div class="m-btn pri"><svg class="ic sm"><use href="#i-card"/></svg>模拟支付 ¥99.00</div>
-    <div class="m-btn ghost" style="margin-top:7px">主动取消 · 释放名额</div>
-  </div>
-  <div class="m-card">
-    <div class="t">回调处理预览 <small>业务 Skill</small></div>
-    <div class="m-note ok"><svg class="ic"><use href="#i-check"/></svg><span><b>支付成功</b> → 已确认；同一 notify_key 重复通知不会重复确认、不重复占名额。</span></div>
-    <div class="m-note bad"><svg class="ic"><use href="#i-alert"/></svg><span><b>迟到回调</b>：预约已关闭后才收到成功 → 登记异常并退款，<b>不恢复预约</b>。</span></div>
-  </div>
-</div>
-</template>
-
-<template id="t-U3">
-<div class="m-hero" style="background:linear-gradient(135deg,#FF8A5B,#F0603C)">
-  <div class="mh-top">‹ 返回　·　我的预约</div>
-  <h3>取消预约</h3>
-  <p>按距开始时间自动分流 · 分界线 2 小时</p>
-</div>
-<div class="m-body">
-  <div class="m-card">
-    <div class="t">当前预约 <span class="pill p-blue">已确认</span></div>
-    <div class="m-line"><span>时段</span><b>11-14　14:00–15:00</b></div>
-    <div class="m-line"><span>宠物 / 项目</span><b>豆豆 · 洗护</b></div>
-    <div class="m-line"><span>已付金额</span><b>¥99.00（9900 分）</b></div>
-    <div class="m-row" style="margin-top:10px;background:#F7F9FD;border-radius:11px;padding:10px">
-      <svg class="ic lg" style="color:#FF7A45"><use href="#i-clock"/></svg>
-      <div style="margin-left:9px"><div class="m-lab">距时段开始</div><div class="m-val" style="font-size:17px">2 小时 15 分</div></div>
-      <span class="pill p-green" style="margin-left:auto">≥ 2h · 自动受理</span>
-    </div>
-    <div class="m-note ok"><svg class="ic"><use href="#i-check"/></svg><span>提前取消无需客服：生成全额退款单，名额释放一次，立即看到「已取消 + 退款状态」。</span></div>
-    <div class="m-btn pri"><svg class="ic sm"><use href="#i-refund"/></svg>自动受理 · 全额退款 ¥99.00</div>
-  </div>
-  <div class="m-divider"><span>临近开始（示例：距开始 1 小时 20 分）</span></div>
-  <div class="m-card">
-    <div class="t">人工审核分支 <span class="pill p-violet">&lt; 2h</span></div>
-    <div class="m-field"><label>取消原因（必填）</label><div class="v" style="font-weight:400">临时出差，无法到店</div></div>
-    <div class="m-textarea" style="margin-bottom:9px">填写后提交客服审核，客服批准或拒绝前不能到店接待。</div>
-    <div class="m-btn danger"><svg class="ic sm"><use href="#i-arrow"/></svg>提交原因 · 转客服审核</div>
-    <div class="m-note warn"><svg class="ic"><use href="#i-lock"/></svg><span>提交后状态 = <b>取消审核中</b>：名额保持、前台禁止核销；重复点击不产生第二笔申请。</span></div>
-  </div>
-  <div class="m-card" style="padding:10px 13px">
-    <div class="m-lab" style="line-height:1.65">已核销 / 服务中 / 已完成预约进入本页时，取消入口不可见（FR-14）；本题不提供申诉入口。</div>
-  </div>
-</div>
-</template>
-
-<template id="t-U4">
-<div class="m-hero" style="background:linear-gradient(135deg,#2E72E8,#4C5BD4)">
-  <div class="mh-top">‹ 返回　·　个人中心</div>
-  <h3>我的预约</h3>
-  <p>预约结果 · 付款结果 · 实际服务结果统一回显</p>
-</div>
-<div class="m-body">
-  <div class="m-card" style="display:flex;gap:8px;text-align:center;padding:11px">
-    <div style="flex:1"><div class="m-val" style="font-size:17px;color:#FF7A45">4</div><div class="m-lab">全部预约</div></div>
-    <div style="flex:1;border-left:1px solid var(--line)"><div class="m-val" style="font-size:17px;color:#0E9F6E">1</div><div class="m-lab">已完成</div></div>
-    <div style="flex:1;border-left:1px solid var(--line)"><div class="m-val" style="font-size:17px;color:#E5484D">1</div><div class="m-lab">待跟进</div></div>
-  </div>
-  <div class="m-card" style="padding:11px 12px">
-    <div class="t" style="margin-bottom:7px">四种结局 <small>同一条记录的不同终态</small></div>
-    <div class="m-res"><span class="ri" style="background:#E3F6EE;color:#0B8058"><svg class="ic"><use href="#i-check"/></svg></span><div style="flex:1"><b>A1 · 服务已完成 <span class="pill p-green">已完成</span></b><small>已收款 9900 分 · 收入已记一次</small></div></div>
-    <div class="m-res"><span class="ri" style="background:#EDF1F7;color:#66738C"><svg class="ic"><use href="#i-refund"/></svg></span><div style="flex:1"><b>A2 · 提前取消自动受理 <span class="pill p-grey">已取消</span></b><small>退款成功 9900 分 · 名额已释放</small></div></div>
-    <div class="m-res"><span class="ri" style="background:#FDEAEA;color:#C2373C"><svg class="ic"><use href="#i-alert"/></svg></span><div style="flex:1"><b>A3 · 临近取消已批准 <span class="pill p-red">退款失败</span></b><small>待跟进 · 已重试 1 次 · 预约不复活</small></div></div>
-    <div class="m-res"><span class="ri" style="background:#FFF4DC;color:#A46B00"><svg class="ic"><use href="#i-user"/></svg></span><div style="flex:1"><b>A4 · 时段结束未到店 <span class="pill p-amber">未到店</span></b><small>原因：未联系上主人 · 不自动退款</small></div></div>
-  </div>
-  <div class="m-card">
-    <div class="t">退款状态链 <small>A3</small></div>
-    <div class="m-stepper">
-      <div class="st done"><i></i>待退款</div><div class="st done"><i></i>退款中</div><div class="st on"><i></i>失败待跟进</div><div class="st"><i></i>重试</div><div class="st"><i></i>成功</div>
-    </div>
-    <div class="m-note bad"><svg class="ic"><use href="#i-lock"/></svg><span><b>硬约束：</b>退款失败不会让已取消预约重新可用，名额不恢复；用户端仍显示「已取消 + 待跟进」。</span></div>
-    <div class="m-note info"><svg class="ic"><use href="#i-info"/></svg><span>本题不实现争议退款裁决，页面不提供申诉入口。</span></div>
-  </div>
-</div>
-</template>
-
-<template id="t-F1">
-<div class="d-h"><div><h3>当日接待台</h3><div class="sub">上海 · 徐汇店　|　2026-11-13　|　数据只读本店</div></div><div class="d-tools"><span class="d-btn on">全部时段</span><span class="d-btn">时段 1</span><span class="d-btn">时段 2</span><span class="d-btn">时段 3</span><span class="d-btn">仅看已确认</span></div></div>
-<div class="d-kpis">
-  <div class="d-kpi"><small>时段 1 占用　13:00</small><b>3 / 3</b><div class="mini"><i style="width:100%;background:#E5484D"></i></div></div>
-  <div class="d-kpi"><small>时段 2 占用　14:00</small><b>2 / 3</b><div class="mini"><i style="width:67%;background:#E9930B"></i></div></div>
-  <div class="d-kpi"><small>时段 3 占用　15:00</small><b>1 / 3</b><div class="mini"><i style="width:33%"></i></div></div>
-  <div class="d-kpi"><small>待接待 / 待审核</small><b>3 / 1</b><div class="mini"><i style="width:45%;background:#7C5CE0"></i></div></div>
-</div>
-<div class="d-panel" style="padding:0;overflow:hidden">
-  <div style="padding:10px 12px;display:flex;align-items:center;gap:7px;border-bottom:1px solid var(--line)"><b style="font-size:11.5px">预约列表</b><span class="pill p-grey">4 条</span><span style="margin-left:auto;font-size:9.5px;color:var(--muted)">每行 = 一条 appointment</span></div>
-  <table class="d-tbl"><thead><tr><th>预约单</th><th>时段</th><th>宠物</th><th>状态</th><th>取消申请</th><th>操作</th></tr></thead><tbody>
-    <tr><td><b>A-001</b></td><td>13:00–14:00</td><td>豆豆</td><td><span class="d-pill b">已确认</span></td><td>无</td><td><span class="d-btn pri">到店核销</span></td></tr>
-    <tr><td><b>A-003</b></td><td>14:00–15:00</td><td>可乐</td><td><span class="d-pill v">取消审核中</span></td><td><span class="d-pill a">待审核</span></td><td><span class="d-btn grey">禁止核销</span></td></tr>
-    <tr><td><b>A-005</b></td><td>14:00–15:00</td><td>团子</td><td><span class="d-pill o">待支付占位</span></td><td>无</td><td><span class="d-btn grey">未付款</span></td></tr>
-    <tr><td><b>A-007</b></td><td>15:00–16:00</td><td>雪球</td><td><span class="d-pill g">已完成</span></td><td>无</td><td><span class="d-btn">查看服务单</span></td></tr>
-  </tbody></table>
-</div>
-<div class="d-note info"><svg class="ic"><use href="#i-info"/></svg><span>占用计数包含<b>「待支付占位」与「取消审核中」</b>——二者都占名额；已取消 / 已关闭 / 已完成 / 未到店不再占用。取消申请列有值时核销按钮必须禁用。</span></div>
-</template>
-
-<!-- ==================== 前台 F2–F3 ==================== -->
-<template id="t-F2">
-<div class="d-h"><div><h3>到店核销 · A-003</h3><div class="sub">三条准入条件全部通过才允许写入 verify_at</div></div><div class="d-tools"><span class="d-btn">返回接待台</span><span class="d-btn">刷新状态</span></div></div>
-<div class="d-flex" style="align-items:stretch">
-  <div class="d-panel" style="flex:1;min-width:190px">
-    <div class="t"><svg class="ic sm"><use href="#i-doc"/></svg>预约信息</div>
-    <div class="d-field" style="margin-bottom:8px"><label>预约单 / 门店</label><div class="inp">A-003　·　上海 · 徐汇店</div></div>
-    <div class="d-field" style="margin-bottom:8px"><label>时段 / 宠物</label><div class="inp">14:00–15:00　·　可乐</div></div>
-    <div class="d-field"><label>支付状态</label><div class="inp">已付 ¥99.00（9900 分）</div></div>
-    <div style="margin-top:10px;display:flex;gap:6px;flex-wrap:wrap"><span class="d-pill b">已确认</span><span class="d-pill v">存在待审核取消申请</span></div>
-  </div>
-  <div class="d-panel" style="flex:1.25;min-width:230px">
-    <div class="t"><svg class="ic sm"><use href="#i-shield"/></svg>准入检查（业务 Skill）</div>
-    <div class="d-check ok"><span class="ci">✓</span><div><b>门店归属</b><small>操作者同店 · 上海徐汇店</small></div></div>
-    <div class="d-check ok"><span class="ci">✓</span><div><b>预约状态</b><small>已确认 · 付款有效</small></div></div>
-    <div class="d-check no"><span class="ci">✕</span><div><b>待处理取消申请</b><small>存在（待客服审核）→ 命中禁止核销规则</small></div></div>
-    <div class="d-note bad" style="margin-bottom:0"><svg class="ic"><use href="#i-x"/></svg><span><b>校验未通过</b>：状态与金额记录保持不变，写入冲突留痕。</span></div>
-  </div>
-</div>
-<div class="d-panel">
-  <div class="t"><svg class="ic sm"><use href="#i-check"/></svg>对照示例 · A-001 三条件全部通过</div>
-  <div class="d-flow"><span class="fs done">本店</span><span class="fa">›</span><span class="fs done">已确认</span><span class="fa">›</span><span class="fs done">无待处理申请</span><span class="fa">›</span><span class="fs on">核销成功</span></div>
-  <div style="display:flex;align-items:center;gap:9px;flex-wrap:wrap"><span class="d-btn brand">确认核销 · A-001</span><span style="font-size:10px;color:var(--muted)">verify_at 只写一次；取消与核销并发时由乐观锁 version 决定唯一胜者（FR-13）</span></div>
-</div>
-<div class="d-note warn"><svg class="ic"><use href="#i-lock"/></svg><span>越权防护：非本店员工操作直接拦截且不改动记录（FR-19）；已核销 / 服务中 / 已完成记录不提供取消退款入口（FR-14）。</span></div>
-</template>
-
-<template id="t-F3">
-<div class="d-h"><div><h3>服务进度登记 · A-003</h3><div class="sub">服务完成时记收入一次，重复动作幂等</div></div><div class="d-tools"><span class="d-btn">服务单详情</span></div></div>
-<div class="d-panel">
-  <div class="t"><svg class="ic sm"><use href="#i-play"/></svg>状态递进（不允许跳级）</div>
-  <div class="d-flow"><span class="fs done">已确认</span><span class="fa">›</span><span class="fs done">已核销</span><span class="fa">›</span><span class="fs on">服务中</span><span class="fa">›</span><span class="fs">已完成</span></div>
-  <div style="display:flex;gap:7px;flex-wrap:wrap"><span class="d-btn pri">登记服务开始</span><span class="d-btn brand">登记服务完成</span><span class="d-btn">重复提交（幂等测试）</span></div>
-</div>
-<div class="d-flex" style="align-items:stretch">
-  <div class="d-panel" style="flex:1.4;min-width:250px;padding:0;overflow:hidden">
-    <div style="padding:10px 12px;font-size:11.5px;font-weight:700;border-bottom:1px solid var(--line)">状态写入流水</div>
-    <table class="d-tbl"><thead><tr><th>动作</th><th>时间</th><th>写入字段</th><th>金额影响</th></tr></thead><tbody>
-      <tr><td>核销</td><td class="num">13:52</td><td>verify_at</td><td>无</td></tr>
-      <tr><td>开始</td><td class="num">13:58</td><td>service_started_at</td><td>无</td></tr>
-      <tr><td><b>完成</b></td><td class="num">14:40</td><td>service_finished_at</td><td><span class="d-pill g">收入 +9900 分（一次）</span></td></tr>
-      <tr><td>重复完成</td><td class="num">14:41</td><td>不写入</td><td><span class="d-pill r">幂等拒绝</span></td></tr>
-    </tbody></table>
-  </div>
-  <div class="d-panel" style="flex:1;min-width:180px">
-    <div class="t"><svg class="ic sm"><use href="#i-chart"/></svg>收入确认口径</div>
-    <div style="font-size:26px;font-weight:800;letter-spacing:-1px;color:#0B8058">9900 <span style="font-size:11px;font-weight:500;color:var(--muted)">分</span></div>
-    <div style="font-size:10px;color:var(--muted);margin-top:2px">仅「已完成」服务记录计入 M4</div>
-    <div class="d-note ok" style="margin-bottom:0"><svg class="ic"><use href="#i-check"/></svg><span>结果同步回写 U4 用户端与 M3 日清分类，不允许出现状态分歧。</span></div>
-  </div>
-</div>
-<div class="d-note bad"><svg class="ic"><use href="#i-alert"/></svg><span>重复核销 / 重复完成一律幂等拒绝：verify_at、started_at、finished_at 均只写一次，收入不得重复计入。</span></div>
-</template>
-
-<!-- ==================== 客服 C1–C3 ==================== -->
-<template id="t-C1">
-<div class="d-h"><div><h3>待审核取消申请</h3><div class="sub">仅临近开始（&lt; 2 小时）的申请进入人工审核</div></div><div class="d-tools"><span class="d-btn on">待审核 2</span><span class="d-btn">全部申请</span></div></div>
-<div class="d-panel" style="padding:0;overflow:hidden">
-  <table class="d-tbl"><thead><tr><th>预约单</th><th>时段 / 距开始</th><th>取消原因</th><th>状态</th><th>审核操作</th></tr></thead><tbody>
-    <tr><td><b>A-003</b><br><span style="font-size:9px;color:var(--muted)">可乐 · 9900 分</span></td><td>14:00–15:00<br><span class="d-pill a">1h20m</span></td><td>临时出差，无法到店</td><td><span class="d-pill v">待审核</span></td><td><span class="d-btn pri">批准</span> <span class="d-btn danger">拒绝</span></td></tr>
-    <tr><td><b>A-009</b><br><span style="font-size:9px;color:var(--muted)">雪球 · 9900 分</span></td><td>15:00–16:00<br><span class="d-pill a">0h45m</span></td><td>宠物身体不适</td><td><span class="d-pill v">待审核</span></td><td><span class="d-btn pri">批准</span> <span class="d-btn danger">拒绝</span></td></tr>
-  </tbody></table>
-</div>
-<div class="d-flex">
-  <div class="d-panel" style="flex:1;min-width:210px">
-    <div class="t"><svg class="ic sm"><use href="#i-check"/></svg>批准后的副作用</div>
-    <div class="d-tl">
-      <div class="ev g"><b>预约状态 → 已取消</b><span class="tm">12:45</span><p>名额释放一次（不可重复释放）</p></div>
-      <div class="ev"><b>生成全额退款单 9900 分</b><p>转 C2 跟进；退款失败不回滚取消结果</p></div>
-      <div class="ev r"><b>已取消预约不得再到店核销</b><p>前台 F2 三条件校验失败</p></div>
-    </div>
-  </div>
-  <div class="d-panel" style="flex:1;min-width:210px">
-    <div class="t"><svg class="ic sm"><use href="#i-refresh"/></svg>拒绝后的回退</div>
-    <div class="d-note info"><svg class="ic"><use href="#i-info"/></svg><span>预约回到<b>已确认</b>，名额保持，用户端 U4 显示「审核拒绝」，可正常到店核销。</span></div>
-    <div class="d-note bad"><svg class="ic"><use href="#i-x"/></svg><span>已核销 / 服务中 / 已完成的取消请求一律拒绝，并给出可读原因（FR-14）。</span></div>
-    <div class="d-note warn"><svg class="ic"><use href="#i-shield"/></svg><span>审核结果写入 reviewer / reviewed_at 留痕；批准与核销并发时只允许一个结果生效。</span></div>
-  </div>
-</div>
-</template>
-
-<template id="t-C2">
-<div class="d-h"><div><h3>退款失败跟进</h3><div class="sub">退款状态独立于预约状态 · 失败可重试</div></div><div class="d-tools"><span class="d-btn on">失败待跟进 1</span><span class="d-btn">全部退款单</span></div></div>
-<div class="d-kpis">
-  <div class="d-kpi"><small>退款总额</small><b>19800</b><div class="mini"><i style="width:60%"></i></div></div>
-  <div class="d-kpi"><small>已成功</small><b style="color:#0B8058">9900</b><div class="mini"><i style="width:50%;background:#0E9F6E"></i></div></div>
-  <div class="d-kpi"><small>失败待跟进</small><b style="color:#C2373C">9900</b><div class="mini"><i style="width:50%;background:#E5484D"></i></div></div>
-</div>
-<div class="d-panel" style="padding:0;overflow:hidden">
-  <table class="d-tbl"><thead><tr><th>退款单</th><th>关联预约</th><th>金额</th><th>失败原因</th><th>重试次数</th><th>操作</th></tr></thead><tbody>
-    <tr><td><b>R-003</b></td><td>A-003（已取消）</td><td class="num">9900 分</td><td>渠道超时</td><td class="num">1</td><td><span class="d-btn pri">重试退款</span></td></tr>
-    <tr><td><b>R-002</b></td><td>A-002（已取消）</td><td class="num">9900 分</td><td>—</td><td class="num">0</td><td><span class="d-pill g">退款成功</span></td></tr>
-  </tbody></table>
-</div>
-<div class="d-panel">
-  <div class="t"><svg class="ic sm"><use href="#i-refund"/></svg>退款状态链 · R-003</div>
-  <div class="d-flow"><span class="fs done">待退款</span><span class="fa">›</span><span class="fs done">退款中</span><span class="fa">›</span><span class="fs done" style="background:#FDEAEA;color:#C2373C">退款失败</span><span class="fa">›</span><span class="fs on">重试中</span><span class="fa">›</span><span class="fs">退款成功</span></div>
-  <div class="d-note bad" style="margin-bottom:0"><svg class="ic"><use href="#i-lock"/></svg><span><b>硬约束：</b>退款失败或重试过程中，预约<b>不复活</b>、名额<b>不恢复</b>、U4 仍显示「已取消 + 待跟进」；重试成功后 M4 的已退款 +9900、未退款金额相应减少。</span></div>
-</div>
-<div class="d-note info"><svg class="ic"><use href="#i-info"/></svg><span>每次重试记录 retry_count 与 last_error。迟到支付回调产生的异常退款同样进入本页；<b>未到店不自动退款</b>，不出现在本页（FR-15）。</span></div>
-</template>
-
-<template id="t-C3">
-<div class="d-h"><div><h3>处理流水 · A-003</h3><div class="sub">只读事件日志 · 用户可见结果与后台记录逐项对照</div></div><div class="d-tools"><span class="d-btn">导出流水</span></div></div>
-<div class="d-flex" style="align-items:stretch">
-  <div class="d-panel" style="flex:1.15;min-width:230px">
-    <div class="t"><svg class="ic sm"><use href="#i-clock"/></svg>客服动作时间线</div>
-    <div class="d-tl">
-      <div class="ev"><b>用户提交取消原因</b><span class="tm">12:40</span><p>距开始 1h20m → 转人工审核，名额保持</p></div>
-      <div class="ev g"><b>客服批准取消</b><span class="tm">12:45</span><p>预约已取消 · 名额释放一次 · 生成退款单</p></div>
-      <div class="ev r"><b>渠道退款请求失败</b><span class="tm">12:46</span><p>渠道超时 · refund_id = R-003 独立标记</p></div>
-      <div class="ev g"><b>客服重试退款成功</b><span class="tm">12:52</span><p>retry_count = 1 · 已取消终态不变</p></div>
-    </div>
-  </div>
-  <div class="d-panel" style="flex:1;min-width:210px">
-    <div class="t"><svg class="ic sm"><use href="#i-user"/></svg>用户端回显对照</div>
-    <table class="d-tbl"><thead><tr><th>后台事件</th><th>U4 可见结果</th></tr></thead><tbody>
-      <tr><td>转人工审核</td><td><span class="d-pill v">取消审核中</span></td></tr>
-      <tr><td>批准取消</td><td><span class="d-pill">已取消</span></td></tr>
-      <tr><td>退款失败</td><td><span class="d-pill r">退款失败待跟进</span></td></tr>
-      <tr><td>重试成功</td><td><span class="d-pill g">已取消 + 退款成功</span></td></tr>
-    </tbody></table>
-    <div class="d-note info" style="margin-bottom:0"><svg class="ic"><use href="#i-shield"/></svg><span>U4 / C3 / M3 / M4 是同一条记录的不同视图，不允许状态分歧。</span></div>
-  </div>
-</div>
-<div class="d-note warn"><svg class="ic"><use href="#i-lock"/></svg><span>流水只读，不提供「撤销 / 回滚」入口；被拒绝的并发或越权操作同样留痕，供 SC-04 与收店核查使用。</span></div>
-</template>
-
-<!-- ==================== 店长 M1 ==================== -->
-<template id="t-M1">
-<div class="d-h"><div><h3>发布可预约时段</h3><div class="sub">单店 · 单项目 · 3 个未来时段 · 容量固定 3</div></div><div class="d-tools"><span class="d-btn">时段模板</span></div></div>
-<div class="d-panel">
-  <div class="t"><svg class="ic sm"><use href="#i-cal"/></svg>新建时段</div>
-  <div class="d-flex" style="margin-bottom:9px">
-    <div class="d-field"><label>开始时间 start_at</label><div class="inp">2026-11-14 13:00</div></div>
-    <div class="d-field"><label>结束时间 end_at</label><div class="inp">2026-11-14 14:00</div></div>
-    <div class="d-field" style="max-width:150px"><label>容量（固定）</label><div class="inp">3 只 / 时段</div></div>
-  </div>
-  <div class="d-flex" style="margin-bottom:10px">
-    <div class="d-field"><label>门店</label><div class="inp">上海 · 徐汇店</div></div>
-    <div class="d-field"><label>服务项目</label><div class="inp">宠物洗护（全款 9900 分）</div></div>
-  </div>
-  <span class="d-btn pri">发布时段</span>
-  <div class="d-note info" style="margin-bottom:0"><svg class="ic"><use href="#i-clock"/></svg><span>end_at 必须晚于 start_at。起止时间是后续所有时间规则的唯一基准：2 小时取消线、时段已开始不可约、时段结束后才可标记未到店。</span></div>
-</div>
-<div class="d-panel" style="padding:0;overflow:hidden">
-  <div style="padding:10px 12px;font-size:11.5px;font-weight:700;border-bottom:1px solid var(--line)">已发布时段</div>
-  <table class="d-tbl"><thead><tr><th>时段</th><th>起止时间</th><th>名额占用</th><th>状态</th><th>取消线</th></tr></thead><tbody>
-    <tr><td><b>时段 1</b></td><td>13:00–14:00</td><td class="num">3 / 3</td><td><span class="d-pill b">未开始</span></td><td>11:00 前自动受理</td></tr>
-    <tr><td><b>时段 2</b></td><td>14:00–15:00</td><td class="num">2 / 3</td><td><span class="d-pill b">未开始</span></td><td>12:00 前自动受理</td></tr>
-    <tr><td><b>时段 3</b></td><td>15:00–16:00</td><td class="num">1 / 3</td><td><span class="d-pill b">未开始</span></td><td>13:00 前自动受理</td></tr>
-  </tbody></table>
-</div>
-<div class="d-note warn"><svg class="ic"><use href="#i-lock"/></svg><span>范围守护：不提供多店结算、排班优化、优惠与会员入口；时段状态由服务器时间驱动（未开始 / 进行中 / 已结束）。</span></div>
-</template>
-
-<!-- ==================== 店长 M2–M4 ==================== -->
-<template id="t-M2">
-<div class="d-h"><div><h3>未到店标记</h3><div class="sub">时段结束 + 无核销记录 → 店长写原因后标记</div></div><div class="d-tools"><span class="d-btn on">需处理 1</span><span class="d-btn">已处理</span></div></div>
-<div class="d-panel" style="padding:0;overflow:hidden">
-  <table class="d-tbl"><thead><tr><th>预约单</th><th>时段（已结束）</th><th>宠物</th><th>核销记录</th><th>原因（必填）</th><th>操作</th></tr></thead><tbody>
-    <tr><td><b>A-004</b><br><span style="font-size:9px;color:var(--muted)">已付 9900 分</span></td><td>13:00–14:00</td><td>团子</td><td><span class="d-pill r">无</span></td><td><span style="background:#F8FAFE;border:1px solid var(--line);border-radius:6px;padding:3px 7px;font-size:10px">未联系上主人</span></td><td><span class="d-btn pri">标记未到店</span></td></tr>
-    <tr><td><b>A-006</b></td><td>13:00–14:00</td><td>雪球</td><td><span class="d-pill g">已核销 13:20</span></td><td>—</td><td><span class="d-btn grey">不在本页</span></td></tr>
-  </tbody></table>
-</div>
-<div class="d-flex">
-  <div class="d-panel" style="flex:1;min-width:210px">
-    <div class="t"><svg class="ic sm"><use href="#i-alert"/></svg>本题约定</div>
-    <div class="d-note bad" style="margin-top:0"><svg class="ic"><use href="#i-lock"/></svg><span><b>未到店不自动退款。</b>页面不提供「自动退款」开关，也不实现争议退款裁决。</span></div>
-    <div class="d-note warn"><svg class="ic"><use href="#i-info"/></svg><span>仅在时段已结束且无核销记录时可标记，原因必填；已核销 / 服务中 / 已完成记录不出现在本页。</span></div>
-  </div>
-  <div class="d-panel" style="flex:1;min-width:210px">
-    <div class="t"><svg class="ic sm"><use href="#i-chart"/></svg>标记后的金额影响</div>
-    <table class="d-tbl"><thead><tr><th>指标</th><th>是否计入</th></tr></thead><tbody>
-      <tr><td>已收款</td><td><span class="d-pill g">+9900 分</span></td></tr>
-      <tr><td>已退款</td><td><span class="d-pill">0</span></td></tr>
-      <tr><td>未退款金额</td><td><span class="d-pill a">+9900 分</span></td></tr>
-      <tr><td>已完成服务收入</td><td><span class="d-pill r">不计入</span></td></tr>
-    </tbody></table>
-    <div style="font-size:10px;color:var(--muted);margin-top:7px">用户端 U4 显示「未到店 + 原因」，结果同步 M3 / M4。</div>
-  </div>
-</div>
-</template>
-
-<template id="t-M3">
-<div class="d-h"><div><h3>当日分类查询</h3><div class="sub">2026-11-13　·　按时段核查五类记录</div></div><div class="d-tools"><span class="d-btn on">全部</span><span class="d-btn">有效预约</span><span class="d-btn">已完成</span><span class="d-btn">取消</span><span class="d-btn">未到店</span><span class="d-btn">退款待处理</span></div></div>
-<div class="d-kpis">
-  <div class="d-kpi"><small>有效预约</small><b>3</b><div class="mini"><i style="width:60%"></i></div></div>
-  <div class="d-kpi"><small>已完成</small><b style="color:#0B8058">1</b><div class="mini"><i style="width:25%;background:#0E9F6E"></i></div></div>
-  <div class="d-kpi"><small>取消</small><b>2</b><div class="mini"><i style="width:45%;background:#7C5CE0"></i></div></div>
-  <div class="d-kpi"><small>未到店</small><b style="color:#A46B00">1</b><div class="mini"><i style="width:25%;background:#E9930B"></i></div></div>
-  <div class="d-kpi"><small>退款待处理</small><b style="color:#C2373C">1</b><div class="mini"><i style="width:25%;background:#E5484D"></i></div></div>
-</div>
-<div class="d-panel" style="padding:0;overflow:hidden">
-  <div style="padding:10px 12px;display:flex;gap:8px;align-items:center;border-bottom:1px solid var(--line)"><b style="font-size:11.5px">时段分布矩阵</b><span style="margin-left:auto;font-size:9.5px;color:var(--muted)">来源 appointment / refund / service_record</span></div>
-  <table class="d-tbl"><thead><tr><th>时段</th><th>有效预约</th><th>已完成</th><th>取消</th><th>未到店</th><th>退款待处理</th></tr></thead><tbody>
-    <tr><td><b>13:00–14:00</b></td><td class="num">1</td><td class="num">1</td><td class="num">0</td><td class="num">1</td><td class="num">0</td></tr>
-    <tr><td><b>14:00–15:00</b></td><td class="num">1</td><td class="num">0</td><td class="num">1</td><td class="num">0</td><td class="num">1</td></tr>
-    <tr><td><b>15:00–16:00</b></td><td class="num">1</td><td class="num">0</td><td class="num">1</td><td class="num">0</td><td class="num">0</td></tr>
-    <tr style="background:#F7F9FD"><td><b>合计</b></td><td class="num"><b>3</b></td><td class="num"><b>1</b></td><td class="num"><b>2</b></td><td class="num"><b>1</b></td><td class="num"><b>1</b></td></tr>
-  </tbody></table>
-</div>
-<div class="d-note info"><svg class="ic"><use href="#i-info"/></svg><span><b>有效预约</b> = 待支付占位 / 已确认 / 取消审核中 / 已核销 / 服务中（仍占名额）；已取消 / 已关闭 / 已完成 / 未到店为终态。明细列含预约单、宠物、状态、支付金额、退款状态、服务结果与最近操作人。</span></div>
-<div class="d-note warn"><svg class="ic"><use href="#i-alert"/></svg><span>五类记录必须可分别筛出，不能只给一个「全部订单」列表；不把已付款记录一律呈现为「已完成服务」。</span></div>
-</template>
-
-<template id="t-M4">
-<div class="d-h"><div><h3>收店核查 · 2026-11-13</h3><div class="sub">逐笔反查支付单 / 退款单 / 服务记录</div></div><div class="d-tools"><span class="d-btn">导出核查明细</span><span class="d-btn pri">核对完成</span></div></div>
-<div class="d-kpis">
-  <div class="d-kpi"><small>已收款（4 笔 × 9900）</small><b>39600</b><div class="mini"><i style="width:100%"></i></div></div>
-  <div class="d-kpi"><small>已退款</small><b style="color:#0B8058">9900</b><div class="mini"><i style="width:25%;background:#0E9F6E"></i></div></div>
-  <div class="d-kpi"><small>未退款金额</small><b style="color:#A46B00">29700</b><div class="mini"><i style="width:75%;background:#E9930B"></i></div></div>
-  <div class="d-kpi" style="background:#FFF6EE;border-color:#FFD7BF"><small>已完成服务收入（仅 1 笔）</small><b style="color:#C2571A">9900</b><div class="mini"><i style="width:25%;background:#FF7A45"></i></div></div>
-</div>
-<div class="d-panel" style="padding:0;overflow:hidden">
-  <div style="padding:10px 12px;font-size:11.5px;font-weight:700;border-bottom:1px solid var(--line)">逐笔对账明细 <span style="font-weight:400;color:var(--muted);font-size:9.5px">单位：分</span></div>
-  <table class="d-tbl"><thead><tr><th>预约</th><th>结局</th><th>已收款</th><th>已退款</th><th>未退款</th><th>已完成服务收入</th></tr></thead><tbody>
-    <tr><td><b>A1</b></td><td>已完成</td><td class="num">9900</td><td class="num">0</td><td class="num">0</td><td class="num"><b style="color:#0B8058">9900</b></td></tr>
-    <tr><td><b>A2</b></td><td>提前取消 · 退款成功</td><td class="num">9900</td><td class="num">9900</td><td class="num">0</td><td class="num">0</td></tr>
-    <tr><td><b>A3</b></td><td>取消 · 退款失败待跟进</td><td class="num">9900</td><td class="num">0</td><td class="num">9900</td><td class="num">0</td></tr>
-    <tr><td><b>A4</b></td><td>未到店 · 不自动退款</td><td class="num">9900</td><td class="num">0</td><td class="num">9900</td><td class="num">0</td></tr>
-    <tr style="background:#F7F9FD"><td><b>合计</b></td><td>4 笔</td><td class="num"><b>39600</b></td><td class="num"><b>9900</b></td><td class="num"><b>29700</b></td><td class="num"><b style="color:#C2571A">9900</b></td></tr>
-  </tbody></table>
-</div>
-<div class="d-note bad"><svg class="ic"><use href="#i-alert"/></svg><span><b>规则 8 警示：</b>若把 4 笔已付款都计作已完成服务，收入会被<b>虚增 29700 分</b>。未退款金额 = 已收款 − 已退款，含退款失败待跟进与未到店未退款；四类记录必须同日可分别核查（SC-05）。</span></div>
-</template>
-
-<!-- ==================== 渠道 P1 ==================== -->
-<template id="t-P1">
-<div class="d-h"><div><h3>模拟支付渠道 · 回调配置</h3><div class="sub">只返回结果，不修改业务状态 · 不产生真实资金流水</div></div><div class="d-tools"><span class="d-btn">重置全部</span></div></div>
-<div class="d-flex" style="align-items:stretch">
-  <div class="d-panel" style="flex:1.1;min-width:235px">
-    <div class="t"><svg class="ic sm"><use href="#i-cloud"/></svg>场景开关</div>
-    <div class="d-toggle"><div class="lb">支付成功<small>返回 PAID · U2 → 已确认</small></div><span class="d-sw on"><i></i></span></div>
-    <div class="d-toggle"><div class="lb">重复支付通知<small>同一 notify_key 连发 2 次 · FR-05 幂等</small></div><span class="d-sw on"><i></i></span></div>
-    <div class="d-toggle"><div class="lb">迟到支付成功回调<small>预约已关闭后到达 · FR-06 异常登记</small></div><span class="d-sw o"><i></i></span></div>
-    <div class="d-toggle"><div class="lb">退款成功<small>REFUNDED 9900 分 · U4 / M4</small></div><span class="d-sw on"><i></i></span></div>
-    <div class="d-toggle"><div class="lb">退款失败<small>FAILED（渠道超时）· C2 跟进重试</small></div><span class="d-sw r"><i></i></span></div>
-  </div>
-  <div class="d-panel" style="flex:1;min-width:210px">
-    <div class="t"><svg class="ic sm"><use href="#i-arrow"/></svg>发送回调</div>
-    <div style="display:flex;gap:6px;flex-wrap:wrap;margin-bottom:10px"><span class="d-btn pri">支付回调</span><span class="d-btn brand">退款回调</span><span class="d-btn danger">制造退款失败</span></div>
-    <div class="d-field" style="margin-bottom:8px"><label>channel_trade_no</label><div class="inp">PAY-20261113-0003</div></div>
-    <div class="d-field"><label>notify_key（幂等键）</label><div class="inp">nkey_8f31c2 · 重复发送保持一致</div></div>
-    <div class="d-log" style="margin-top:10px">
-      <div><span class="ok">[ ok ]</span> 12:01 PAID　A-003 → 已确认</div>
-      <div><span class="wn">[dup]</span> 12:01 PAID　nkey 重复 → 幂等忽略</div>
-      <div><span class="er">[err]</span> 12:46 REFUND FAILED　渠道超时</div>
-      <div><span class="wn">[late]</span> 13:02 PAID　预约已关闭 → 异常登记</div>
-    </div>
-  </div>
-</div>
-<div class="d-note info"><svg class="ic"><use href="#i-info"/></svg><span>可稳定制造「未付款超时 / 取消 → 名额恢复」（SC-02）与「退款失败 → 重试成功」（SC-03）。迟到回调必须与关闭时间比较，触发异常登记与退款，<b>不能恢复预约</b>。</span></div>
-<div class="d-note warn"><svg class="ic"><use href="#i-shield"/></svg><span>状态变更由业务侧按幂等键与预约当前状态决定；渠道结果同时供 U2 支付页、C2 退款跟进与 M4 金额核查引用。</span></div>
-</template>
-
-</div>
+<footer>题目 02 · 宠物门店预约、接待、服务与取消退款 ｜ 可交互角色页面原型 V3.0 ｜ 依据《软件需求规格说明书》FR-01~FR-20 与 5 个必演场景</footer>
+<div class="toast" id="toast"></div>
 
 <script>
 (function(){
 'use strict';
+/* ================= 基础 ================= */
 var IC=function(n,cls){return '<svg class="ic '+(cls||'')+'"><use href="#'+n+'"/></svg>';};
 
 var ROLES=[
@@ -939,113 +573,216 @@ var NAV={
 
 var P={
 U1:{n:'时段选择与预约',kind:'phone',nav:'预约时段',url:'m.maoqiu.app/book',tab:1,
- desc:'选择自己的宠物与可预约时段。创建预约时原子校验名额、时段是否已开始、同一宠物同一时段唯一有效预约；成功后进入 5 分钟占位。',
- chips:['FR-01','FR-02','FR-03','FR-04','R1','SC-02'],shared:'appointment_id = A-20261113-003 · amount_fen = <b>9900</b> · version = 7',
- skills:['名额：容量 3 / 时段 2 剩 1','预约时间：当前时间 &lt; start_at','唯一有效预约：豆豆 + 时段 2 无有效单'],
- rules:['名额不足或时段已开始 → 按钮禁用并给出原因，不生成预约记录。','并发抢占最后 1 个名额时只允许 1 人成功，其余收到「名额不足」。','宠物下拉只列当前用户名下宠物，不做档案编辑。'],
+ desc:'选择自己的宠物与可预约时段。点击【立即预约】会真实创建一条占位记录：原子校验名额、时段是否已开始、同一宠物同一时段唯一有效预约。',
+ chips:['FR-01','FR-02','FR-03','FR-04','R1','SC-02'],
+ skills:['名额：容量 3 / 有效占用计数','预约时间：当前时间 &lt; start_at','唯一有效预约：同一宠物同一时段'],
+ rules:['名额不足或时段已开始 → 按钮禁用并给出原因，不生成预约记录。','并发抢占最后 1 个名额时只允许 1 人成功。','宠物下拉只列当前用户名下宠物，不做档案编辑。'],
  exits:['U2 订单支付','U1 重新预约（SC-02）']},
-U2:{n:'订单支付',kind:'phone',nav:'订单支付',url:'m.maoqiu.app/order/A-003',tab:2,
- desc:'展示预约单摘要与 9900 分全款，发起模拟支付；支付成功回调把预约从「待支付占位」推进到「已确认」，重复通知与迟到回调必须被正确处理。',
- chips:['FR-05','FR-06','FR-20','R2'],shared:'status: 待支付占位 → 已确认 · version = 7 → <b>8</b>',
+U2:{n:'订单支付',kind:'phone',nav:'订单支付',url:'m.maoqiu.app/order',tab:2,
+ desc:'展示预约单摘要与 9900 分全款，点击【确认支付】发起支付请求；需到 P1 模拟渠道返回回调后预约才推进为「已确认」。',
+ chips:['FR-05','FR-06','FR-20','R2'],
  skills:['预约时间：5 分钟占位倒计时','退款：迟到回调需登记异常并退款','幂等键 notify_key / channel_trade_no'],
- rules:['confirmed_at 只写一次；重复通知不改变状态、不重复占名额、不重复记收入。','主动取消或超时 → 预约关闭，名额释放一次（SC-02）。','金额固定 9900 分，展示为 ¥99.00，不做优惠与会员价。'],
- exits:['U4 我的预约','C2 退款跟进（异常）']},
-U3:{n:'取消申请',kind:'phone',nav:'我的预约',url:'m.maoqiu.app/cancel/A-003',tab:3,
+ rules:['confirmed_at 只写一次；重复通知不改变状态、不重复占名额。','主动取消或超时 → 预约关闭，名额释放一次（SC-02）。','金额固定 9900 分，不做优惠与会员价。'],
+ exits:['P1 返回回调','U4 我的预约']},
+U3:{n:'取消申请',kind:'phone',nav:'我的预约',url:'m.maoqiu.app/cancel',tab:3,
  desc:'按「距时段开始时间」自动分流：≥2 小时自动受理并全额退款；&lt;2 小时必须填写原因提交客服审核，审核期间名额保持且不得核销。',
- chips:['FR-07','FR-08','R3','SC-03'],shared:'status: 已确认 → 取消审核中 / 已取消 · cancel_request_id 写入主记录',
+ chips:['FR-07','FR-08','R3','SC-03'],
  skills:['预约时间：start_at − 当前时间','取消政策：自动 / 人工分流、待审核禁核销','名额：不得提前释放'],
- rules:['等于 2 小时走自动受理分支；小于 2 小时原因必填。','待审核期间重复点击取消不产生第二笔申请，也不释放名额。','已核销 / 服务中 / 已完成进入本页时，取消入口不可见（FR-14）。'],
+ rules:['等于 2 小时走自动受理分支；小于 2 小时原因必填。','待审核期间重复点击取消不产生第二笔申请。','已核销 / 服务中 / 已完成，取消入口不可见（FR-14）。'],
  exits:['U4（自动受理）','C1 客服审核']},
 U4:{n:'我的预约与服务结果',kind:'phone',nav:'我的预约',url:'m.maoqiu.app/mine',tab:3,
- desc:'统一回显预约结果、付款结果与实际服务结果，覆盖四种结局；退款状态独立可查，未到店结果带原因且不自动退款。',
- chips:['FR-10','FR-16','R4','R7','SC-05'],shared:'用户看到的状态必须与前台 / 客服 / 店长记录<b>一致</b>',
+ desc:'统一回显预约结果、付款结果与实际服务结果；退款状态独立可查，未到店结果带原因且不自动退款。',
+ chips:['FR-10','FR-16','R4','R7','SC-05'],
  skills:['退款：状态独立、失败跟进','服务进度：仅已完成显示服务结果','取消政策：终态不可再取消'],
- rules:['四种结局分别展示，用户能看到各自不同结果（SC-03）。','退款失败卡片显示「待跟进」，不隐藏、不改写为已退款。','未到店卡片显示店长填写的原因，且不自动产生退款单。'],
+ rules:['四种结局分别展示，与前台 / 客服 / 店长记录一致。','退款失败卡片显示「待跟进」，不改写为已退款。','未到店卡片显示店长填写的原因，不自动产生退款单。'],
  exits:['U3 取消申请（仅有效预约）']},
-F1:{n:'当日接待台',kind:'desk',nav:'当日接待台',url:'desk.maoqiu.app/reception?date=2026-11-13',
- desc:'本店当日预约总览与名额占用视图，按门店、时段、状态筛选；是核销与服务登记的统一入口。',
- chips:['FR-03','FR-11','FR-17','SC-04'],shared:'列表每行 = 一条 appointment · 前台<b>只读本店</b>记录',
+F1:{n:'当日接待台',kind:'desk',nav:'当日接待台',url:'desk.maoqiu.app/reception',
+ desc:'本店当日预约总览与名额占用视图，可按状态筛选；点击行内【核销】进入 F2，是核销与服务登记的统一入口。',
+ chips:['FR-03','FR-11','FR-17','SC-04'],
  skills:['名额：占用计数含占位与审核中','取消政策：待审核期间禁止核销','服务进度：终态不可再操作'],
- rules:['列表只读本店；跨店数据不展示（FR-19）。','「取消申请」列有值时，核销按钮禁用并给出拒绝原因。','重复核销请求由后端幂等拒绝，页面不重复提交。'],
+ rules:['列表只读本店；跨店数据不展示（FR-19）。','「取消申请」列有值时，核销按钮禁用并给出拒绝原因。','重复核销请求由后端幂等拒绝。'],
  exits:['F2 到店核销']},
-F2:{n:'到店核销',kind:'desk',nav:'到店核销',url:'desk.maoqiu.app/verify/A-003',
- desc:'核验到店时逐项校验三条准入条件：本店、已确认、无待处理取消申请；任一不满足即拒绝，且不得改动预约与金额记录。',
- chips:['FR-11','FR-13','FR-19','SC-04'],shared:'核销与取消并发时由 <b>version</b> 决定唯一胜者',
+F2:{n:'到店核销',kind:'desk',nav:'到店核销',url:'desk.maoqiu.app/verify',
+ desc:'核验到店时逐项校验三条准入条件：本店、已确认、无待处理取消申请；任一不满足即拒绝。可演示「取消与核销并发」的 version 冲突。',
+ chips:['FR-11','FR-13','FR-19','SC-04'],
  skills:['取消政策：待审核禁核销','服务进度：前序状态校验','名额：取消与核销并发只产生一个合法结果'],
  rules:['非本店员工操作 → 拦截且不改动记录（FR-19）。','取消与核销同时发生 → 只有一个成功，冲突留痕（FR-13）。','已核销 / 服务中 / 已完成 → 取消退款入口不可达（FR-14）。'],
  exits:['F3 服务进度登记']},
-F3:{n:'服务进度登记',kind:'desk',nav:'服务登记',url:'desk.maoqiu.app/service/A-003',
- desc:'核销后依次登记服务开始与完成；完成时记收入一次，重复核销或重复完成不得重复计入收入。',
- chips:['FR-12','FR-13','R5','SC-01'],shared:'revenue_fen = <b>9900</b>（只在完成时写一次）',
+F3:{n:'服务进度登记',kind:'desk',nav:'服务登记',url:'desk.maoqiu.app/service',
+ desc:'核销后依次登记服务开始与完成；完成时记收入一次，重复点击【完成服务】会被幂等拒绝，不重复计收入。',
+ chips:['FR-12','FR-13','R5','SC-01'],
  skills:['服务进度：状态顺序递进、幂等','退款：已完成不可进入取消退款流程'],
- rules:['状态必须按 已确认 → 已核销 → 服务中 → 已完成 递进，不允许跳级。','已完成记录才计入 M4 的「已完成服务收入」。','服务结果同步回写到用户端 U4 与店长端 M3。'],
+ rules:['状态必须按 已确认 → 已核销 → 服务中 → 已完成 递进。','已完成记录才计入 M4 的「已完成服务收入」。','服务结果同步回写用户端 U4 与店长端 M3。'],
  exits:['U4 服务结果','M3 日清分类']},
 C1:{n:'取消审核工作台',kind:'desk',nav:'取消审核',url:'cs.maoqiu.app/cancel-requests',
  desc:'处理临近开始（&lt;2 小时）的取消申请：查看原因与距开始时间，批准或拒绝；批准才释放名额并进入退款流程。',
- chips:['FR-08','FR-09','R3','SC-03'],shared:'批准 / 拒绝结果回写主记录 status 与 cancel_request.status',
+ chips:['FR-08','FR-09','R3','SC-03'],
  skills:['取消政策：人工审核分支','名额：批准时释放一次','服务进度：终态禁入'],
- rules:['审核期间名额保持、前台不得核销；结果写入操作留痕（reviewer / reviewed_at）。','批准与核销并发时只允许一个结果生效（FR-13）。','批准不因退款失败而回滚，名额不恢复（FR-09 / FR-10）。'],
+ rules:['审核期间名额保持、前台不得核销；结果写入留痕。','批准与核销并发时只允许一个结果生效（FR-13）。','批准不因退款失败而回滚，名额不恢复（FR-09/10）。'],
  exits:['C2 退款跟进（批准）','U4（拒绝）']},
-C2:{n:'退款失败跟进',kind:'desk',nav:'退款跟进',url:'cs.maoqiu.app/refunds?status=failed',
+C2:{n:'退款失败跟进',kind:'desk',nav:'退款跟进',url:'cs.maoqiu.app/refunds',
  desc:'退款状态独立可查询；渠道返回失败时留痕并允许重试，重试成功不改变已取消终态，也不让名额重新可用。',
- chips:['FR-10','FR-20','R4','SC-03'],shared:'refund_id 独立于 appointment.status · 预约仍为「<b>已取消</b>」',
+ chips:['FR-10','FR-20','R4','SC-03'],
  skills:['退款：全额、状态独立、失败跟进、不改变取消终态','名额：不因退款失败释放第二次'],
- rules:['每次重试记录 retry_count 与 last_error，供收店核查。','迟到支付成功回调产生的异常退款同样进入本页跟进。','未到店不自动退款，因此不出现在本页（FR-15）。'],
+ rules:['每次重试记录 retry_count 与 last_error。','迟到支付成功回调产生的异常退款同样进入本页跟进。','未到店不自动退款，因此不出现在本页（FR-15）。'],
  exits:['C3 处理记录','U4 退款状态','M4 金额核查']},
-C3:{n:'处理记录与结果回显',kind:'desk',nav:'处理记录',url:'cs.maoqiu.app/history/A-003',
- desc:'汇总客服动作流水，并把处理结果回显给用户；保证用户看到的结果与店长日清记录一致。',
- chips:['FR-16','R8','SC-03'],shared:'事件日志 EventLog <b>只读</b>展示 · 不产生新业务流程',
+C3:{n:'处理记录与结果回显',kind:'desk',nav:'处理记录',url:'cs.maoqiu.app/history',
+ desc:'汇总全流程动作流水（只读），并把处理结果回显给用户；保证用户看到的结果与店长日清记录一致。',
+ chips:['FR-16','R8','SC-03'],
  skills:['退款：状态链完整','服务进度：未进入接待流程','取消政策：终态一致'],
  rules:['流水只读，不提供「撤销 / 回滚」入口；本题不实现争议退款裁决。','被拒绝的并发 / 越权操作也留痕，供 SC-04 与收店核查。'],
  exits:['U4','M3 日清']},
-M1:{n:'时段发布',kind:'desk',nav:'时段发布',url:'mgr.maoqiu.app/slots/new',
- desc:'创建带明确起止时间的可预约时段；容量固定 3，单店单项目，3 个未来时段。',
- chips:['FR-01','P02','SC-01'],shared:'slot 是 appointment 的分组键 · <b>start_at</b> 决定 2 小时取消线与「时段已开始」判定',
+M1:{n:'时段发布',kind:'desk',nav:'时段发布',url:'mgr.maoqiu.app/slots',
+ desc:'创建带明确起止时间的可预约时段；容量固定 3，单店单项目。时段状态由模拟时钟驱动：未开始 / 进行中 / 已结束。',
+ chips:['FR-01','P02','SC-01'],
  skills:['预约时间：起止时间合法','名额：容量固定 3'],
- rules:['只做单店单项目，不提供多店结算或排班优化入口。','时段状态由服务器时间驱动：未开始 / 进行中 / 已结束。'],
+ rules:['只做单店单项目，不提供多店结算或排班优化入口。','时段状态由服务器时间驱动。'],
  exits:['U1 用户可预约','M2 未到店标记']},
 M2:{n:'未到店标记',kind:'desk',nav:'未到店标记',url:'mgr.maoqiu.app/no-show',
- desc:'时段结束后，对仍未核销的预约由店长标记未到店并写明原因；本题约定不自动退款，用户可查看该结果。',
- chips:['FR-15','FR-16','R7','SC-05'],shared:'status → 未到店 · no_show_reason 必填 · <b>不生成退款单</b>',
+ desc:'时段结束后，对仍未核销的预约由店长标记未到店并写明原因；本题约定不自动退款，用户可在 U4 查看该结果。',
+ chips:['FR-15','FR-16','R7','SC-05'],
  skills:['预约时间：end_at 已过','服务进度：无核销记录','退款：不自动退款'],
  rules:['仅在时段已结束且无核销记录时才可标记；原因必填。','已核销 / 服务中 / 已完成记录不出现在本页。'],
  exits:['U4 未到店结果','M3 / M4 日清']},
-M3:{n:'日清分类查询',kind:'desk',nav:'日清分类',url:'mgr.maoqiu.app/daily?date=2026-11-13',
+M3:{n:'日清分类查询',kind:'desk',nav:'日清分类',url:'mgr.maoqiu.app/daily',
  desc:'按当日各时段查询有效预约、已完成、取消、未到店及退款待处理记录，五类可分别核查。',
- chips:['FR-17','R8','SC-05'],shared:'查询条件：日期 + 时段 + 分类 · 来源 appointment / refund / service_record',
+ chips:['FR-17','R8','SC-05'],
  skills:['名额：有效占用定义','退款：待处理单独可筛','服务进度：已完成分类'],
  rules:['五类记录必须可分别筛出，不能只给一个「全部订单」列表。','不把已付款记录一律呈现为「已完成服务」。'],
  exits:['M4 金额核查']},
 M4:{n:'金额核查',kind:'desk',nav:'金额核查',url:'mgr.maoqiu.app/daily/settlement',
- desc:'已收款、已退款与未退款金额须可从记录逐笔反查；已完成服务收入只认已完成服务记录。',
- chips:['FR-18','R8','SC-05'],shared:'金额单位「分」· Payment + Refund + ServiceRecord 三账对查',
+ desc:'已收款、已退款与未退款金额逐笔反查；已完成服务收入只认已完成服务记录。数字随沙盒操作实时变化。',
+ chips:['FR-18','R8','SC-05'],
  skills:['退款：金额三分类','服务进度：收入确认仅认已完成','名额：终态不再占用'],
- rules:['未退款金额 = 已收款 − 已退款，含退款失败待跟进与未到店未退款。','四类记录（已服务 / 取消退款 / 未到店 / 退款失败）必须同日可分别核查（SC-05）。'],
+ rules:['未退款金额 = 已收款 − 已退款，含退款失败待跟进与未到店未退款。','四类记录必须同日可分别核查（SC-05）。'],
  exits:['收店核查完成（SC-05）']},
 P1:{n:'模拟支付控制台',kind:'desk',nav:'控制台',url:'mock.pay.test/console',
- desc:'返回预约款支付及退款结果，可配置成功、重复通知、迟到回调、退款失败，用于稳定复现 SC-02 / SC-03 / SC-05。',
- chips:['FR-20','FR-05','FR-06','FR-10'],shared:'回调携带 channel_trade_no + notify_key · <b>不产生真实资金流水</b>',
+ desc:'返回预约款支付及退款结果：待回调的支付/退款单在此返回成功或失败；可制造重复通知、迟到回调，用于复现 SC-02 / SC-03 / SC-05。',
+ chips:['FR-20','FR-05','FR-06','FR-10'],
  skills:['退款：失败可重试','名额：迟到回调不恢复名额','支付通知幂等'],
  rules:['可稳定制造「未付款超时 / 取消 → 名额恢复」与「退款失败 → 重试成功」。','迟到回调必须与关闭时间比较，触发异常登记与退款而非恢复预约。'],
  exits:['U2 支付结果','C2 退款结果','M4 金额核查']}
 };
-
 var ORDER=[];ROLES.forEach(function(r){r.pages.forEach(function(p){ORDER.push(p);});});
-var SCENES={
- 'SC-01':{name:'正常预约到完成',pages:['M1','U1','U2','F1','F2','F3','U4']},
- 'SC-02':{name:'占位超时名额恢复',pages:['U1','U2','P1','U1']},
- 'SC-03':{name:'临近取消与退款失败',pages:['U3','C1','C2','C3','U4']},
- 'SC-04':{name:'待审核禁止核销',pages:['F1','F2','C1','F3']},
- 'SC-05':{name:'收店四类记录核查',pages:['M2','M3','M4','U4']}
-};
-var cur='U1',curRole='user',curView='overview',scene=null,sceneIdx=0;
 
-/* ---------- device frames ---------- */
+/* ================= 状态字典 ================= */
+var ST={hold:['待支付占位','o'],confirmed:['已确认','b'],review:['取消审核中','v'],verified:['已核销','b'],serving:['服务中','b'],completed:['已完成','g'],cancelled:['已取消',''],closed:['已关闭',''],noshow:['未到店','r']};
+var ACTIVE=['hold','confirmed','review','verified','serving','completed'];
+var PETS=[{n:'豆豆',t:'金毛犬 · 2 岁',e:'🐕'},{n:'咪咪',t:'英短猫 · 3 岁',e:'🐈'},{n:'球球',t:'柯基犬 · 1 岁',e:'🐶'},{n:'布丁',t:'布偶猫 · 2 岁',e:'🐱'}];
+var NSHOW_REASONS=['客户联系不上','迟到超 15 分钟','宠物当日身体不适','其他（已电话确认）'];
+
+function D(h,m){return new Date(2026,10,13,h,m);}
+function pad(n){return (n<10?'0':'')+n;}
+function tm(d){return pad(d.getHours())+':'+pad(d.getMinutes());}
+function addMin(d,m){return new Date(d.getTime()+m*60000);}
+function money(f){return '¥'+(f/100).toFixed(2);}
+function petE(n){var p=PETS.filter(function(x){return x.n===n;})[0];return p?p.e:'🐾';}
+function S(id){return STORE.slots.filter(function(s){return s.id===id;})[0];}
+function A(id){return STORE.appts.filter(function(a){return a.id===id;})[0];}
+function occ(id){return STORE.appts.filter(function(a){return a.slotId===id&&ACTIVE.indexOf(a.status)>=0;}).length;}
+function rem(id){var s=S(id);return s?s.cap-occ(id):0;}
+function slotState(s){return clock<s.start?'未开始':(clock<s.end?'进行中':'已结束');}
+function minsTo(s){return Math.floor((s.start-clock)/60000);}
+function pill(st){var s=ST[st]||[st,''];return '<span class="d-pill '+s[1]+'">'+s[0]+'</span>';}
+function refPill(rs){return rs==='success'?'<span class="d-pill g">退款成功</span>':(rs==='failed'?'<span class="d-pill r">退款失败 · 待跟进</span>':'<span class="d-pill a">退款待回调</span>');}
+function refundOf(aid){return STORE.refunds.filter(function(r){return r.apptId===aid;})[0];}
+function paysOf(aid){return STORE.pays.filter(function(p){return p.apptId===aid;});}
+function EV(cat,actor,page,txt,lvl){STORE.events.push({t:tm(clock),cat:cat,actor:actor,page:page,txt:txt,lvl:lvl||'info'});if(STORE.events.length>90)STORE.events.shift();}
+function toast(msg,lvl){var w=document.getElementById('toast');var d=document.createElement('div');if(lvl)d.className=lvl;d.innerHTML=msg;w.appendChild(d);setTimeout(function(){d.style.transition='.4s';d.style.opacity='0';setTimeout(function(){d.remove();},420);},2600);}
+function expire(){STORE.appts.forEach(function(a){if(a.status==='hold'&&a.holdUntil<=clock){a.status='closed';a.version++;EV('sys','系统','P1','占位超时未支付：'+a.id+' 关闭，名额释放一次（version '+a.version+'）','warn');toast(a.id+' 占位超时已关闭，名额释放','warn');}});}
+function MONEY(){var c=0,rf=0,rv=0;STORE.pays.forEach(function(p){if(p.status==='success')c+=p.amount;});STORE.refunds.forEach(function(r){if(r.status==='success')rf+=r.amount;});STORE.srv.forEach(function(s){rv+=s.revenue;});return {c:c,rf:rf,pend:c-rf,rv:rv};}
+
+/* ================= 共享状态与种子 ================= */
+var STORE,CH,draft,FOCUS,F1F,M3F,REASON,NSR,SEQ,clock;
+
+function seedBase(){
+ STORE={slots:[{id:'S1',name:'上午场',start:D(10,0),end:D(11,0),cap:3},{id:'S2',name:'下午场',start:D(14,0),end:D(15,0),cap:3},{id:'S3',name:'傍晚场',start:D(18,0),end:D(19,0),cap:3}],
+  appts:[],pays:[],refunds:[],srv:[],events:[]};
+ clock=D(9,0);CH={payFail:false,refundFail:false};draft={pet:null,slot:null};
+ FOCUS=null;F1F='全部';M3F='有效预约';REASON='';NSR={};SEQ=100;
+ EV('sys','系统','—','营业日开始：3 个时段已发布（容量各 3），模拟时钟 09:00','info');
+}
+function mkPaid(pet,slotId){
+ var id='A-'+(++SEQ);
+ STORE.appts.push({id:id,pet:pet,slotId:slotId,status:'confirmed',version:3,holdUntil:null,cancelReq:null,noShowReason:null});
+ STORE.pays.push({id:'P-'+(++SEQ),apptId:id,amount:9900,status:'success',at:clock,mode:'normal'});
+ EV('user','宠物主人','U2',id+'（'+pet+'）支付成功 '+money(9900)+'，预约已确认','ok');
+ return id;
+}
+
+/* ================= 场景剧本 ================= */
+var SCENES={
+ 'SC-01':{name:'正常预约到完成',seed:function(){seedBase();},steps:[
+  {p:'M1',h:'店长已发布 3 个未来时段（容量各 3），可直接下一步'},
+  {p:'U1',h:'为「豆豆」选择下午场并点击【立即预约】（真实占用名额 + 5 分钟占位）',a:[['selPet','豆豆'],['selSlot','S2'],['reserve','']]},
+  {p:'U2',h:'点击【确认支付 ¥99.00】向模拟渠道发起支付请求',a:[['pay','']]},
+  {p:'P1',h:'在「支付回调」区点击【返回支付成功】，预约推进为已确认',a:[['payOk','AUTO']]},
+  {p:'F1',h:'点击名单中豆豆一行的【核销】，进入 F2 到店核销',a:[['goVerify','AUTO']]},
+  {p:'F2',h:'三条准入条件全部通过，点击【确认核销】',a:[['verify','']]},
+  {p:'F3',h:'依次点击【开始服务】→【完成服务】（完成时记收入一次）',a:[['start',''],['complete','']]},
+  {p:'U4',h:'查看服务结果：已完成 · 收入 '+money(9900)+' 已记录，四端一致'}
+ ]},
+ 'SC-02':{name:'占位超时名额恢复',seed:function(){
+   seedBase();var id='A-'+(++SEQ);
+   STORE.appts.push({id:id,pet:'豆豆',slotId:'S1',status:'hold',version:1,holdUntil:D(9,5),cancelReq:null,noShowReason:null});
+   FOCUS=id;
+   EV('user','宠物主人','U1',id+'（豆豆）预约上午场成功，进入 5 分钟占位','ok');
+ },steps:[
+  {p:'U1',h:'上午场名额显示 2/3 —— 未付款占位同样占用名额'},
+  {p:'U2',h:'占位剩余 5 分钟，超时未支付将关闭预约并释放名额'},
+  {p:'P1',h:'点击【快进 5 分钟】，占位超时 → 预约关闭、名额释放一次',a:[['tick','5']]},
+  {p:'U1',h:'上午场恢复 3/3，名额已释放；可重新预约'}
+ ]},
+ 'SC-03':{name:'临近取消与退款失败',seed:function(){
+   seedBase();clock=D(9,30);var id=mkPaid('咪咪','S1');FOCUS=id;
+   EV('sys','系统','—','模拟时钟 09:30，距上午场开始仅 30 分钟（&lt; 2 小时取消线）','info');
+ },steps:[
+  {p:'U3',h:'距开始仅 30 分钟（&lt;2 小时），填写原因后点击【提交取消申请】',a:[['fillReason','临时有事需要外出'],['submitCancel','']]},
+  {p:'C1',h:'点击【批准并退款】→ 名额释放 + 生成待回调退款单',a:[['approve','AUTO']]},
+  {p:'P1',h:'在「退款回调」区点击【返回退款失败】',a:[['refundFail','AUTO']]},
+  {p:'C2',h:'点击【重试退款】→ 再到 P1 返回【成功】；注意预约始终保持「已取消」终态',a:[['retryRefund','AUTO'],['goPage','P1'],['refundOk','AUTO']]},
+  {p:'C3',h:'查看处理记录：申请、批准、失败、重试全程留痕，不可回滚'},
+  {p:'U4',h:'用户端：已取消 · 退款成功，与客服 / 店长记录一致'}
+ ]},
+ 'SC-04':{name:'待审核禁止核销',seed:function(){
+   seedBase();clock=D(9,30);var id=mkPaid('球球','S1');
+   var a=A(id);a.status='review';a.version=4;a.cancelReq={status:'pending',reason:'临时出差无法到店',at:clock};
+   FOCUS=id;
+   EV('user','宠物主人','U3',id+'（球球）距开始不足 2 小时，取消申请转入客服审核','warn');
+ },steps:[
+  {p:'F1',h:'球球一行状态为「取消审核中」，【核销】按钮禁用并给出原因'},
+  {p:'F2',h:'条件 3「无待处理取消申请」不通过 → 核销被拒绝，记录不被改动',a:[['goVerify','AUTO']]},
+  {p:'C1',h:'客服点击【拒绝】→ 预约回到「已确认」',a:[['reject','AUTO']]},
+  {p:'F2',h:'三条准入恢复，点击【确认核销】',a:[['goVerify','AUTO'],['verify','']]},
+  {p:'F3',h:'完成服务流程（开始 → 完成）',a:[['start',''],['complete','']]}
+ ]},
+ 'SC-05':{name:'收店四类记录核查',seed:function(){
+   seedBase();clock=D(23,30);
+   var a1=mkPaid('豆豆','S1');var x1=A(a1);x1.status='completed';x1.version=6;
+   STORE.srv.push({apptId:a1,start:D(10,5),completedAt:D(10,55),revenue:9900});
+   EV('frontdesk','前台 · 小林','F3',a1+'（豆豆）服务完成，记收入 '+money(9900),'ok');
+   var a2=mkPaid('咪咪','S1');var x2=A(a2);x2.status='cancelled';x2.version=5;
+   STORE.refunds.push({id:'R-'+(++SEQ),apptId:a2,amount:9900,status:'success',retries:0,cause:'cancel',lastError:''});
+   EV('cs','客服 · 小周','C1',a2+'（咪咪）取消批准，退款 '+money(9900)+' 成功','ok');
+   var a3=mkPaid('球球','S2');var x3=A(a3);x3.status='noshow';x3.version=4;x3.noShowReason='迟到超 15 分钟';
+   EV('manager','店长 · 陈店长','M2',a3+'（球球）标记未到店：迟到超 15 分钟（不自动退款）','bad');
+   var a4=mkPaid('布丁','S2');var x4=A(a4);x4.status='cancelled';x4.version=5;
+   STORE.refunds.push({id:'R-'+(++SEQ),apptId:a4,amount:9900,status:'failed',retries:1,cause:'cancel',lastError:'CHANNEL_REFUND_REJECTED'});
+   EV('channel','模拟渠道','P1',a4+'（布丁）退款返回失败，转 C2 跟进','bad');
+   EV('sys','系统','—','23:30 收店核查：已收款 39600 · 已退款 9900 · 未退款 29700 · 已完成服务收入 9900','info');
+ },steps:[
+  {p:'M2',h:'时段已结束且未核销的预约已标记未到店（原因必填 · 不自动退款）'},
+  {p:'M3',h:'切换五个分类：有效预约 / 已完成 / 已取消 / 未到店 / 退款待处理'},
+  {p:'M4',h:'核对金额：已收款 39600 · 已退款 9900 · 未退款 29700 · 已完成服务收入 9900'},
+  {p:'U4',h:'用户端四种结局与店长日清完全一致'}
+ ]}
+};
+/* ================= 设备外壳 ================= */
 var PTABS=[['i-home','首页'],['i-cal','预约'],['i-card','订单'],['i-user','我的']];
-function phoneFrame(inner,p,id){
+function phoneFrame(inner,p){
  var tb=PTABS.map(function(t,i){return '<div class="'+(i===p.tab?'on':'')+'">'+IC(t[0])+'<span>'+t[1]+'</span></div>';}).join('');
  return '<div class="device phone"><div class="ph-notch"></div><div class="ph-screen">'+
-  '<div class="ph-status"><b>9:41</b><span class="sig">'+IC('i-signal','sm')+IC('i-wifi','sm')+IC('i-battery','sm')+'</span></div>'+
+  '<div class="ph-status"><b>'+tm(clock)+'</b><span class="sig">'+IC('i-signal','sm')+IC('i-wifi','sm')+IC('i-battery','sm')+'</span></div>'+
   '<div class="ph-scroll">'+inner+'</div>'+
   '<div class="ph-tabbar">'+tb+'</div><div class="ph-home"></div></div></div>';
 }
@@ -1057,23 +794,660 @@ function deskFrame(inner,p,id){
   '<span class="addr">'+IC('i-lock','sm')+' '+p.url+'</span><span class="chrome-x">⋮</span></div>'+
   '<div class="d-shell"><aside class="d-side"><div class="d-brand"><span class="bi">'+IC('i-paw','sm')+'</span>毛球驿站</div>'+
   '<div class="grp">工作区</div>'+nav+'<div class="grp">当前门店</div><div class="mi">'+IC('i-desk','sm')+'<span>上海 · 徐汇店</span></div>'+
-  '<div class="foot">单店 · 单项目 · 单日<br>2026-11-13 营业中</div></aside>'+
+  '<div class="foot">单店 · 单项目 · 单日<br>模拟时间 '+tm(clock)+'</div></aside>'+
   '<div class="d-main"><div class="d-top"><div class="d-crumb">'+r.name+' / '+r.module+'<b>'+id+' '+p.n+'</b></div>'+
-  '<div class="d-user">'+IC('i-bell','sm')+'<span class="av">'+who.slice(0,1)+'</span>'+who+'</div></div>'+
+  '<div class="d-user">'+IC('i-clock','sm')+' '+tm(clock)+'　'+IC('i-bell','sm')+'<span class="av">'+who.slice(0,1)+'</span>'+who+'</div></div>'+
   '<div class="d-body">'+inner+'</div></div></div></div>';
 }
-function render(id){
- var t=document.getElementById('t-'+id);if(!t)return '';
- var inner=t.innerHTML,p=P[id];
- return p.kind==='phone'?phoneFrame(inner,p,id):deskFrame(inner,p,id);
+
+/* ================= 小工具 ================= */
+function holdMin(a){return Math.max(0,Math.ceil((a.holdUntil-clock)/60000));}
+function byId(arr,id){return arr.filter(function(x){return x.id===id;})[0];}
+function pickVerify(){var f=FOCUS&&A(FOCUS);if(f&&['confirmed','review','verified','serving','completed'].indexOf(f.status)>=0)return f;return STORE.appts.filter(function(a){return a.status==='confirmed';})[0];}
+function pickService(){var f=FOCUS&&A(FOCUS);if(f&&['verified','serving','completed'].indexOf(f.status)>=0)return f;return STORE.appts.filter(function(a){return ['verified','serving','completed'].indexOf(a.status)>=0;})[0];}
+function evCls(e){return e.lvl==='ok'?'g':(e.lvl==='bad'?'r':'');}
+
+/* ================= 页面组件 ================= */
+function pgU1(){
+ var h='<div class="m-hero"><div class="mh-top">'+IC('i-paw','sm')+' 毛球驿站 · 上海徐汇店</div><h3>预约时段</h3><p>2026-11-13 · 洗护美容单项目 · 每时段限 3 只</p></div><div class="m-body">';
+ var holds=STORE.appts.filter(function(a){return a.status==='hold';});
+ if(holds.length){var ha=holds[0];
+  h+='<div class="m-card"><div class="t">待支付占位中 <small>'+ha.id+'</small></div>'+
+   '<div class="m-line"><span>'+ha.pet+' · '+S(ha.slotId).name+' '+tm(S(ha.slotId).start)+'</span><b style="color:#B85A14">剩 '+holdMin(ha)+' 分钟</b></div>'+
+   '<div class="m-btn ghost act" data-go="U2">'+IC('i-card','sm')+' 去支付（¥99.00）</div></div>';
+ }
+ h+='<div class="m-card"><div class="t">选择宠物 <small>仅显示我名下宠物</small></div><div class="pet-pick">';
+ PETS.forEach(function(p){h+='<div class="pet-opt '+(draft.pet===p.n?'on ':'')+'act" data-act="selPet" data-arg="'+p.n+'"><div class="m-avatar">'+p.e+'</div><b>'+p.n+'</b><small>'+p.t+'</small></div>';});
+ h+='</div></div>';
+ h+='<div class="m-card"><div class="t">选择时段 <small>名额 = 容量 3 − 有效占用</small></div>';
+ STORE.slots.forEach(function(s){
+  var r=rem(s.id),st=slotState(s),started=st!=='未开始',full=r<=0,dis=started||full;
+  var pct=Math.min(100,Math.round(occ(s.id)/s.cap*100));
+  h+='<div class="m-slot '+(draft.slot===s.id?'pick ':'')+(started?'off ':'')+(!dis?'act ':'')+'"'+(!dis?' data-act="selSlot" data-arg="'+s.id+'"':'')+'>'+
+   '<div class="when"><b>'+s.name+'　'+tm(s.start)+'–'+tm(s.end)+'</b><small>'+
+   (st==='未开始'?'距开始 '+minsTo(s)+' 分钟':st)+' · '+(full?'名额不足':'剩 '+r+' / '+s.cap+' 名额')+'</small>'+
+   '<div class="m-bar"><i class="'+(full?'full':(r===1?'low':''))+'" style="width:'+pct+'%"></i></div></div>'+
+   (draft.slot===s.id?'<span class="pill p-orange">已选</span>':'')+'</div>';
+ });
+ h+='</div>';
+ var s2=draft.slot?S(draft.slot):null;
+ var dup=s2&&draft.pet?STORE.appts.some(function(a){return a.slotId===draft.slot&&a.pet===draft.pet&&ACTIVE.indexOf(a.status)>=0;}):false;
+ var can=draft.pet&&s2&&slotState(s2)==='未开始'&&rem(s2.id)>0&&!dup;
+ h+='<div class="m-card"><div class="m-price"><b>¥99.00</b><small>预约款 9900 分 · 本次服务全款</small></div>'+
+  '<div class="m-btn pri '+(can?'act':'')+'"'+(can?' data-act="reserve"':'')+'>'+IC('i-check','sm')+' 立即预约</div>'+
+  (dup?'<div class="m-note bad">'+IC('i-alert','sm')+'<span>'+draft.pet+' 在该时段已有有效预约，同一宠物同一时段仅允许一个有效预约。</span></div>':
+   (can?'':'<div class="m-note info">'+IC('i-info','sm')+'<span>'+(!draft.pet?'请先选择宠物':(!s2?'请选择可用时段':(slotState(s2)!=='未开始'?'该时段已开始，不可预约':'该时段名额不足，不生成预约记录')))+'</span></div>'))+
+  '</div>';
+ h+='<div class="m-note warn">'+IC('i-shield','sm')+'<span>名额不足 / 时段已开始 → 拒绝且不生成预约记录；并发抢占最后 1 个名额时只允许 1 人成功。</span></div>';
+ return h+'</div>';
+}
+function pgU2(){
+ var cand=STORE.appts.filter(function(a){return a.status==='hold';});
+ var c2=STORE.appts.filter(function(a){return a.status==='confirmed';});
+ var ap=cand[0]||c2[c2.length-1]||null;
+ if(FOCUS){var f=A(FOCUS);if(f&&(f.status==='hold'||f.status==='confirmed'))ap=f;}
+ if(!ap)return '<div class="m-hero"><div class="mh-top">'+IC('i-card','sm')+' 毛球驿站</div><h3>订单支付</h3><p>暂无待支付订单</p></div><div class="m-body"><div class="m-card"><div class="m-note info">'+IC('i-info','sm')+'<span>还没有待支付或已支付的预约。先去 U1 选时段预约吧。</span></div><div class="m-btn pri act" data-go="U1">'+IC('i-cal','sm')+' 去预约时段</div></div></div>';
+ var s=S(ap.slotId);
+ var pend=STORE.pays.filter(function(p){return p.apptId===ap.id&&p.status==='pending';})[0];
+ var h='<div class="m-hero"><div class="mh-top">'+IC('i-card','sm')+' 订单支付</div><h3>'+ap.pet+' · '+s.name+'</h3><p>预约单 '+ap.id+' · '+tm(s.start)+'–'+tm(s.end)+'</p></div><div class="m-body">';
+ h+='<div class="m-card"><div class="t">预约单摘要</div>'+
+  '<div class="m-line"><span>宠物</span><b>'+ap.pet+'</b></div>'+
+  '<div class="m-line"><span>时段</span><b>'+s.name+' '+tm(s.start)+'–'+tm(s.end)+'</b></div>'+
+  '<div class="m-line"><span>门店 / 项目</span><b>上海·徐汇店 · 洗护美容</b></div>'+
+  '<div class="m-line"><span>预约号 / version</span><b>'+ap.id+' · v'+ap.version+'</b></div></div>';
+ if(ap.status==='hold'){
+  h+='<div class="m-card"><div class="m-count">'+IC('i-clock','sm')+' 占位剩余 <b>'+holdMin(ap)+'</b> 分钟<span style="font-size:9.5px;opacity:.8">超时未支付 → 关闭并释放名额</span></div>'+
+   '<div class="m-btn ghost act" data-act="tick" data-arg="5" style="margin-bottom:8px">'+IC('i-clock','sm')+' 演示：快进 5 分钟</div>';
+  if(pend){
+   h+='<div class="m-note info">'+IC('i-info','sm')+'<span>支付请求已发出（'+pend.id+'，¥99.00），等待渠道回调。</span></div>'+
+    '<div class="m-btn pri act" data-go="P1">'+IC('i-cloud','sm')+' 前往 P1 模拟渠道返回结果</div>';
+  }else{
+   h+='<div class="m-price"><b>¥99.00</b><small>应付 · 9900 分</small></div>'+
+    '<div class="m-btn pri act" data-act="pay">'+IC('i-card','sm')+' 确认支付 ¥99.00</div>'+
+    '<div class="m-note warn">'+IC('i-alert','sm')+'<span>支付经模拟渠道<b>异步回调</b>确认，成功后才推进为「已确认」。</span></div>';
+  }
+  h+='</div>';
+ }else{
+  h+='<div class="m-card"><div class="m-note ok">'+IC('i-check','sm')+'<span>支付成功，预约已确认（confirmed_at 只写一次）。当前 version = '+ap.version+'。</span></div>'+
+   '<div class="m-btn ghost act" data-act="dupNotify" data-arg="'+ap.id+'">'+IC('i-refresh','sm')+' 重发支付通知（幂等演示）</div>'+
+   '<div class="m-btn pri act" data-go="U4">'+IC('i-user','sm')+' 查看我的预约</div></div>';
+ }
+ return h+'</div>';
+}
+function pgU3(){
+ var list=STORE.appts.filter(function(a){return a.status==='confirmed';});
+ var ap=(FOCUS&&A(FOCUS)&&A(FOCUS).status==='confirmed')?A(FOCUS):list[0];
+ if(!ap)return '<div class="m-hero"><div class="mh-top">'+IC('i-x','sm')+' 毛球驿站</div><h3>取消申请</h3><p>当前无可取消预约</p></div><div class="m-body"><div class="m-card"><div class="m-note info">'+IC('i-info','sm')+'<span>没有处于「已确认」的预约；已核销 / 服务中 / 已完成的取消入口不可见（FR-14）。</span></div><div class="m-btn ghost act" data-go="U4">查看我的预约</div></div></div>';
+ var s=S(ap.slotId);var mts=minsTo(s);
+ var h='<div class="m-hero"><div class="mh-top">'+IC('i-x','sm')+' 取消申请</div><h3>'+ap.pet+' · '+s.name+'</h3><p>预约单 '+ap.id+' · '+tm(s.start)+'–'+tm(s.end)+' · 距开始 '+mts+' 分钟</p></div><div class="m-body">';
+ h+='<div class="m-card"><div class="t">当前预约 <small>version '+ap.version+'</small></div>'+
+  '<div class="m-line"><span>状态</span><b>'+ST[ap.status][0]+'</b></div>'+
+  '<div class="m-line"><span>已支付</span><b>¥99.00（全款，取消时全额退款）</b></div>'+
+  '<div class="m-line"><span>取消分界线</span><b>开始前 2 小时（'+tm(addMin(s.start,-120))+'）</b></div></div>';
+ if(mts>=120){
+  h+='<div class="m-card"><div class="m-note ok">'+IC('i-check','sm')+'<span>距开始 '+mts+' 分钟 ≥ 120 → 走<b>自动受理</b>：取消立即生效、全额退款 9900 分、名额立即释放。</span></div>'+
+   '<div class="m-btn danger act" data-act="submitCancel">'+IC('i-x','sm')+' 确认取消并退款</div></div>';
+ }else if(mts>0){
+  h+='<div class="m-card"><div class="m-note warn">'+IC('i-alert','sm')+'<span>距开始仅 '+mts+' 分钟 &lt; 120 → 须填写原因<b>转客服审核</b>；审核期间名额保持且前台禁止核销。</span></div>'+
+   '<textarea class="mta" id="cancelReason" placeholder="请填写取消原因（必填）">'+(REASON||'')+'</textarea>'+
+   '<div class="m-btn danger act" data-act="submitCancel">'+IC('i-arrow','sm')+' 提交取消申请</div></div>';
+ }else{
+  h+='<div class="m-card"><div class="m-note bad">'+IC('i-alert','sm')+'<span>时段已开始，取消入口不可见（FR-14）。</span></div></div>';
+ }
+ h+='<div class="m-note info">'+IC('i-shield','sm')+'<span>待审核期间重复点击取消不产生第二笔申请，也不释放名额；审核结果由 C1 回写。</span></div>';
+ return h+'</div>';
+}
+function pgU4(){
+ var h='<div class="m-hero"><div class="mh-top">'+IC('i-user','sm')+' 毛球驿站</div><h3>我的预约</h3><p>预约结果 · 付款结果 · 服务结果 · 退款状态</p></div><div class="m-body">';
+ if(!STORE.appts.length){
+  h+='<div class="m-card"><div class="m-note info">'+IC('i-info','sm')+'<span>还没有预约记录。</span></div><div class="m-btn pri act" data-go="U1">'+IC('i-cal','sm')+' 去预约</div></div>';
+ }else{
+  STORE.appts.slice().reverse().forEach(function(a){
+   var s=S(a.slotId);var rf=refundOf(a.id);var payOk=paysOf(a.id).some(function(p){return p.status==='success';});
+   h+='<div class="m-res"><div class="ri m-avatar">'+petE(a.pet)+'</div><div style="flex:1;min-width:0">'+
+    '<b>'+a.pet+' · '+s.name+' '+tm(s.start)+'–'+tm(s.end)+'　'+pill(a.status)+'</b>'+
+    '<small>'+a.id+' · version '+a.version+(payOk?' · 已支付 ¥99.00':' · 未支付')+'</small>';
+   if(a.status==='completed')h+='<div class="m-note ok" style="margin:6px 0 0">'+IC('i-check','sm')+'<span>服务已完成，收入 '+money(9900)+' 已记录（仅已完成计入收入）。</span></div>';
+   if(a.status==='noshow')h+='<div class="m-note bad" style="margin:6px 0 0">'+IC('i-alert','sm')+'<span>未到店：'+a.noShowReason+'。按约定<b>不自动退款</b>。</span></div>';
+   if(rf)h+='<div class="m-note '+(rf.status==='success'?'ok':(rf.status==='failed'?'bad':'info'))+'" style="margin:6px 0 0">'+IC('i-refund','sm')+'<span>退款：'+(rf.status==='success'?'已全额退回 '+money(9900):(rf.status==='failed'?'渠道返回失败，待客服跟进（已重试 '+rf.retries+' 次）':'待渠道返回结果'))+(rf.status==='failed'?'　<span class="chip role act" data-go="C2" style="cursor:pointer">去 C2 跟进 →</span>':'')+'</span></div>';
+   if(a.status==='confirmed')h+='<div class="m-btn sm danger act" data-act="goCancel" data-arg="'+a.id+'" style="margin-top:6px">申请取消</div>';
+   h+='</div></div>';
+  });
+ }
+ h+='<div class="m-note info">'+IC('i-shield','sm')+'<span>这里的状态与前台 / 客服 / 店长看到的是<b>同一条记录</b>，随时可到「实时数据」核对。</span></div>';
+ return h+'</div>';
+}
+function pgF1(){
+ var h='<div class="d-h"><h3>当日接待台</h3><span class="sub">2026-11-13 · 上海·徐汇店 · 模拟时间 '+tm(clock)+'</span></div>';
+ var nHold=STORE.appts.filter(function(a){return a.status==='hold';}).length;
+ var nConf=STORE.appts.filter(function(a){return a.status==='confirmed';}).length;
+ var nRev=STORE.appts.filter(function(a){return a.status==='review';}).length;
+ h+='<div class="d-kpis">'+
+  '<div class="d-kpi"><small>'+IC('i-doc','sm')+'今日预约</small><b>'+STORE.appts.length+'</b></div>'+
+  '<div class="d-kpi"><small>'+IC('i-clock','sm')+'待支付占位</small><b>'+nHold+'</b></div>'+
+  '<div class="d-kpi"><small>'+IC('i-check','sm')+'待核销</small><b>'+nConf+'</b></div>'+
+  '<div class="d-kpi"><small>'+IC('i-headset','sm')+'取消审核中</small><b>'+nRev+'</b></div></div>';
+ h+='<div class="d-panel"><div class="t">'+IC('i-cal','sm')+'名额占用（占用含占位与审核中）</div>';
+ STORE.slots.forEach(function(s){
+  var o=occ(s.id),r=rem(s.id),pct=Math.min(100,Math.round(o/s.cap*100));
+  h+='<div class="mini-oc"><small>'+s.name+' '+tm(s.start)+' · '+slotState(s)+'</small><div class="bar"><i class="'+(r<=0?'full':'')+'" style="width:'+pct+'%"></i></div><small style="width:44px;text-align:right">'+o+'/'+s.cap+'</small></div>';
+ });
+ h+='</div>';
+ var FS=['全部','待支付','已确认','审核中','已核销','服务中','已完成','已取消','未到店'];
+ var FMAP={'待支付':['hold'],'已确认':['confirmed'],'审核中':['review'],'已核销':['verified'],'服务中':['serving'],'已完成':['completed'],'已取消':['cancelled','closed'],'未到店':['noshow']};
+ h+='<div class="d-panel"><div class="t">'+IC('i-desk','sm')+'预约名单<button class="d-btn" style="margin-left:auto">导出</button></div><div class="d-tools" style="margin-bottom:9px">';
+ FS.forEach(function(f){h+='<button class="d-btn '+(F1F===f?'on':'')+' act" data-act="setF1F" data-arg="'+f+'">'+f+'</button>';});
+ h+='</div>';
+ var rows=STORE.appts.filter(function(a){return F1F==='全部'||FMAP[F1F].indexOf(a.status)>=0;});
+ if(!rows.length){h+='<div class="d-note info">'+IC('i-info','sm')+'<span>该分类下暂无记录。</span></div>';}
+ else{
+  h+='<table class="d-tbl"><thead><tr><th>预约号</th><th>宠物</th><th>时段</th><th>状态</th><th>取消申请</th><th>操作</th></tr></thead><tbody>';
+  rows.forEach(function(a){
+   var s=S(a.slotId);var pendC=a.cancelReq&&a.cancelReq.status==='pending';
+   var op='';
+   if(a.status==='hold')op='<button class="d-btn grey">等待支付</button>';
+   else if(a.status==='review')op='<button class="d-btn grey" title="存在待处理取消申请">🔒 禁止核销</button>';
+   else if(a.status==='confirmed')op=pendC?'<button class="d-btn grey" title="存在待处理取消申请">🔒 禁止核销</button>':'<button class="d-btn brand act" data-act="goVerify" data-arg="'+a.id+'">核销 →</button>';
+   else if(a.status==='verified'||a.status==='serving')op='<button class="d-btn pri act" data-act="goService" data-arg="'+a.id+'">服务登记 →</button>';
+   else if(a.status==='completed')op='<span class="d-pill g">已服务 ✓</span>';
+   else if(a.status==='noshow')op='<span class="d-pill r">未到店</span>';
+   else op='<span class="d-pill">终态</span>';
+   h+='<tr><td class="num"><b>'+a.id+'</b><br><small style="color:#A3ADBF">v'+a.version+'</small></td><td>'+petE(a.pet)+' '+a.pet+'</td><td>'+s.name+'<br><small style="color:#A3ADBF">'+tm(s.start)+'–'+tm(s.end)+'</small></td><td>'+pill(a.status)+'</td>'+
+    '<td>'+(a.cancelReq?'<span class="d-pill '+(a.cancelReq.status==='pending'?'v':(a.cancelReq.status==='approved'?'g':''))+'">'+(a.cancelReq.status==='pending'?'待审核':(a.cancelReq.status==='approved'?'已批准':'已拒绝'))+'</span>':'—')+'</td><td>'+op+'</td></tr>';
+  });
+  h+='</tbody></table>';
+ }
+ h+='</div><div class="d-note warn">'+IC('i-alert','sm')+'<span>「取消申请」列为<b>待审核</b>时核销按钮禁用；重复核销由后端幂等拒绝；列表只读本店当日记录（FR-19）。</span></div>';
+ return h;
+}
+function pgF2(){
+ var ap=pickVerify();
+ if(!ap)return '<div class="d-h"><h3>到店核销</h3></div><div class="d-note info">'+IC('i-info','sm')+'<span>当前没有可核销的预约，请从 F1 接待台选择。</span></div>';
+ var s=S(ap.slotId);
+ var c1=true,c2=ap.status==='confirmed',c3=!(ap.cancelReq&&ap.cancelReq.status==='pending');
+ var all=c1&&c2&&c3;
+ var h='<div class="d-h"><h3>到店核销 · '+ap.id+'</h3><span class="sub">'+ap.pet+' · '+s.name+' '+tm(s.start)+' · ¥99.00</span></div>';
+ h+='<div class="d-panel"><div class="t">'+IC('i-user','sm')+'核验对象</div>'+
+  '<table class="d-tbl"><tbody>'+
+  '<tr><td>预约状态</td><td>'+pill(ap.status)+' <small>version '+ap.version+'</small></td></tr>'+
+  '<tr><td>取消申请</td><td>'+(ap.cancelReq?('<span class="d-pill '+(ap.cancelReq.status==='pending'?'v':(ap.cancelReq.status==='approved'?'g':''))+'">'+(ap.cancelReq.status==='pending'?'待审核（原因：'+ap.cancelReq.reason+'）':(ap.cancelReq.status==='approved'?'已批准':'已拒绝'))+'</span>'):'<span class="d-pill g">无</span>')+'</td></tr>'+
+  '</tbody></table></div>';
+ h+='<div class="d-panel"><div class="t">'+IC('i-shield','sm')+'三条准入条件（任一不满足即拒绝）</div>'+
+  '<div class="d-check ok"><span class="ci">✓</span><div><b>本店员工操作</b><small>上海·徐汇店 · 小林（工号 FD-007）</small></div></div>'+
+  '<div class="d-check '+(c2?'ok':'no')+'"><span class="ci">'+(c2?'✓':'✕')+'</span><div><b>预约状态 = 已确认</b><small>'+(c2?'当前已确认，可核销':'当前状态为「'+ST[ap.status][0]+'」，不满足')+'</small></div></div>'+
+  '<div class="d-check '+(c3?'ok':'no')+'"><span class="ci">'+(c3?'✓':'✕')+'</span><div><b>无待处理取消申请</b><small>'+(c3?'无待审核申请':'存在待处理取消申请 → 禁止核销（FR-13）')+'</small></div></div>';
+ if(all){
+  h+='<div class="d-flex" style="margin-top:10px"><button class="d-btn brand act" data-act="verify">'+IC('i-check','sm')+' 确认核销（v'+ap.version+' → '+(ap.version+1)+'）</button>'+
+   '<button class="d-btn act" data-act="race">并发演示：核销先到 · 取消被拒</button></div>';
+ }else{
+  h+='<div class="d-note bad">'+IC('i-x','sm')+'<span>拒绝核销：'+(c2?'':'状态非已确认；')+(c3?'':'存在待处理取消申请。')+'不改动预约与金额记录。</span></div>';
+ }
+ h+='</div>';
+ if(ap.status==='verified'||ap.status==='serving'||ap.status==='completed'){
+  h+='<div class="d-note ok">'+IC('i-check','sm')+'<span>已核销（version '+ap.version+'）。重复核销请求会被幂等拒绝。</span></div><button class="d-btn pri act" data-act="goService" data-arg="'+ap.id+'">前往 F3 服务登记 →</button>';
+ }
+ return h;
+}
+function pgF3(){
+ var ap=pickService();
+ if(!ap)return '<div class="d-h"><h3>服务进度登记</h3></div><div class="d-note info">'+IC('i-info','sm')+'<span>当前没有已核销的预约。先在 F2 完成核销。</span></div>';
+ var s=S(ap.slotId);
+ var seq=['confirmed','verified','serving','completed'];var idx=seq.indexOf(ap.status);
+ var names=['已确认','已核销','服务中','已完成'];
+ var h='<div class="d-h"><h3>服务进度登记 · '+ap.id+'</h3><span class="sub">'+ap.pet+' · '+s.name+' · ¥99.00</span></div>';
+ h+='<div class="d-panel"><div class="t">'+IC('i-scissor','sm')+'进度（只允许顺序递进）</div><div class="d-flow">';
+ names.forEach(function(n,i){h+='<span class="fs '+(i<idx?'done':(i===idx?'on':''))+'">'+n+'</span>'+(i<3?'<span class="fa">→</span>':'');});
+ h+='</div>';
+ if(ap.status==='verified')h+='<button class="d-btn brand act" data-act="start">'+IC('i-play','sm')+' 开始服务</button>';
+ else if(ap.status==='serving')h+='<button class="d-btn brand act" data-act="complete">'+IC('i-check','sm')+' 完成服务（记收入 ¥99.00 一次）</button>';
+ else if(ap.status==='completed')h+='<div class="d-note ok">'+IC('i-check','sm')+'<span>已完成：收入 '+money(9900)+' 已记录（revenue_fen 只写一次）。</span></div><button class="d-btn act" data-act="complete">重放完成请求（幂等演示）</button>';
+ h+='</div>';
+ h+='<div class="d-note info">'+IC('i-info','sm')+'<span>状态必须按 已确认 → 已核销 → 服务中 → 已完成 递进；服务结果同步回写 U4 与 M3。</span></div>';
+ return h;
+}
+function pgC1(){
+ var h='<div class="d-h"><h3>取消审核工作台</h3><span class="sub">仅处理距开始 &lt; 2 小时的申请 · 模拟时间 '+tm(clock)+'</span></div>';
+ var list=STORE.appts.filter(function(a){return a.status==='review'&&a.cancelReq&&a.cancelReq.status==='pending';});
+ if(!list.length)h+='<div class="d-note info">'+IC('i-info','sm')+'<span>当前无待审核取消申请。可在 U3 对一条距开始 &lt;2 小时的已确认预约提交取消。</span></div>';
+ list.forEach(function(a){
+  var s=S(a.slotId);
+  h+='<div class="d-panel"><div class="t">'+IC('i-headset','sm')+a.id+' · '+a.pet+' · '+s.name+' '+tm(s.start)+'</div>'+
+   '<table class="d-tbl"><tbody>'+
+   '<tr><td>申请时间</td><td class="num">'+a.cancelReq.at.getHours().toString().padStart(2,'0')+':'+a.cancelReq.at.getMinutes().toString().padStart(2,'0')+'</td></tr>'+
+   '<tr><td>距开始</td><td><b>'+minsTo(s)+' 分钟</b>（&lt; 120 人工审核分支）</td></tr>'+
+   '<tr><td>取消原因</td><td>'+a.cancelReq.reason+'</td></tr>'+
+   '<tr><td>当前 version</td><td class="num">'+a.version+'（审核期间名额保持 · 前台禁止核销）</td></tr>'+
+   '</tbody></table>'+
+   '<div class="d-flex" style="margin-top:10px"><button class="d-btn brand act" data-act="approve" data-arg="'+a.id+'">'+IC('i-check','sm')+' 批准并退款</button>'+
+   '<button class="d-btn danger act" data-act="reject" data-arg="'+a.id+'">'+IC('i-x','sm')+' 拒绝（恢复已确认）</button></div></div>';
+ });
+ h+='<div class="d-note warn">'+IC('i-alert','sm')+'<span>批准 → 名额释放一次 + 进入退款流程，<b>不因退款失败回滚</b>；批准与核销并发只允许一个结果生效（FR-13）。</span></div>';
+ return h;
+}
+function pgC2(){
+ var h='<div class="d-h"><h3>退款失败跟进</h3><span class="sub">退款状态独立于预约状态 · 模拟时间 '+tm(clock)+'</span></div>';
+ if(!STORE.refunds.length)h+='<div class="d-note info">'+IC('i-info','sm')+'<span>暂无退款单。产生途径：① ≥2 小时自动取消 ② C1 批准取消 ③ P1 迟到支付回调异常退款。</span></div>';
+ var order={failed:0,pending:1,success:2};
+ var refs=STORE.refunds.slice().sort(function(a,b){return order[a.status]-order[b.status];});
+ refs.forEach(function(r){
+  var ap=A(r.apptId);var s=ap?S(ap.slotId):null;
+  h+='<div class="d-panel"><div class="t">'+IC('i-refund','sm')+r.id+' · '+(ap?ap.pet+' · '+(s?s.name:''):'')+'　'+refPill(r.status)+'</div>'+
+   '<table class="d-tbl"><tbody>'+
+   '<tr><td>关联预约</td><td><b>'+r.apptId+'</b> '+(ap?pill(ap.status):'')+'<small>（退款失败不改变已取消终态，名额不恢复）</small></td></tr>'+
+   '<tr><td>金额</td><td class="num"><b>'+money(r.amount)+'</b>（9900 分全额）</td></tr>'+
+   '<tr><td>重试次数 / 最近错误</td><td class="num">'+(r.retries||0)+' 次 · '+(r.lastError||'—')+'</td></tr>'+
+   '<tr><td>产生原因</td><td>'+(r.cause==='cancel'?'用户取消（政策内全额退款）':'迟到支付回调异常退款')+'</td></tr>'+
+   '</tbody></table>'+
+   '<div style="margin-top:10px">'+
+   (r.status==='failed'?'<button class="d-btn brand act" data-act="retryRefund" data-arg="'+r.id+'">'+IC('i-refresh','sm')+' 重试退款 → 待渠道回调</button>':'')+
+   (r.status==='pending'?'<button class="d-btn pri act" data-go="P1">到 P1 返回退款结果 →</button>':'')+
+   (r.status==='success'?'<span class="d-pill g">已完结 · 无需跟进</span>':'')+
+   '</div></div>';
+ });
+ h+='<div class="d-note warn">'+IC('i-alert','sm')+'<span>未到店不自动退款，因此不出现在本页（FR-15）；每次重试记录 retry_count 与 last_error，供收店核查。</span></div>';
+ return h;
+}
+function pgC3(){
+ var h='<div class="d-h"><h3>处理记录与结果回显</h3><span class="sub">只读事件流水 · 与 U4 / M3 / M4 同源</span></div><div class="d-panel"><div class="t">'+IC('i-doc','sm')+'全流程事件（最近 14 条）</div><div class="d-tl">';
+ var evs=STORE.events.slice(-14).reverse();
+ if(!evs.length)h+='<div class="ev"><b>暂无记录</b></div>';
+ evs.forEach(function(e){
+  h+='<div class="ev '+evCls(e)+'"><b>'+e.actor+' · '+e.page+'</b><span class="tm">'+e.t+'</span><p>'+e.txt+'</p></div>';
+ });
+ h+='</div></div><div class="d-note info">'+IC('i-info','sm')+'<span>流水只读，不提供撤销 / 回滚；被拒绝的并发 / 越权操作同样留痕，供 SC-04 与收店核查。</span></div>';
+ return h;
+}
+function pgM1(){
+ var h='<div class="d-h"><h3>时段发布</h3><span class="sub">单店 · 单项目 · 容量固定 3 · 模拟时间 '+tm(clock)+'</span></div>';
+ h+='<div class="d-panel"><div class="t">'+IC('i-cal','sm')+'已发布时段</div><table class="d-tbl"><thead><tr><th>时段</th><th>起止</th><th>容量</th><th>状态</th><th>有效占用</th></tr></thead><tbody>';
+ STORE.slots.forEach(function(s){
+  var o=occ(s.id);var st=slotState(s);
+  h+='<tr><td><b>'+s.name+'</b><br><small style="color:#A3ADBF">'+s.id+'</small></td><td class="num">'+tm(s.start)+'–'+tm(s.end)+'</td><td class="num">'+s.cap+'</td>'+
+  '<td><span class="d-pill '+(st==='未开始'?'b':(st==='进行中'?'a':''))+'">'+st+'</span></td>'+
+  '<td class="num">'+o+' / '+s.cap+'</td></tr>';
+ });
+ h+='</tbody></table></div>';
+ h+='<div class="d-panel"><div class="t">'+IC('i-play','sm')+'发布新时段</div><div class="d-flex">'+
+  '<div class="d-field"><label>时段模板（起止时间）</label><select class="sel" id="m1sel"><option value="S4">晚间加开场　20:00–21:00</option><option value="S5">夜间场　21:00–22:00</option></select></div>'+
+  '<button class="d-btn brand act" data-act="publish" style="align-self:flex-end">'+IC('i-check','sm')+' 发布（容量 3）</button></div></div>';
+ h+='<div class="d-note info">'+IC('i-info','sm')+'<span>start_at 决定 2 小时取消线与「时段已开始」判定；不做排班优化、不做多店结算。</span></div>';
+ return h;
+}
+function pgM2(){
+ var h='<div class="d-h"><h3>未到店标记</h3><span class="sub">仅时段已结束且无核销记录 · 模拟时间 '+tm(clock)+'</span></div>';
+ var list=STORE.appts.filter(function(a){return ['confirmed','review'].indexOf(a.status)>=0&&slotState(S(a.slotId))==='已结束';});
+ if(!list.length)h+='<div class="d-note ok">'+IC('i-check','sm')+'<span>当前无可标记记录（需时段已结束且无核销）。可用时钟「到闭店」快进演示。</span></div>';
+ list.forEach(function(a){
+  var s=S(a.slotId);
+  h+='<div class="d-panel"><div class="t">'+IC('i-user','sm')+a.id+' · '+a.pet+' · '+s.name+' '+tm(s.start)+'　'+pill(a.status)+'</div>'+
+   '<div class="d-flex"><div class="d-field"><label>未到店原因（必填）</label>'+
+   '<select class="sel" data-nsel="'+a.id+'">'+NSHOW_REASONS.map(function(r){return '<option'+((NSR[a.id]||'客户联系不上')===r?' selected':'')+'>'+r+'</option>';}).join('')+'</select></div>'+
+   '<button class="d-btn danger act" data-act="noshow" data-arg="'+a.id+'" style="align-self:flex-end">标记未到店（不退款）</button></div></div>';
+ });
+ h+='<div class="d-note bad">'+IC('i-alert','sm')+'<span>标记后 status → 未到店、原因必填，<b>不自动生成退款单</b>（R7）；已核销 / 服务中 / 已完成不出现在本页。</span></div>';
+ return h;
+}
+function pgM3(){
+ var h='<div class="d-h"><h3>日清分类查询</h3><span class="sub">2026-11-13 · 五类可分别核查</span></div>';
+ var FS=['有效预约','已完成','已取消','未到店','退款待处理'];
+ h+='<div class="d-tools" style="margin-bottom:11px">'+FS.map(function(f){return '<button class="d-btn '+(M3F===f?'on':'')+' act" data-act="setM3F" data-arg="'+f+'">'+f+'</button>';}).join('')+'</div>';
+ var rows=[],cols=[];
+ if(M3F==='有效预约'){rows=STORE.appts.filter(function(a){return ACTIVE.indexOf(a.status)>=0;});cols=['预约号','宠物','时段','状态','金额'];}
+ else if(M3F==='已完成'){rows=STORE.appts.filter(function(a){return a.status==='completed';});cols=['预约号','宠物','时段','服务完成时间','收入'];}
+ else if(M3F==='已取消'){rows=STORE.appts.filter(function(a){return ['cancelled','closed'].indexOf(a.status)>=0;});cols=['预约号','宠物','时段','取消路径','金额'];}
+ else if(M3F==='未到店'){rows=STORE.appts.filter(function(a){return a.status==='noshow';});cols=['预约号','宠物','时段','原因','金额'];}
+ else{rows=STORE.refunds.filter(function(r){return r.status!=='success';});cols=['退款单','关联预约','金额','状态','原因'];}
+ if(!rows.length){h+='<div class="d-note info">'+IC('i-info','sm')+'<span>「'+M3F+'」分类下暂无记录。</span></div>';}
+ else{
+  h+='<div class="d-panel"><table class="d-tbl"><thead><tr>'+cols.map(function(c){return '<th>'+c+'</th>';}).join('')+'</tr></thead><tbody>';
+  rows.forEach(function(r){
+   if(M3F==='退款待处理'){
+    var ap=A(r.apptId);var s=ap?S(ap.slotId):null;
+    h+='<tr><td class="num"><b>'+r.id+'</b></td><td>'+r.apptId+(ap?' · '+ap.pet:'')+'</td><td class="num">'+money(r.amount)+'</td><td>'+refPill(r.status)+'</td><td>'+(r.cause==='cancel'?'取消退款':'迟到回调')+'</td></tr>';
+   }else{
+    var s=S(r.slotId);
+    h+='<tr><td class="num"><b>'+r.id+'</b></td><td>'+petE(r.pet)+' '+r.pet+'</td><td>'+s.name+' '+tm(s.start)+'</td><td>'+
+     (M3F==='已完成'?tm(STORE.srv.filter(function(x){return x.apptId===r.id;})[0].completedAt)+pill(r.status):
+      M3F==='已取消'?pill(r.status)+(r.status==='closed'?'（占位超时）':'（用户取消）'):
+      M3F==='未到店'?r.noShowReason:pill(r.status))+
+     '</td><td class="num">'+(M3F==='已完成'?money(9900):money(9900))+'</td></tr>';
+   }
+  });
+  h+='</tbody></table></div>';
+ }
+ h+='<div class="d-note info">'+IC('i-info','sm')+'<span>五类记录必须可分别筛出；<b>不把已付款记录一律呈现为「已完成服务」</b>（R8）。</span></div>';
+ return h;
+}
+function pgM4(){
+ var m=MONEY();
+ var h='<div class="d-h"><h3>金额核查</h3><span class="sub">单位：分 · Payment + Refund + ServiceRecord 三账对查</span></div>';
+ h+='<div class="d-kpis">'+
+  '<div class="d-kpi"><small>'+IC('i-card','sm')+'已收款</small><b>'+m.c+'</b></div>'+
+  '<div class="d-kpi"><small>'+IC('i-refund','sm')+'已退款</small><b>'+m.rf+'</b></div>'+
+  '<div class="d-kpi"><small>'+IC('i-clock','sm')+'未退款金额</small><b>'+m.pend+'</b></div>'+
+  '<div class="d-kpi" style="border-color:#FFD7BF;background:linear-gradient(160deg,#FFF6EE,#FFEBDD)"><small>已完成服务收入</small><b style="color:#C2571A">'+m.rv+'</b></div></div>';
+ if(!STORE.appts.length)h+='<div class="d-note info">'+IC('i-info','sm')+'<span>暂无记录。跑一遍场景或自由操作后，这里逐笔反查。</span></div>';
+ else{
+  h+='<div class="d-panel"><div class="t">'+IC('i-doc','sm')+'逐笔对查</div><table class="d-tbl"><thead><tr><th>预约</th><th>支付单</th><th>退款单</th><th>服务收入</th><th>归类</th></tr></thead><tbody>';
+  STORE.appts.forEach(function(a){
+   var payOk=paysOf(a.id).some(function(p){return p.status==='success';});
+   var payMode=paysOf(a.id).filter(function(p){return p.status==='success';})[0];
+   var rf=refundOf(a.id);
+   var srv=STORE.srv.filter(function(x){return x.apptId===a.id;})[0];
+   var cat;
+   if(a.status==='completed')cat='<span class="d-pill g">已完成服务</span>';
+   else if(a.status==='noshow')cat='<span class="d-pill r">未到店 · 未退款</span>';
+   else if(a.status==='cancelled'&&rf&&rf.status==='failed')cat='<span class="d-pill r">已取消 · 退款待跟进</span>';
+   else if(a.status==='cancelled'&&rf&&rf.status==='success')cat='<span class="d-pill g">已取消 · 已退款</span>';
+   else if(a.status==='cancelled')cat='<span class="d-pill a">已取消 · 退款待回调</span>';
+   else if(a.status==='closed')cat='<span class="d-pill">已关闭（未支付'+(payMode&&payMode.mode==='late'?' · 迟到款异常退款':'')+'）</span>';
+   else cat='<span class="d-pill b">进行中</span>';
+   h+='<tr><td class="num"><b>'+a.id+'</b><br><small style="color:#A3ADBF">'+petE(a.pet)+' '+a.pet+'</small></td>'+
+    '<td>'+(payOk?'<span class="d-pill g">✓ '+money(9900)+'</span>'+(payMode&&payMode.mode==='late'?'<br><small style="color:#C2373C">迟到回调</small>':''):'<span class="d-pill">未支付</span>')+'</td>'+
+    '<td>'+(rf?refPill(rf.status):'—')+'</td>'+
+    '<td>'+(srv?'<span class="d-pill g">✓ '+money(srv.revenue)+'</span>':'—')+'</td>'+
+    '<td>'+cat+'</td></tr>';
+  });
+  h+='</tbody></table></div>';
+ }
+ h+='<div class="d-note bad">'+IC('i-alert','sm')+'<span>未退款金额 = 已收款 − 已退款 = <b>'+m.pend+' 分</b>（含退款失败待跟进与未到店未退款）。把已收款全部计作收入会<b>虚增 '+(m.c-m.rv)+' 分</b>。</span></div>';
+ return h;
+}
+function pgP1(){
+ var h='<div class="d-h"><h3>模拟支付控制台</h3><span class="sub">只返回结果与回调 · 不产生真实资金流水</span></div>';
+ h+='<div class="d-panel"><div class="t">'+IC('i-cloud','sm')+'渠道开关（用于稳定复现异常）</div>'+
+  '<div class="d-toggle"><div class="lb">支付返回失败<small>开启后用户发起支付将被渠道拒绝</small></div><div class="d-sw '+(CH.payFail?'r on':'')+' act" data-act="toggleCh" data-arg="payFail"><i></i></div></div>'+
+  '<div class="d-toggle"><div class="lb">退款返回失败<small>开启后退款回调返回失败 → 转 C2 跟进</small></div><div class="d-sw '+(CH.refundFail?'r on':'')+' act" data-act="toggleCh" data-arg="refundFail"><i></i></div></div></div>';
+ var pend=STORE.pays.filter(function(p){return p.status==='pending';});
+ h+='<div class="d-panel"><div class="t">'+IC('i-card','sm')+'支付回调（待返回 '+pend.length+' 笔）</div>';
+ if(!pend.length)h+='<div class="d-note info">'+IC('i-info','sm')+'<span>无待回调支付单。在 U2 点击【确认支付】后到这里返回结果。</span></div>';
+ pend.forEach(function(p){
+  var ap=A(p.apptId);
+  h+='<div class="d-check" style="cursor:default"><div class="ci" style="background:var(--amber)">¥</div><div style="flex:1"><b>'+p.id+' · '+(ap?ap.pet+' '+ap.id:'')+'</b><small>金额 9900 分 · 发起时间 '+tm(p.at)+'</small></div>'+
+   '<button class="d-btn pri act" data-act="payOk" data-arg="'+p.id+'">返回支付成功</button>'+
+   '<button class="d-btn danger act" data-act="payFail" data-arg="'+p.id+'">返回支付失败</button></div>';
+ });
+ var conf=STORE.appts.filter(function(a){return a.status==='confirmed';});
+ var closed=STORE.appts.filter(function(a){return ['closed','cancelled'].indexOf(a.status)>=0&&!paysOf(a.id).some(function(p){return p.status==='success';});});
+ if(conf.length||closed.length){
+  h+='<div style="margin-top:9px" class="d-tools">';
+  conf.forEach(function(a){h+='<button class="d-btn act" data-act="dupNotify" data-arg="'+a.id+'">重发支付通知（'+a.id+' 幂等演示）</button>';});
+  closed.forEach(function(a){h+='<button class="d-btn act" data-act="latePay" data-arg="'+a.id+'">迟到支付回调（'+a.id+' 异常+退款）</button>';});
+  h+='</div>';
+ }
+ h+='</div>';
+ var rpend=STORE.refunds.filter(function(r){return r.status==='pending';});
+ h+='<div class="d-panel"><div class="t">'+IC('i-refund','sm')+'退款回调（待返回 '+rpend.length+' 笔）</div>';
+ if(!rpend.length)h+='<div class="d-note info">'+IC('i-info','sm')+'<span>无待回调退款单。产生途径：自动取消 / C1 批准 / 迟到回调异常退款。</span></div>';
+ rpend.forEach(function(r){
+  h+='<div class="d-check" style="cursor:default"><div class="ci" style="background:var(--violet)">↩</div><div style="flex:1"><b>'+r.id+' · '+r.apptId+'</b><small>金额 9900 分 · '+(r.cause==='cancel'?'取消退款':'迟到回调异常退款')+'</small></div>'+
+   '<button class="d-btn pri act" data-act="refundOk" data-arg="'+r.id+'">返回退款成功</button>'+
+   '<button class="d-btn danger act" data-act="refundFail" data-arg="'+r.id+'">返回退款失败</button></div>';
+ });
+ h+='</div>';
+ h+='<div class="d-panel"><div class="t">'+IC('i-clock','sm')+'时钟快进（复现占位超时 / 2 小时线 / 闭店）</div><div class="d-tools">'+
+  '<button class="d-btn act" data-act="tick" data-arg="5">+5 分钟</button>'+
+  '<button class="d-btn act" data-act="tick" data-arg="30">+30 分钟</button>'+
+  '<button class="d-btn act" data-act="tick" data-arg="120">+2 小时</button>'+
+  '<button class="d-btn act" data-act="tickEnd">到闭店</button></div></div>';
+ h+='<div class="d-panel"><div class="t">'+IC('i-doc','sm')+'回调日志（最近 10 条）</div><div class="d-log">';
+ var evs=STORE.events.filter(function(e){return e.cat==='channel'||e.cat==='sys';}).slice(-10).reverse();
+ if(!evs.length)h+='<div>— 暂无回调 —</div>';
+ evs.forEach(function(e){h+='<div class="'+(e.lvl==='ok'?'ok':(e.lvl==='bad'?'er':'wn'))+'">['+e.t+'] '+e.page+'　'+e.txt+'</div>';});
+ h+='</div></div>';
+ return h;
+}
+var PAGES={U1:pgU1,U2:pgU2,U3:pgU3,U4:pgU4,F1:pgF1,F2:pgF2,F3:pgF3,C1:pgC1,C2:pgC2,C3:pgC3,M1:pgM1,M2:pgM2,M3:pgM3,M4:pgM4,P1:pgP1};
+function render(id){var p=P[id];return p.kind==='phone'?phoneFrame(PAGES[id](),p):deskFrame(PAGES[id](),p,id);}
+
+/* ================= 动作实现 ================= */
+function actReserve(){
+ var s=draft.slot?S(draft.slot):null;
+ if(!draft.pet||!s){toast('请先选择宠物和时段','warn');return;}
+ if(slotState(s)!=='未开始'){toast('该时段已开始，不可预约','bad');return;}
+ if(rem(s.id)<=0){EV('user','宠物主人','U1','预约被拒绝：'+s.name+' 名额不足（不生成记录）','bad');toast('名额不足，预约被拒绝','bad');rerender();return;}
+ var dup=STORE.appts.some(function(a){return a.slotId===s.id&&a.pet===draft.pet&&ACTIVE.indexOf(a.status)>=0;});
+ if(dup){toast(draft.pet+' 在该时段已有有效预约','bad');return;}
+ var id='A-'+(++SEQ);var pet=draft.pet;
+ STORE.appts.push({id:id,pet:pet,slotId:s.id,status:'hold',version:1,holdUntil:addMin(clock,5),cancelReq:null,noShowReason:null});
+ FOCUS=id;draft={pet:null,slot:null};
+ EV('user','宠物主人','U1','创建预约 '+id+'（'+pet+' · '+s.name+'）→ 5 分钟占位（version 1）','ok');
+ toast('预约成功！占位 5 分钟，请前往支付','ok');
+ rerender();
+ if(!sceneAuto())setTimeout(function(){if(cur==='U1')show('U2');},700);
+}
+function sceneAuto(){return !!scene;}
+function actPay(){
+ var ap=STORE.appts.filter(function(a){return a.status==='hold';})[0];
+ if(FOCUS&&A(FOCUS)&&A(FOCUS).status==='hold')ap=A(FOCUS);
+ if(!ap){toast('当前没有待支付预约','warn');return;}
+ if(STORE.pays.some(function(p){return p.apptId===ap.id&&p.status==='pending';})){toast('支付请求已在途，请到 P1 返回结果','warn');return;}
+ if(CH.payFail){EV('channel','模拟渠道','P1','支付请求被渠道拒绝（开关：支付返回失败）→ 可重新发起','bad');toast('渠道返回支付失败：请先关闭「支付返回失败」开关','bad');rerender();return;}
+ STORE.pays.push({id:'P-'+(++SEQ),apptId:ap.id,amount:9900,status:'pending',at:clock,mode:'normal'});
+ EV('user','宠物主人','U2',ap.id+' 发起支付 '+money(9900)+'，等待渠道回调','info');
+ toast('支付请求已发出 → 请到 P1 模拟渠道返回结果','info');
+ rerender();
+}
+function actPayOk(p){
+ p.status='success';
+ var ap=A(p.apptId);
+ if(ap&&ap.status==='hold'){
+  ap.status='confirmed';ap.version++;
+  EV('channel','模拟渠道','P1','支付成功回调 '+p.id+'（notify_key 幂等）→ '+ap.id+' 已确认（version '+ap.version+'）','ok');
+  toast('支付成功！预约已确认','ok');
+ }else if(ap){handleLate(ap,p);}
+ rerender();
+}
+function actPayFail(p){
+ STORE.pays.splice(STORE.pays.indexOf(p),1);
+ EV('channel','模拟渠道','P1','渠道返回支付失败：'+p.id+'，支付未完成，可重新发起','bad');
+ toast('渠道返回支付失败，可回到 U2 重新发起','bad');
+ rerender();
+}
+function actDup(aid){
+ var ap=A(aid);
+ if(!ap){toast('预约不存在','warn');return;}
+ EV('channel','模拟渠道','P1','重复支付通知到达 '+ap.id+'：notify_key 已处理 → 幂等忽略，状态不变、不重复占名额、不重复记收入','warn');
+ toast('重复通知已幂等忽略（状态与金额均不变）','warn');
+ rerender();
+}
+function actLatePay(aid){
+ var ap=A(aid);
+ if(!ap){toast('预约不存在','warn');return;}
+ var p={id:'P-'+(++SEQ),apptId:ap.id,amount:9900,status:'success',at:clock,mode:'late'};
+ STORE.pays.push(p);handleLate(ap,p);
+ toast('迟到回调：已登记异常并发起退款，预约不复活','bad');
+ rerender();
+}
+function handleLate(ap,p){
+ if(STORE.refunds.some(function(r){return r.apptId===ap.id;}))return;
+ STORE.refunds.push({id:'R-'+(++SEQ),apptId:ap.id,amount:9900,status:'pending',retries:0,cause:'late',lastError:''});
+ EV('channel','模拟渠道','P1','迟到支付回调 '+p.id+'：'+ap.id+' 已关闭 → 登记异常并发起退款（预约不恢复、名额不释放第二次）','bad');
+}
+function actRefundOk(r){
+ r.status='success';
+ EV('channel','模拟渠道','P1','退款成功回调 '+r.id+' → '+money(9900)+' 已退回（预约保持已取消终态）','ok');
+ toast('退款成功，'+money(9900)+' 已退回','ok');
+ rerender();
+}
+function actRefundFail(r){
+ r.status='failed';r.lastError='CHANNEL_REFUND_REJECTED';
+ EV('channel','模拟渠道','P1','退款返回失败：'+r.id+'（CHANNEL_REFUND_REJECTED）→ 转 C2 跟进','bad');
+ toast('退款失败：已留痕，转 C2 跟进','bad');
+ rerender();
+}
+function actRetry(r){
+ r.status='pending';r.retries=(r.retries||0)+1;
+ EV('cs','客服 · 小周','C2','重试退款 '+r.id+'（第 '+r.retries+' 次）→ 等待渠道回调','info');
+ toast('已重试，请到 P1 返回退款结果','info');
+ rerender();
+}
+function actCancel(){
+ var ap=(FOCUS&&A(FOCUS)&&A(FOCUS).status==='confirmed')?A(FOCUS):STORE.appts.filter(function(a){return a.status==='confirmed';})[0];
+ if(!ap){toast('当前没有可取消的有效预约','warn');return;}
+ if(ap.cancelReq&&ap.cancelReq.status==='pending'){toast('已有待处理取消申请，不重复创建','warn');return;}
+ var s=S(ap.slotId);var mts=minsTo(s);
+ if(mts>=120){
+  ap.status='cancelled';ap.version++;
+  STORE.refunds.push({id:'R-'+(++SEQ),apptId:ap.id,amount:9900,status:'pending',retries:0,cause:'cancel',lastError:''});
+  EV('user','宠物主人','U3','距开始 '+mts+' 分钟 ≥ 120：自动受理取消，全额退款 9900 分，名额释放（version '+ap.version+'）','ok');
+  toast('取消已自动受理，退款单已生成 → 到 P1 返回退款结果','ok');
+  REASON='';
+  rerender();
+  if(!sceneAuto())setTimeout(function(){if(cur==='U3')show('U4');},700);
+ }else{
+  var ta=document.getElementById('cancelReason');
+  var reason=(ta&&ta.value.trim())||REASON;
+  if(!reason){toast('请填写取消原因（距开始 < 2 小时必填）','bad');return;}
+  ap.status='review';ap.version++;
+  ap.cancelReq={status:'pending',reason:reason,at:clock};
+  EV('user','宠物主人','U3','距开始 '+mts+' 分钟 < 120：取消申请转客服审核（名额保持 · 禁止核销，version '+ap.version+'）','warn');
+  toast('取消申请已提交客服审核','warn');
+  REASON='';
+  rerender();
+  if(!sceneAuto())setTimeout(function(){if(cur==='U3')show('C1');},700);
+ }
+}
+function actApprove(arg){
+ var ap=(arg&&arg!=='AUTO')?A(arg):STORE.appts.filter(function(a){return a.status==='review';})[0];
+ if(!ap){toast('没有待审核申请','warn');return;}
+ ap.status='cancelled';ap.version++;ap.cancelReq.status='approved';
+ STORE.refunds.push({id:'R-'+(++SEQ),apptId:ap.id,amount:9900,status:'pending',retries:0,cause:'cancel',lastError:''});
+ EV('cs','客服 · 小周','C1','批准 '+ap.id+' 取消：名额释放一次 + 生成退款单（version '+ap.version+'；批准不因退款失败回滚）','ok');
+ toast('已批准取消，退款单待渠道回调 → 到 P1 或 C2 跟进','ok');
+ rerender();
+}
+function actReject(arg){
+ var ap=(arg&&arg!=='AUTO')?A(arg):STORE.appts.filter(function(a){return a.status==='review';})[0];
+ if(!ap){toast('没有待审核申请','warn');return;}
+ ap.status='confirmed';ap.version++;ap.cancelReq.status='rejected';
+ EV('cs','客服 · 小周','C1','拒绝 '+ap.id+' 取消申请：恢复已确认，名额保持（version '+ap.version+'）','warn');
+ toast('已拒绝取消，预约恢复已确认','warn');
+ rerender();
+}
+function actVerify(){
+ var ap=pickVerify();
+ if(!ap){toast('没有可核销的预约','warn');return;}
+ if(ap.status!=='confirmed'){EV('frontdesk','前台 · 小林','F2','核销被拒绝：'+ap.id+' 当前状态 '+ST[ap.status][0]+'，只有「已确认」可核销','bad');toast('前序状态校验不通过','bad');rerender();return;}
+ if(ap.cancelReq&&ap.cancelReq.status==='pending'){EV('frontdesk','前台 · 小林','F2','核销被拒绝：'+ap.id+' 存在待处理取消申请（FR-13）','bad');toast('存在待处理取消申请，禁止核销','bad');rerender();return;}
+ ap.status='verified';ap.version++;
+ EV('frontdesk','前台 · 小林','F2','核销成功 '+ap.id+'：已确认 → 已核销（version '+ap.version+'）','ok');
+ toast('核销成功，可开始服务','ok');
+ rerender();
+}
+function actRace(){
+ var ap=pickVerify();
+ if(!ap||ap.status!=='confirmed'){toast('需要一条「已确认」预约才能演示并发','warn');return;}
+ ap.status='verified';ap.version++;
+ EV('frontdesk','前台 · 小林','F2','并发场景：核销请求先提交成功（version '+ap.version+'）','ok');
+ EV('frontdesk','前台 · 小林','F2','并发场景：取消申请携带过期 version 到达 → 冲突拒绝并留痕（FR-13：只产生一个合法结果）','bad');
+ toast('并发演示：核销胜出，取消被 version 冲突拒绝','warn');
+ rerender();
+}
+function actStart(){
+ var ap=pickService();
+ if(!ap||ap.status!=='verified'){toast('只有「已核销」可开始服务','bad');return;}
+ ap.status='serving';ap.version++;
+ EV('frontdesk','前台 · 小林','F3',ap.id+' 服务开始（version '+ap.version+'）','info');
+ toast('服务已开始','ok');
+ rerender();
+}
+function actComplete(){
+ var ap=pickService();
+ if(!ap){toast('没有可登记的服务','warn');return;}
+ if(ap.status==='completed'){
+  EV('frontdesk','前台 · 小林','F3','重复完成请求被幂等拒绝：收入不重复计入','warn');
+  toast('重复完成请求被幂等拒绝（收入只记一次）','warn');rerender();return;
+ }
+ if(ap.status!=='serving'){toast('只有「服务中」可完成服务','bad');return;}
+ ap.status='completed';ap.version++;
+ STORE.srv.push({apptId:ap.id,start:clock,completedAt:clock,revenue:9900});
+ EV('frontdesk','前台 · 小林','F3',ap.id+' 服务完成，记收入 '+money(9900)+'（revenue_fen 只写一次，version '+ap.version+'）','ok');
+ toast('服务完成，收入已记录','ok');
+ rerender();
+ if(!sceneAuto())setTimeout(function(){if(cur==='F3')show('U4');},700);
+}
+function actNoshow(arg){
+ var ap=A(arg);
+ if(!ap){toast('预约不存在','warn');return;}
+ if(slotState(S(ap.slotId))!=='已结束'){toast('时段未结束，不能标记未到店','bad');return;}
+ if(['confirmed','review'].indexOf(ap.status)<0){toast('仅未核销的预约可标记','bad');return;}
+ var reason=NSR[ap.id]||'客户联系不上';
+ ap.status='noshow';ap.version++;ap.noShowReason=reason;
+ EV('manager','店长 · 陈店长','M2','标记 '+ap.id+' 未到店：'+reason+'（不自动退款，version '+ap.version+'）','bad');
+ toast('已标记未到店（不自动退款）','warn');
+ rerender();
+}
+function actPublish(){
+ var sel=document.getElementById('m1sel');var v=sel?sel.value:'S4';
+ var PRESET={S4:{name:'晚间加开场',start:D(20,0),end:D(21,0)},S5:{name:'夜间场',start:D(21,0),end:D(22,0)}};
+ var cfg=PRESET[v];
+ if(!cfg){toast('请选择时段模板','warn');return;}
+ if(STORE.slots.some(function(s){return s.id===v;})){toast('该时段已存在','warn');return;}
+ STORE.slots.push({id:v,name:cfg.name,start:cfg.start,end:cfg.end,cap:3});
+ EV('manager','店长 · 陈店长','M1','发布新时段 '+cfg.name+' '+tm(cfg.start)+'–'+tm(cfg.end)+'（容量 3）','ok');
+ toast('时段已发布，U1 立即可约','ok');
+ rerender();
+}
+function tick(m){
+ clock=addMin(clock,m);
+ EV('sys','系统','—','模拟时钟前进至 '+tm(clock),'info');
+ expire();
+ rerender();
+}
+function tickEnd(){
+ var last=STORE.slots[STORE.slots.length-1];
+ var m=Math.max(1,Math.ceil((last.end-clock)/60000));
+ tick(m);
 }
 
-/* ---------- rail ---------- */
+/* ================= 动作分发 ================= */
+function doAct(act,arg){
+ switch(act){
+  case 'selPet':draft.pet=arg;rerender();break;
+  case 'selSlot':draft.slot=arg;rerender();break;
+  case 'reserve':actReserve();break;
+  case 'pay':actPay();break;
+  case 'payOk':{var p=(arg&&arg!=='AUTO')?byId(STORE.pays,arg):STORE.pays.filter(function(x){return x.status==='pending';})[0];if(!p){toast('没有待回调的支付单','warn');break;}actPayOk(p);}break;
+  case 'payFail':{var p2=(arg&&arg!=='AUTO')?byId(STORE.pays,arg):STORE.pays.filter(function(x){return x.status==='pending';})[0];if(!p2){toast('没有待回调的支付单','warn');break;}actPayFail(p2);}break;
+  case 'dupNotify':actDup(arg);break;
+  case 'latePay':actLatePay(arg);break;
+  case 'refundOk':{var r=(arg&&arg!=='AUTO')?byId(STORE.refunds,arg):STORE.refunds.filter(function(x){return x.status==='pending';})[0];if(!r){toast('没有待回调的退款单','warn');break;}actRefundOk(r);}break;
+  case 'refundFail':{var r2=(arg&&arg!=='AUTO')?byId(STORE.refunds,arg):STORE.refunds.filter(function(x){return x.status==='pending';})[0];if(!r2){toast('没有待回调的退款单','warn');break;}actRefundFail(r2);}break;
+  case 'retryRefund':{var r3=(arg&&arg!=='AUTO')?byId(STORE.refunds,arg):STORE.refunds.filter(function(x){return x.status==='failed';})[0];if(!r3){toast('没有失败退款单','warn');break;}actRetry(r3);}break;
+  case 'fillReason':REASON=arg;{var ta=document.getElementById('cancelReason');if(ta)ta.value=arg;}break;
+  case 'submitCancel':actCancel();break;
+  case 'approve':actApprove(arg);break;
+  case 'reject':actReject(arg);break;
+  case 'verify':actVerify();break;
+  case 'race':actRace();break;
+  case 'start':actStart();break;
+  case 'complete':actComplete();break;
+  case 'noshow':actNoshow(arg);break;
+  case 'publish':actPublish();break;
+  case 'tick':tick(+arg);break;
+  case 'tickEnd':tickEnd();break;
+  case 'toggleCh':CH[arg]=!CH[arg];EV('sys','系统','P1','渠道开关「'+(arg==='payFail'?'支付返回失败':'退款返回失败')+'」→ '+(CH[arg]?'开启':'关闭'),'info');rerender();break;
+  case 'goVerify':{if(arg&&arg!=='AUTO')FOCUS=arg;else{var ap=pickVerify();if(ap)FOCUS=ap.id;}show('F2');}break;
+  case 'goService':{if(arg)FOCUS=arg;else{var ap2=pickService();if(ap2)FOCUS=ap2.id;}show('F3');}break;
+  case 'goCancel':FOCUS=arg;show('U3');break;
+  case 'goPage':show(arg);break;
+  case 'focusA':FOCUS=arg;rerender();break;
+  case 'setF1F':F1F=arg;rerender();break;
+  case 'setM3F':M3F=arg;rerender();break;
+  case 'reset':stopAuto();scene=null;seedBase();sceneBar();hint();rerender();toast('沙盒已重置为营业初始状态（09:00）','ok');break;
+ }
+}
+/* ================= 视图 ================= */
+var cur='U1',curRole='user',curView='overview',scene=null,sceneIdx=0,autoToken=0;
+function stopAuto(){autoToken++;}
+
 function rail(){
  var h='<div class="rail-cap">导航 / NAVIGATION</div>';
  h+='<div class="rail-item '+(curView==='overview'?'on':'')+'" data-go="overview">'+IC('i-grid')+'<span>分配总览</span></div>';
  h+='<div class="rail-item '+(curView==='gallery'?'on':'')+'" data-go="gallery">'+IC('i-spark')+'<span>全页画廊</span><span class="rail-num">15</span></div>';
- h+='<div class="rail-sep"></div><div class="rail-cap">按角色浏览 / ROLES</div>';
+ h+='<div class="rail-item '+(curView==='data'?'on':'')+'" data-go="data">'+IC('i-dbase')+'<span>实时数据</span></div>';
+ h+='<div class="rail-sep"></div><div class="rail-cap">按角色操作 / ROLES</div>';
  ROLES.forEach(function(r){
   var on=(curRole===r.id&&curView==='detail');
   h+='<div class="rail-item '+(on?'on':'')+'" data-role="'+r.id+'" style="--r-soft:'+r.soft+'"><span class="rail-ico" style="--r-soft:'+r.soft+';--r-color:'+r.color+'">'+IC(r.icon)+'</span><span>'+r.name+'</span><span class="rail-num">'+r.pages.length+'</span></div>';
@@ -1083,11 +1457,9 @@ function rail(){
    h+='</div>';
   }
  });
- h+='<div class="rail-sep"></div><div class="rail-tip"><b>快捷键</b>　← / → 翻页<br>点击角色卡可直接进入该角色首屏。<br>页面下方标注 FR / SC 验收锚点。</div>';
+ h+='<div class="rail-sep"></div><div class="rail-tip"><b>提示</b>　所有页面共享同一份业务记录<br>按钮点击真实生效 · 顶部可快进模拟时钟<br>← / → 翻页</div>';
  document.getElementById('rail').innerHTML=h;
 }
-
-/* ---------- overview cards ---------- */
 function roleGrid(){
  document.getElementById('roleGrid').innerHTML=ROLES.map(function(r){
   return '<div class="role-card" data-role="'+r.id+'" style="--r-soft:'+r.soft+';--r-color:'+r.color+'">'+
@@ -1096,29 +1468,31 @@ function roleGrid(){
    '<div class="bd">'+r.scope+'</div></div></div>';
  }).join('');
 }
-
-/* ---------- detail ---------- */
+function sharedLive(){
+ var ap=(FOCUS&&A(FOCUS))||STORE.appts[STORE.appts.length-1];
+ if(!ap)return '暂无业务记录 —— 去 U1 创建第一条预约';
+ var rf=refundOf(ap.id);
+ return ap.id+' · status: <b>'+ST[ap.status][0]+'</b> · version = <b>'+ap.version+'</b> · amount_fen = <b>9900</b>'+(rf?'<br>refund: '+rf.id+' = '+rf.status+'（状态独立）':'');
+}
 function detail(){
  var p=P[cur],r=RMAP[cur];
  document.documentElement.style.setProperty('--role',r.color);
  document.documentElement.style.setProperty('--role-soft',r.soft);
  document.getElementById('pageHead').innerHTML=
-  '<div class="code-badge">'+cur+'</div><div class="txt"><div class="crumb">'+r.name+' / '+r.module+'　·　'+(p.kind==='phone'?'移动端 App':'桌面后台')+'</div>'+
+  '<div class="code-badge">'+cur+'</div><div class="txt"><div class="crumb">'+r.name+' / '+r.module+'　·　'+(p.kind==='phone'?'移动端 App':'桌面后台')+'　·　可操作</div>'+
   '<h2>'+p.n+'</h2><p>'+p.desc+'</p><div class="chips">'+p.chips.map(function(c){return '<span class="chip'+(c.indexOf('FR')===0?'':' role')+'">'+c+'</span>';}).join('')+'</div></div>';
  document.getElementById('preview').innerHTML=render(cur);
  document.getElementById('spec').innerHTML=
-  '<h4>'+IC('i-shield','sm')+'同一份业务记录</h4><div class="shared-box">'+p.shared+'<br>用户 / 前台 / 客服 / 店长读写同一行</div>'+
+  '<h4>'+IC('i-shield','sm')+'同一份业务记录（实时）</h4><div class="shared-box">'+sharedLive()+'<br>用户 / 前台 / 客服 / 店长读写同一行</div>'+
   '<h4>'+IC('i-spark','sm')+'业务 Skill 校验</h4><div class="skill-list">'+p.skills.map(function(s){return '<div>'+IC('i-check','sm')+'<span>'+s+'</span></div>';}).join('')+'</div>'+
   '<h4>'+IC('i-doc','sm')+'页面规则</h4><ul>'+p.rules.map(function(x){return '<li>'+x+'</li>';}).join('')+'</ul>'+
   '<h4>'+IC('i-arrow','sm')+'出口</h4><div class="exit-list">'+p.exits.map(function(x){return '<span>'+x+'</span>';}).join('')+'</div>';
  var i=ORDER.indexOf(cur);
  document.getElementById('pageNav').innerHTML=
   '<button data-go="'+(i>0?ORDER[i-1]:ORDER[ORDER.length-1])+'">'+IC('i-chev','sm')+' 上一页　'+ORDER[i>0?i-1:ORDER.length-1]+'</button>'+
-  '<button data-go="gallery">'+IC('i-grid','sm')+' 查看全页画廊</button>'+
+  '<button data-go="data">'+IC('i-dbase','sm')+' 实时数据</button>'+
   '<button data-go="'+(i<ORDER.length-1?ORDER[i+1]:ORDER[0])+'">下一页　'+ORDER[i<ORDER.length-1?i+1:0]+' '+IC('i-chev','sm')+'</button>';
 }
-
-/* ---------- gallery ---------- */
 function gallery(){
  document.getElementById('galGrid').innerHTML=ORDER.map(function(id){
   var p=P[id],r=RMAP[id];
@@ -1127,69 +1501,187 @@ function gallery(){
    '<div class="cap"><span class="ci">'+id+'</span><div><b>'+p.n+'</b><small>'+r.name+' · '+p.chips.slice(0,2).join(' / ')+'</small></div></div></div>';
  }).join('');
 }
+function renderData(){
+ var m=MONEY();
+ var h='<div class="card" style="margin-bottom:16px"><div class="money-grid">'+
+  '<div><b>'+m.c+'</b><small>已收款（分）</small></div>'+
+  '<div><b>'+m.rf+'</b><small>已退款（分）</small></div>'+
+  '<div><b>'+m.pend+'</b><small>未退款金额（分）</small></div>'+
+  '<div style="background:linear-gradient(160deg,#FFF6EE,#FFEBDD);border-color:#FFD7BF"><b style="color:#C2571A">'+m.rv+'</b><small>已完成服务收入（分）</small></div></div>'+
+  '<div style="padding:0 16px 14px"><div class="note '+(m.pend===0&&m.c===m.rv?'ok':'info')+'">'+IC('i-alert')+'<span>未退款 = 已收款 − 已退款 = <b>'+m.pend+'</b> 分；已收款 ≠ 收入，当前差额 '+(m.c-m.rv)+' 分（含进行中 / 未到店 / 退款待跟进）。</span></div></div></div>';
+ h+='<div class="card tbl-wrap" style="margin-bottom:16px"><table class="tbl"><thead><tr><th>时段</th><th>起止</th><th>容量</th><th>状态</th><th>有效占用</th><th>剩余名额</th></tr></thead><tbody>';
+ STORE.slots.forEach(function(s){h+='<tr><td><b>'+s.name+'</b>（'+s.id+'）</td><td>'+tm(s.start)+'–'+tm(s.end)+'</td><td>'+s.cap+'</td><td>'+slotState(s)+'</td><td>'+occ(s.id)+'</td><td><b>'+rem(s.id)+'</b></td></tr>';});
+ h+='</tbody></table></div>';
+ h+='<div class="card tbl-wrap" style="margin-bottom:16px"><table class="tbl"><thead><tr><th>预约号</th><th>宠物</th><th>时段</th><th>status</th><th>version</th><th>取消申请</th><th>退款</th></tr></thead><tbody>';
+ if(!STORE.appts.length)h+='<tr><td colspan="7" style="color:var(--muted)">暂无预约 —— 去 U1 创建，或载入场景剧本</td></tr>';
+ STORE.appts.forEach(function(a){
+  var s=S(a.slotId);var rf=refundOf(a.id);
+  h+='<tr><td><b>'+a.id+'</b></td><td>'+a.pet+'</td><td>'+s.name+'</td><td>'+ST[a.status][0]+'</td><td>v'+a.version+'</td><td>'+(a.cancelReq?a.cancelReq.status+'（'+a.cancelReq.reason+'）':'—')+'</td><td>'+(rf?rf.status+' / 重试 '+rf.retries+' 次':'—')+'</td></tr>';
+ });
+ h+='</tbody></table></div>';
+ h+='<div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(320px,1fr));gap:16px">';
+ h+='<div class="card tbl-wrap"><table class="tbl"><thead><tr><th>支付单 Payment</th><th>预约</th><th>金额</th><th>状态</th></tr></thead><tbody>';
+ if(!STORE.pays.length)h+='<tr><td colspan="4" style="color:var(--muted)">暂无支付单</td></tr>';
+ STORE.pays.forEach(function(p){h+='<tr><td>'+p.id+'</td><td>'+p.apptId+'</td><td>'+p.amount+'</td><td>'+p.status+(p.mode==='late'?'（迟到）':'')+'</td></tr>';});
+ h+='</tbody></table></div>';
+ h+='<div class="card tbl-wrap"><table class="tbl"><thead><tr><th>退款单 Refund</th><th>预约</th><th>金额</th><th>状态</th></tr></thead><tbody>';
+ if(!STORE.refunds.length)h+='<tr><td colspan="4" style="color:var(--muted)">暂无退款单</td></tr>';
+ STORE.refunds.forEach(function(r){h+='<tr><td>'+r.id+'</td><td>'+r.apptId+'</td><td>'+r.amount+'</td><td>'+r.status+'</td></tr>';});
+ h+='</tbody></table></div>';
+ h+='<div class="card tbl-wrap"><table class="tbl"><thead><tr><th>服务记录 ServiceRecord</th><th>完成时间</th><th>收入（分）</th></tr></thead><tbody>';
+ if(!STORE.srv.length)h+='<tr><td colspan="3" style="color:var(--muted)">暂无服务记录</td></tr>';
+ STORE.srv.forEach(function(x){h+='<tr><td>'+x.apptId+'</td><td>'+tm(x.completedAt)+'</td><td>'+x.revenue+'</td></tr>';});
+ h+='</tbody></table></div>';
+ h+='</div>';
+ h+='<div class="card" style="margin-top:16px;padding:14px 16px"><div class="sec-h" style="margin:0 0 10px">'+IC('i-doc','lg')+'事件日志（只读留痕 · 最近 30 条）</div><div class="d-log" style="max-height:300px;overflow:auto">';
+ if(!STORE.events.length)h+='<div>— 暂无事件 —</div>';
+ STORE.events.slice(-30).reverse().forEach(function(e){h+='<div class="'+(e.lvl==='ok'?'ok':(e.lvl==='bad'?'er':'wn'))+'">['+e.t+'] '+e.actor+' · '+e.page+'　'+e.txt+'</div>';});
+ h+='</div></div>';
+ document.getElementById('dataBody').innerHTML=h;
+}
 
-/* ---------- scene bar ---------- */
+/* ---------- 场景剧本条 ---------- */
 function sceneBar(){
- var h='<label>场景演示</label>';
- Object.keys(SCENES).forEach(function(k){h+='<button class="scn '+(scene===k?'on':'')+'" data-scn="'+k+'">'+k+'</button>';});
+ var h='<label>场景剧本</label>';
+ Object.keys(SCENES).forEach(function(k){h+='<button class="scn '+(scene===k?'on':'')+'" data-scn="'+k+'" title="'+SCENES[k].name+'">'+k+' '+SCENES[k].name+'</button>';});
  if(scene){
-  h+='<span style="font-size:11px;color:var(--indigo);font-weight:650;margin-left:4px">'+SCENES[scene].name+'　'+(sceneIdx+1)+'/'+SCENES[scene].pages.length+'</span>';
-  h+='<button class="scn" data-step="-1">← 上一步</button><button class="scn" data-step="1">下一步 →</button><button class="scn" data-step="0">退出</button>';
+  h+='<button class="scn" data-step="-1" title="上一步">←</button><button class="scn" data-step="1" title="下一步">→</button><button class="scn" data-step="0" title="退出剧本">退出</button>';
  }
  document.getElementById('scenes').innerHTML=h;
 }
-function applyScene(){
+function hint(){
+ var hb=document.getElementById('hintbar');
+ if(!scene){hb.className='hintbar';hb.innerHTML='';return;}
+ var sc=SCENES[scene],st=sc.steps[sceneIdx];
+ hb.className='hintbar on';
+ hb.innerHTML='<span class="st">'+scene+' · '+(sceneIdx+1)+'/'+sc.steps.length+'</span><span style="flex:1;min-width:220px"><b>'+sc.name+'</b>　'+st.h+'</span>'+
+  '<button data-hint="auto">▶ 自动演示</button><button class="ghost" data-hint="replay">↺ 重演</button><button class="ghost" data-hint="exit">退出剧本</button>';
+ var pv=document.getElementById('preview');
+ if(pv&&st.a){var el=pv.querySelector('[data-act="'+st.a[0][0]+'"]');if(el)el.classList.add('pulse');}
+}
+function replayScene(){
  if(!scene)return;
- var ids=SCENES[scene].pages;sceneIdx=Math.max(0,Math.min(ids.length-1,sceneIdx));
- show(ids[sceneIdx]);sceneBar();
+ SCENES[scene].seed();sceneIdx=0;stopAuto();
+ show(SCENES[scene].steps[0].p);sceneBar();hint();
+ toast('已重置为「'+SCENES[scene].name+'」初始状态','ok');
+}
+function autoRun(){
+ if(!scene)return;
+ stopAuto();var token=++autoToken;
+ var st=SCENES[scene].steps[sceneIdx];
+ show(st.p);hint();
+ var acts=(st.a||[]).slice();var i=0;
+ (function next(){
+  if(token!==autoToken||!scene)return;
+  if(i<acts.length){
+   var ac=acts[i++];
+   setTimeout(function(){if(token!==autoToken||!scene)return;doAct(ac[0],ac[1]);next();},700);
+  }else{
+   setTimeout(function(){
+    if(token!==autoToken||!scene)return;
+    if(sceneIdx<SCENES[scene].steps.length-1){sceneIdx++;autoRun();}
+    else{toast('🎉 场景 '+scene+'《'+SCENES[scene].name+'》演示完毕，可点「↺ 重演」再来一遍','ok');}
+   },1200);
+  }
+ })();
 }
 
-/* ---------- views ---------- */
+/* ---------- 视图切换 ---------- */
 function setView(v){
  curView=v;
- ['overview','detail','gallery'].forEach(function(x){document.getElementById('v-'+x).classList.toggle('on',x===v);});
+ ['overview','detail','gallery','data'].forEach(function(x){document.getElementById('v-'+x).classList.toggle('on',x===v);});
  document.querySelectorAll('#seg button').forEach(function(b){b.classList.toggle('on',b.getAttribute('data-view')===v);});
  rail();
+ if(v==='data')renderData();
  if(v==='overview')window.scrollTo({top:0,behavior:'smooth'});
 }
 function show(id){
- if(id==='overview'||id==='gallery'){setView(id);return;}
+ if(id==='overview'||id==='gallery'||id==='data'){setView(id);return;}
  if(!P[id])return;
  cur=id;curRole=RMAP[id].id;curView='detail';
- ['overview','detail','gallery'].forEach(function(x){document.getElementById('v-'+x).classList.toggle('on',x==='detail');});
+ ['overview','detail','gallery','data'].forEach(function(x){document.getElementById('v-'+x).classList.toggle('on',x==='detail');});
  document.querySelectorAll('#seg button').forEach(function(b){b.classList.toggle('on',b.getAttribute('data-view')==='detail');});
- detail();rail();window.scrollTo({top:0,behavior:'smooth'});
+ expire();
+ detail();rail();hint();
+ window.scrollTo({top:0,behavior:'smooth'});
 }
-
-/* ---------- events (delegated) ---------- */
+function clockbar(){
+ var el=document.getElementById('clockbar');
+ el.innerHTML='<span class="lb">模拟时钟</span><b>'+tm(clock)+'</b>'+
+  '<button data-act="tick" data-arg="5">+5分</button><button data-act="tick" data-arg="30">+30分</button><button data-act="tick" data-arg="60">+1时</button><button data-act="tick" data-arg="120">+2时</button>'+
+  '<button data-act="tickEnd">到闭店</button><button data-act="reset" style="border-color:#F3C3C5;color:#C2373C">↺ 重置沙盒</button>';
+}
+function rerender(){
+ clockbar();
+ if(curView==='detail')detail();
+ else if(curView==='data')renderData();
+ else if(curView==='gallery')gallery();
+ sceneBar();
+ if(scene)hint();
+}
+/* ================= 事件与启动 ================= */
 document.addEventListener('click',function(e){
- var t=e.target.closest('[data-go],[data-role],[data-view],[data-scn],[data-step]');
+ var t=e.target.closest('[data-go],[data-role],[data-view],[data-scn],[data-step],[data-act],[data-hint]');
  if(!t)return;
- if(t.hasAttribute('data-view')){setView(t.getAttribute('data-view'));return;}
- if(t.hasAttribute('data-scn')){var k=t.getAttribute('data-scn');scene=(scene===k?null:k);sceneIdx=0;if(scene)applyScene();else sceneBar();return;}
- if(t.hasAttribute('data-step')){
-  var d=+t.getAttribute('data-step');
-  if(d===0){scene=null;sceneBar();return;}
-  sceneIdx+=d;applyScene();return;
+ if(t.hasAttribute('data-hint')){
+  var hh=t.getAttribute('data-hint');
+  if(hh==='auto')autoRun();
+  else if(hh==='replay')replayScene();
+  else if(hh==='exit'){scene=null;sceneBar();hint();}
+  return;
  }
- if(t.hasAttribute('data-go')){show(t.getAttribute('data-go'));return;}
+ if(t.hasAttribute('data-scn')){
+  var k=t.getAttribute('data-scn');
+  if(scene===k){scene=null;sceneBar();hint();}
+  else{
+   scene=k;sceneIdx=0;SCENES[k].seed();stopAuto();
+   show(SCENES[k].steps[0].p);sceneBar();hint();
+   toast('已载入剧本 '+k+'《'+SCENES[k].name+'》→ 点提示条「▶ 自动演示」或按提示手动点击','info');
+  }
+  return;
+ }
+ if(t.hasAttribute('data-step')){
+  if(!scene)return;
+  var d=+t.getAttribute('data-step');
+  if(d===0){scene=null;sceneBar();hint();return;}
+  stopAuto();
+  sceneIdx=Math.max(0,Math.min(SCENES[scene].steps.length-1,sceneIdx+d));
+  show(SCENES[scene].steps[sceneIdx].p);sceneBar();hint();
+  return;
+ }
+ if(t.hasAttribute('data-view')){stopAuto();setView(t.getAttribute('data-view'));return;}
+ if(t.hasAttribute('data-go')){stopAuto();show(t.getAttribute('data-go'));return;}
  if(t.hasAttribute('data-role')){
+  stopAuto();
   var rid=t.getAttribute('data-role');
   var rr=ROLES.filter(function(x){return x.id===rid;})[0];
   if(rr)show(rr.pages[0]);
   return;
  }
+ if(t.hasAttribute('data-act')){stopAuto();doAct(t.getAttribute('data-act'),t.getAttribute('data-arg')||'');return;}
+});
+document.addEventListener('change',function(e){
+ var t=e.target.closest('[data-nsel]');
+ if(t){NSR[t.getAttribute('data-nsel')]=t.value;}
 });
 document.addEventListener('keydown',function(e){
  if(curView!=='detail')return;
- if(e.key==='ArrowRight'){if(scene){sceneIdx++;applyScene();}else show(ORDER[(ORDER.indexOf(cur)+1)%ORDER.length]);}
- if(e.key==='ArrowLeft'){if(scene){sceneIdx--;applyScene();}else show(ORDER[(ORDER.indexOf(cur)-1+ORDER.length)%ORDER.length]);}
+ if(e.key==='ArrowRight'){
+  if(scene){stopAuto();sceneIdx=Math.min(SCENES[scene].steps.length-1,sceneIdx+1);show(SCENES[scene].steps[sceneIdx].p);sceneBar();hint();}
+  else show(ORDER[(ORDER.indexOf(cur)+1)%ORDER.length]);
+ }
+ if(e.key==='ArrowLeft'){
+  if(scene){stopAuto();sceneIdx=Math.max(0,sceneIdx-1);show(SCENES[scene].steps[sceneIdx].p);sceneBar();hint();}
+  else show(ORDER[(ORDER.indexOf(cur)-1+ORDER.length)%ORDER.length]);
+ }
 });
 
-/* ---------- boot ---------- */
-roleGrid();rail();sceneBar();gallery();detail();
+/* ---------- 启动 ---------- */
+seedBase();
+roleGrid();rail();sceneBar();clockbar();gallery();detail();hint();
 })();
 </script>
+
 <script src="/app.js"></script>
 </body>
 </html>

@@ -3,7 +3,7 @@
   "check": "S6 场景断言：高保真原型逐页核对与联调契约",
   "cmd": "python scripts/pages_check.py",
   "result": "PASS",
-  "at": "2026-11-13T14:43:00+08:00",
+  "at": "2026-11-13T16:25:32+08:00",
   "pages": 15,
   "roles": 5,
   "checks": [
