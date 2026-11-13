@@ -1,0 +1,63 @@
+{
+  "feature": "F2.3",
+  "result": "PASS",
+  "at": "2026-11-13T11:41:49+08:00",
+  "checks": [
+    {
+      "name": "S1 前置 F1.1 已通过",
+      "cmd": "read .agent\\workflow\\gate-records\\F1.1.json",
+      "exit": 0,
+      "detail": "",
+      "result": "PASS"
+    },
+    {
+      "name": "S1 前置 F2.1 已通过",
+      "cmd": "read .agent\\workflow\\gate-records\\F2.1.json",
+      "exit": 0,
+      "detail": "",
+      "result": "PASS"
+    },
+    {
+      "name": "S1 前置 F2.2 已通过",
+      "cmd": "read .agent\\workflow\\gate-records\\F2.2.json",
+      "exit": 0,
+      "detail": "",
+      "result": "PASS"
+    },
+    {
+      "name": "S2/S3 单测文件 internal/cache/cache_test.go",
+      "cmd": "test -s internal/cache/cache_test.go",
+      "exit": 0,
+      "detail": "",
+      "result": "PASS"
+    },
+    {
+      "name": "S4 gofmt -l 无输出",
+      "cmd": "gofmt -l .",
+      "exit": 0,
+      "detail": "",
+      "result": "PASS"
+    },
+    {
+      "name": "S4 go vet ./...",
+      "cmd": "go vet ./...",
+      "exit": 0,
+      "detail": "",
+      "result": "PASS"
+    },
+    {
+      "name": "S5 功能点专项单测",
+      "cmd": "go test -race -count=1 -v -run TestCache ./internal/cache",
+      "exit": 0,
+      "detail": "命中顶层 PASS 测试 6 个",
+      "result": "PASS"
+    }
+  ],
+  "tests_hit": 6,
+  "requires": [
+    "F1.1",
+    "F2.1",
+    "F2.2"
+  ],
+  "notes": "F2.3 Cache-Aside 名额读缓存、SETNX+TTL 支付去重、会话 TTL、Redis 不可用降级（读一律 miss、去重由 MySQL 唯一索引兜底）；实现 store.SlotCacheInvalidator 接口；零外部依赖内存适配器，真实 Redis 适配器待接入；TDD 红灯因实现缺失编译失败。"
+}
