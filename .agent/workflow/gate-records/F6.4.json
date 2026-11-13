@@ -1,0 +1,63 @@
+{
+  "feature": "F6.4",
+  "result": "PASS",
+  "at": "2026-11-13T14:43:00+08:00",
+  "checks": [
+    {
+      "name": "S1 前置 F6.1 已通过",
+      "cmd": "read .agent\\workflow\\gate-records\\F6.1.json",
+      "exit": 0,
+      "detail": "",
+      "result": "PASS"
+    },
+    {
+      "name": "S1 前置 F6.2 已通过",
+      "cmd": "read .agent\\workflow\\gate-records\\F6.2.json",
+      "exit": 0,
+      "detail": "",
+      "result": "PASS"
+    },
+    {
+      "name": "S1 前置 F6.3 已通过",
+      "cmd": "read .agent\\workflow\\gate-records\\F6.3.json",
+      "exit": 0,
+      "detail": "",
+      "result": "PASS"
+    },
+    {
+      "name": "覆盖率门禁复查（核心包每包 >=85%）",
+      "cmd": "C:\\Users\\91526\\AppData\\Local\\Programs\\Python\\Python314\\python.exe scripts/coverage_check.py",
+      "exit": 0,
+      "detail": "tements\nok  \tgithub.com/Abeautiful-crypto/Pet-store/internal/store\t2.534s\tcoverage: 88.0% of statements\n[PASS] T8 ���帲���� >=85%������ҵ�����: overall=90.6%\n[PASS] T8 internal/api >=85%: internal/api=94.2%\n[PASS] T8 internal/app >=85%: internal/app=93.4%\n[PASS] T8 internal/cache >=85%: internal/cache=94.8%\n[PASS] T8 internal/model >=85%: internal/model=88.1%\n[PASS] T8 internal/service >=85%: internal/service=89.4%\n[PASS] T8 internal/store >=85%: internal/store=88.0%\nF5.1 result=PASS overall=90.6%",
+      "result": "PASS"
+    },
+    {
+      "name": "五场景一键验收复查",
+      "cmd": "C:\\Users\\91526\\AppData\\Local\\Programs\\Python\\Python314\\python.exe scripts/acceptance_check.py",
+      "exit": 0,
+      "detail": "-02 ����ѭ��: ���ж��� PASS ���� 3 ����go test exit=0\n[PASS] SC-03 ȡ����֧: ���ж��� PASS ���� 5 ����go test exit=0\n[PASS] SC-04 �ŵ��ֳ���ͻ: ���ж��� PASS ���� 3 ����go test exit=0\n[PASS] SC-05 �յ�˲�: ���ж��� PASS ���� 3 ����go test exit=0\n[PASS] Ӳ�����޳���: ���ж��� PASS ���� 2 ����go test exit=0\n[PASS] Ӳ�������ظ��տ�: ���ж��� PASS ���� 2 ����go test exit=0\n[PASS] Ӳ�������ظ��ͷ�: ���ж��� PASS ���� 2 ����go test exit=0\n[PASS] Ӳ������ԽȨ: ���ж��� PASS ���� 1 ����go test exit=0\nF5.2 result=PASS tests_hit=23",
+      "result": "PASS"
+    },
+    {
+      "name": "全量回归复查",
+      "cmd": "C:\\Users\\91526\\AppData\\Local\\Programs\\Python\\Python314\\python.exe scripts/regression_check.py",
+      "exit": 0,
+      "detail": "[PASS] S1 ǰ�� F5.2 ��ͨ��\n[PASS] gofmt -l �����\n[PASS] go vet ./...\n[PASS] go test -race -count=1 ./...\nF5.3 result=PASS",
+      "result": "PASS"
+    },
+    {
+      "name": "高保真页面与联调契约复查",
+      "cmd": "C:\\Users\\91526\\AppData\\Local\\Programs\\Python\\Python314\\python.exe scripts/pages_check.py",
+      "exit": 0,
+      "detail": "[PASS] web/index.html ���¸߱����Ӿ���׼: �뱸\n[PASS] web/index.html �� 15 ��ҳ����: �뱸\n[PASS] web/index.html ���� /app.js: �뱸\n[PASS] web/app.js �� requireRole ����: �뱸\n[PASS] web/app.js ���ֻ���֡�Ԫ��ʽ��: �뱸\n[PASS] web/app.js ���� innerHTML ƴ��: �뱸\n[PASS] web/app.js ����ȫ��д�����ӿ�: �뱸\n[PASS] frontend/permission.md �� 15 ��ҳ��ӳ��: �뱸\n[PASS] frontend/permission.md �������ɫ����: �뱸\npages result=PASS pages=15 roles=5",
+      "result": "PASS"
+    }
+  ],
+  "tests_hit": 0,
+  "requires": [
+    "F6.1",
+    "F6.2",
+    "F6.3"
+  ],
+  "notes": "串联覆盖率门禁、五场景验收、全量回归与页面核对；真实 MySQL/Redis 集成测试由环境变量启用。"
+}

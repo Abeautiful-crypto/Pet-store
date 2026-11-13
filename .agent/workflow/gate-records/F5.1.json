@@ -1,7 +1,7 @@
 {
   "feature": "F5.1",
   "result": "PASS",
-  "at": "2026-11-13T14:06:14+08:00",
+  "at": "2026-11-13T14:41:57+08:00",
   "checks": [
     {
       "name": "S1 前置 F4.5 已通过",
@@ -28,14 +28,14 @@
       "name": "T8 覆盖率采集",
       "cmd": "go test ./... -count=1 -covermode=atomic -coverprofile=coverage.out",
       "exit": 0,
-      "detail": " of statements\nok  \tgithub.com/Abeautiful-crypto/Pet-store/internal/cache\t1.293s\tcoverage: 98.3% of statements\nok  \tgithub.com/Abeautiful-crypto/Pet-store/internal/model\t1.139s\tcoverage: 88.1% of statements\nok  \tgithub.com/Abeautiful-crypto/Pet-store/internal/service\t1.339s\tcoverage: 89.4% of statements\nok  \tgithub.com/Abeautiful-crypto/Pet-store/internal/store\t1.539s\tcoverage: 87.6% of statements",
+      "detail": " of statements\nok  \tgithub.com/Abeautiful-crypto/Pet-store/internal/cache\t3.272s\tcoverage: 94.8% of statements\nok  \tgithub.com/Abeautiful-crypto/Pet-store/internal/model\t1.159s\tcoverage: 88.1% of statements\nok  \tgithub.com/Abeautiful-crypto/Pet-store/internal/service\t1.271s\tcoverage: 89.4% of statements\nok  \tgithub.com/Abeautiful-crypto/Pet-store/internal/store\t2.534s\tcoverage: 88.0% of statements",
       "result": "PASS"
     },
     {
       "name": "T8 整体覆盖率 >=85%（核心业务包）",
       "cmd": "parse coverage.out",
       "exit": 0,
-      "detail": "overall=90.4%",
+      "detail": "overall=90.6%",
       "result": "PASS"
     },
     {
@@ -49,14 +49,14 @@
       "name": "T8 internal/app >=85%",
       "cmd": "parse coverage.out",
       "exit": 0,
-      "detail": "internal/app=100.0%",
+      "detail": "internal/app=93.4%",
       "result": "PASS"
     },
     {
       "name": "T8 internal/cache >=85%",
       "cmd": "parse coverage.out",
       "exit": 0,
-      "detail": "internal/cache=98.3%",
+      "detail": "internal/cache=94.8%",
       "result": "PASS"
     },
     {
@@ -77,19 +77,19 @@
       "name": "T8 internal/store >=85%",
       "cmd": "parse coverage.out",
       "exit": 0,
-      "detail": "internal/store=87.6%",
+      "detail": "internal/store=88.0%",
       "result": "PASS"
     }
   ],
   "coverage": {
     "internal/api": 94.2,
-    "internal/app": 100.0,
-    "internal/cache": 98.3,
+    "internal/app": 93.4,
+    "internal/cache": 94.8,
     "internal/model": 88.1,
     "internal/service": 89.4,
-    "internal/store": 87.6
+    "internal/store": 88.0
   },
-  "overall": 90.4,
+  "overall": 90.6,
   "tests_hit": 0,
   "requires": [
     "F4.5"
