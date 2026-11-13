@@ -1,0 +1,47 @@
+{
+  "feature": "F6.3",
+  "result": "PASS",
+  "at": "2026-11-13T14:34:12+08:00",
+  "checks": [
+    {
+      "name": "S1 前置 F5.3 已通过",
+      "cmd": "read .agent\\workflow\\gate-records\\F5.3.json",
+      "exit": 0,
+      "detail": "",
+      "result": "PASS"
+    },
+    {
+      "name": "S2/S3 单测文件 internal/cache/redis_test.go",
+      "cmd": "test -s internal/cache/redis_test.go",
+      "exit": 0,
+      "detail": "",
+      "result": "PASS"
+    },
+    {
+      "name": "S4 gofmt -l 无输出",
+      "cmd": "gofmt -l .",
+      "exit": 0,
+      "detail": "",
+      "result": "PASS"
+    },
+    {
+      "name": "S4 go vet ./...",
+      "cmd": "go vet ./...",
+      "exit": 0,
+      "detail": "",
+      "result": "PASS"
+    },
+    {
+      "name": "S5 功能点专项单测",
+      "cmd": "go test -race -count=1 -v -run TestRedis ./internal/cache",
+      "exit": 0,
+      "detail": "命中顶层 PASS 测试 4 个",
+      "result": "PASS"
+    }
+  ],
+  "tests_hit": 4,
+  "requires": [
+    "F5.3"
+  ],
+  "notes": "F6.3 本地 Redis 接入：Cache-Aside 名额读缓存、SETNX+TTL 支付去重、会话 JSON、写失效与 InvalidateAll、Redis 不可用/连接错误熔断降级（读 miss、去重放行由 MySQL 唯一索引兜底）；PETSTORE_TEST_REDIS_ADDR 已设置，真实 Redis 集成测试实际执行。"
+}
