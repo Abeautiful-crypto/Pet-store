@@ -1,3 +1,9 @@
 coverage.out
 *.exe
 *.test
+
+# Docker 镜像构建用的主机交叉编译产物（CGO_ENABLED=0 GOOS=linux go build 生成）
+petstore-server
+
+# 讲解效果视频（体积大，本地存在即满足交付；提交包时单独附带，不进 git）
+reports/video/

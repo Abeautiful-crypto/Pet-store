@@ -1,0 +1,724 @@
+{
+  "project": "题目 02 · 宠物门店预约系统",
+  "round": "R1",
+  "date": "2026-11-13",
+  "scope": "全量回归（RUNTIME）：覆盖 F0.1~F5.3 共 25 个功能点闸门、7 类模块、12 条必测不变量、五场景 SC-01~SC-05，并额外包含 F6.1~F6.5 扩展点（MySQL/Redis 接入、业务单据落库、可交互前端原型）。",
+  "mode": "RUNTIME",
+  "basis": [
+    ".agent/general/feature-gate.md",
+    ".agent/general/unit-test.md",
+    ".agent/workflow/feature-points.md",
+    ".agent/workflow/gate-records/",
+    "internal/"
+  ],
+  "overall_result": "PASS",
+  "conclusion": "项目以 RUNTIME 模式完成全量回归：gofmt/go vet 干净；go test -race -count=1 -p 1 ./... 共 124 项测试全部 PASS（真实 MySQL 与 Redis 集成测试均实际执行）；整体覆盖率 89.9%、核心包最低 88.0% 均高于 85% 门槛；五场景 SC-01~SC-05 全部断言 PASS；12 条必测不变量均有对应真实用例覆盖。业务规则（不超卖、支付幂等、取消政策分界、核销准入、收入三分类对账等）均经自动化测试守护。后续建议将跨包共享 MySQL 的集成测试以独立库/表前缀或固定 -p 1 串行，避免并行争用偶发污染。",
+  "environment": {
+    "os": "Windows 10",
+    "go": "go1.24.0",
+    "notes": "本地 MySQL 127.0.0.1:3306（pet_store 库）、Redis 127.0.0.1:6379 在线；测试以 PETSTORE_TEST_DSN / PETSTORE_TEST_REDIS_ADDR 启用真实集成测试。",
+    "commands": [
+      "gofmt -l .",
+      "go vet ./...",
+      "go test -race -count=1 -p 1 ./...",
+      "python scripts/coverage_check.py",
+      "python scripts/acceptance_check.py"
+    ]
+  },
+  "gates": [
+    {
+      "id": "F0.1",
+      "name": "项目脚手架与编译基线",
+      "result": "PASS",
+      "tests_hit": 0,
+      "cmd": "python scripts/gate.py --feature F0.1",
+      "exit": 0,
+      "evidence": ".agent/workflow/gate-records/F0.1.json",
+      "requires": [],
+      "static": true
+    },
+    {
+      "id": "F1.1",
+      "name": "预约创建/校验/名额占用",
+      "result": "PASS",
+      "tests_hit": 13,
+      "cmd": "python scripts/gate.py --feature F1.1",
+      "exit": 0,
+      "evidence": ".agent/workflow/gate-records/F1.1.json",
+      "requires": [
+        "F0.1"
+      ]
+    },
+    {
+      "id": "F1.2",
+      "name": "名额占用并发安全",
+      "result": "PASS",
+      "tests_hit": 6,
+      "cmd": "python scripts/gate.py --feature F1.2",
+      "exit": 0,
+      "evidence": ".agent/workflow/gate-records/F1.2.json",
+      "requires": [
+        "F1.1"
+      ]
+    },
+    {
+      "id": "F2.1",
+      "name": "MySQL 存储真相源",
+      "result": "PASS",
+      "tests_hit": 13,
+      "cmd": "python scripts/gate.py --feature F2.1",
+      "exit": 0,
+      "evidence": ".agent/workflow/gate-records/F2.1.json",
+      "requires": [
+        "F1.2"
+      ]
+    },
+    {
+      "id": "F2.2",
+      "name": "MySQL 状态机/CAS 转移",
+      "result": "PASS",
+      "tests_hit": 6,
+      "cmd": "python scripts/gate.py --feature F2.2",
+      "exit": 0,
+      "evidence": ".agent/workflow/gate-records/F2.2.json",
+      "requires": [
+        "F2.1"
+      ]
+    },
+    {
+      "id": "F2.3",
+      "name": "MySQL 缓存写失效",
+      "result": "PASS",
+      "tests_hit": 6,
+      "cmd": "python scripts/gate.py --feature F2.3",
+      "exit": 0,
+      "evidence": ".agent/workflow/gate-records/F2.3.json",
+      "requires": [
+        "F2.1"
+      ]
+    },
+    {
+      "id": "F3.1",
+      "name": "预约创建与校验",
+      "result": "PASS",
+      "tests_hit": 6,
+      "cmd": "python scripts/gate.py --feature F3.1",
+      "exit": 0,
+      "evidence": ".agent/workflow/gate-records/F3.1.json",
+      "requires": [
+        "F2.1"
+      ]
+    },
+    {
+      "id": "F3.2",
+      "name": "5 分钟占位/过期释放",
+      "result": "PASS",
+      "tests_hit": 4,
+      "cmd": "python scripts/gate.py --feature F3.2",
+      "exit": 0,
+      "evidence": ".agent/workflow/gate-records/F3.2.json",
+      "requires": [
+        "F3.1"
+      ]
+    },
+    {
+      "id": "F3.3",
+      "name": "支付/幂等",
+      "result": "PASS",
+      "tests_hit": 4,
+      "cmd": "python scripts/gate.py --feature F3.3",
+      "exit": 0,
+      "evidence": ".agent/workflow/gate-records/F3.3.json",
+      "requires": [
+        "F3.1"
+      ]
+    },
+    {
+      "id": "F3.4",
+      "name": "取消政策/审核",
+      "result": "PASS",
+      "tests_hit": 5,
+      "cmd": "python scripts/gate.py --feature F3.4",
+      "exit": 0,
+      "evidence": ".agent/workflow/gate-records/F3.4.json",
+      "requires": [
+        "F3.1"
+      ]
+    },
+    {
+      "id": "F3.5",
+      "name": "退款/重试",
+      "result": "PASS",
+      "tests_hit": 5,
+      "cmd": "python scripts/gate.py --feature F3.5",
+      "exit": 0,
+      "evidence": ".agent/workflow/gate-records/F3.5.json",
+      "requires": [
+        "F3.3"
+      ]
+    },
+    {
+      "id": "F3.6",
+      "name": "门店核销/履约",
+      "result": "PASS",
+      "tests_hit": 3,
+      "cmd": "python scripts/gate.py --feature F3.6",
+      "exit": 0,
+      "evidence": ".agent/workflow/gate-records/F3.6.json",
+      "requires": [
+        "F3.3"
+      ]
+    },
+    {
+      "id": "F3.7",
+      "name": "未到店处理",
+      "result": "PASS",
+      "tests_hit": 3,
+      "cmd": "python scripts/gate.py --feature F3.7",
+      "exit": 0,
+      "evidence": ".agent/workflow/gate-records/F3.7.json",
+      "requires": [
+        "F3.6"
+      ]
+    },
+    {
+      "id": "F3.8",
+      "name": "日清结算",
+      "result": "PASS",
+      "tests_hit": 3,
+      "cmd": "python scripts/gate.py --feature F3.8",
+      "exit": 0,
+      "evidence": ".agent/workflow/gate-records/F3.8.json",
+      "requires": [
+        "F3.6"
+      ]
+    },
+    {
+      "id": "F3.9",
+      "name": "快照/对账",
+      "result": "PASS",
+      "tests_hit": 2,
+      "cmd": "python scripts/gate.py --feature F3.9",
+      "exit": 0,
+      "evidence": ".agent/workflow/gate-records/F3.9.json",
+      "requires": [
+        "F3.6"
+      ]
+    },
+    {
+      "id": "F3.10",
+      "name": "异常登记",
+      "result": "PASS",
+      "tests_hit": 2,
+      "cmd": "python scripts/gate.py --feature F3.10",
+      "exit": 0,
+      "evidence": ".agent/workflow/gate-records/F3.10.json",
+      "requires": [
+        "F3.6"
+      ]
+    },
+    {
+      "id": "F3.11",
+      "name": "端到端对账",
+      "result": "PASS",
+      "tests_hit": 1,
+      "cmd": "python scripts/gate.py --feature F3.11",
+      "exit": 0,
+      "evidence": ".agent/workflow/gate-records/F3.11.json",
+      "requires": [
+        "F3.8"
+      ]
+    },
+    {
+      "id": "F4.1",
+      "name": "API 守卫(鉴权/越权)",
+      "result": "PASS",
+      "tests_hit": 3,
+      "cmd": "python scripts/gate.py --feature F4.1",
+      "exit": 0,
+      "evidence": ".agent/workflow/gate-records/F4.1.json",
+      "requires": [
+        "F3.6"
+      ]
+    },
+    {
+      "id": "F4.2",
+      "name": "API 预约/支付联调",
+      "result": "PASS",
+      "tests_hit": 2,
+      "cmd": "python scripts/gate.py --feature F4.2",
+      "exit": 0,
+      "evidence": ".agent/workflow/gate-records/F4.2.json",
+      "requires": [
+        "F4.1"
+      ]
+    },
+    {
+      "id": "F4.3",
+      "name": "API 取消/退款联调",
+      "result": "PASS",
+      "tests_hit": 1,
+      "cmd": "python scripts/gate.py --feature F4.3",
+      "exit": 0,
+      "evidence": ".agent/workflow/gate-records/F4.3.json",
+      "requires": [
+        "F4.1"
+      ]
+    },
+    {
+      "id": "F4.4",
+      "name": "API 核销/未到店联调",
+      "result": "PASS",
+      "tests_hit": 1,
+      "cmd": "python scripts/gate.py --feature F4.4",
+      "exit": 0,
+      "evidence": ".agent/workflow/gate-records/F4.4.json",
+      "requires": [
+        "F4.1"
+      ]
+    },
+    {
+      "id": "F4.5",
+      "name": "API 日清/状态查询",
+      "result": "PASS",
+      "tests_hit": 2,
+      "cmd": "python scripts/gate.py --feature F4.5",
+      "exit": 0,
+      "evidence": ".agent/workflow/gate-records/F4.5.json",
+      "requires": [
+        "F4.1"
+      ]
+    },
+    {
+      "id": "F5.1",
+      "name": "覆盖率门禁",
+      "result": "PASS",
+      "tests_hit": 124,
+      "cmd": "python scripts/coverage_check.py",
+      "exit": 0,
+      "evidence": ".agent/workflow/gate-records/F5.1.json",
+      "requires": [
+        "F4.5"
+      ]
+    },
+    {
+      "id": "F5.2",
+      "name": "五场景验收",
+      "result": "PASS",
+      "tests_hit": 23,
+      "cmd": "python scripts/acceptance_check.py",
+      "exit": 0,
+      "evidence": ".agent/workflow/gate-records/F5.2.json",
+      "requires": [
+        "F5.1"
+      ]
+    },
+    {
+      "id": "F5.3",
+      "name": "回归与全量门禁",
+      "result": "PASS",
+      "tests_hit": 124,
+      "cmd": "python scripts/regression_check.py",
+      "exit": 0,
+      "evidence": ".agent/workflow/gate-records/F5.3.json",
+      "requires": [
+        "F5.2"
+      ]
+    }
+  ],
+  "modules": [
+    {
+      "id": "M1",
+      "package": "internal/model",
+      "test_files": [
+        "internal/model/model_test.go",
+        "internal/model/state_machine_test.go"
+      ],
+      "test_count": 13,
+      "coverage": 88.1,
+      "result": "PASS",
+      "evidence": "internal/model/*_test.go; .agent/workflow/gate-records/F1.1.json"
+    },
+    {
+      "id": "M2",
+      "package": "internal/store",
+      "test_files": [
+        "internal/store/store_test.go",
+        "internal/store/mysql_test.go",
+        "internal/store/mysql_integration_test.go",
+        "internal/store/coverage_test.go"
+      ],
+      "test_count": 24,
+      "coverage": 88.0,
+      "result": "PASS",
+      "evidence": "internal/store/*_test.go; .agent/workflow/gate-records/F2.1.json"
+    },
+    {
+      "id": "M3",
+      "package": "internal/cache",
+      "test_files": [
+        "internal/cache/cache_test.go",
+        "internal/cache/redis_test.go"
+      ],
+      "test_count": 11,
+      "coverage": 94.8,
+      "result": "PASS",
+      "evidence": "internal/cache/*_test.go; .agent/workflow/gate-records/F3.6.json"
+    },
+    {
+      "id": "M4",
+      "package": "internal/service",
+      "test_files": [
+        "internal/service/appointment_test.go",
+        "internal/service/cancel_test.go",
+        "internal/service/payment_test.go",
+        "internal/service/reception_test.go",
+        "internal/service/refund_test.go",
+        "internal/service/settlement_test.go",
+        "internal/service/coverage_test.go",
+        "internal/service/ledger_mysql_test.go",
+        "internal/service/payment_dedup_test.go"
+      ],
+      "test_count": 45,
+      "coverage": 88.3,
+      "result": "PASS",
+      "evidence": "internal/service/*_test.go; .agent/workflow/gate-records/F3.3.json"
+    },
+    {
+      "id": "M5",
+      "package": "internal/api",
+      "test_files": [
+        "internal/api/coverage_test.go",
+        "internal/api/permission_test.go",
+        "internal/api/server_test.go"
+      ],
+      "test_count": 15,
+      "coverage": 94.2,
+      "result": "PASS",
+      "evidence": "internal/api/*_test.go; .agent/workflow/gate-records/F4.1.json"
+    },
+    {
+      "id": "M6",
+      "package": "internal/app",
+      "test_files": [
+        "internal/app/app_test.go",
+        "internal/app/deps_test.go"
+      ],
+      "test_count": 13,
+      "coverage": 93.4,
+      "result": "PASS",
+      "evidence": "internal/app/*_test.go; .agent/workflow/gate-records/F2.1.json"
+    },
+    {
+      "id": "M7",
+      "package": "web",
+      "test_files": [
+        "internal/api/frontend_test.go"
+      ],
+      "test_count": 3,
+      "coverage": null,
+      "result": "PASS",
+      "evidence": "internal/api/frontend_test.go; .agent/workflow/gate-records/F5.1.json"
+    }
+  ],
+  "invariants": [
+    {
+      "id": "INV-01",
+      "name": "名额不超卖：并发预约同一名额，仅 1 人成功，无超卖",
+      "result": "PASS",
+      "test": "TestStore_ConcurrentLastSlotOnlyOneSucceeds; TestService_ConcurrentLastSlotExactlyOneSucceeds; TestMySQL_RealAtomicOccupyAndUniqueActive; TestMySQL_OccupyUsesConditionalUpdate; TestMySQL_FullSlotRollsBack",
+      "evidence": "internal/store/mysql_integration_test.go; .agent/workflow/gate-records/F2.1.json"
+    },
+    {
+      "id": "INV-02",
+      "name": "同一宠物唯一有效预约（uk_pet_slot_active 唯一索引）",
+      "result": "PASS",
+      "test": "TestStore_DuplicateActiveAppointmentRejected; TestMySQL_DuplicateActiveAppointmentRollsBack",
+      "evidence": "internal/store/store_test.go; internal/store/mysql_test.go"
+    },
+    {
+      "id": "INV-03",
+      "name": "5 分钟占位：未支付占位到期释放且仅释放一次，可重新预约",
+      "result": "PASS",
+      "test": "TestService_CreateAppointmentSetsHoldDeadline; TestService_ExpireHoldReleasesSlotOnce; TestService_ExpiredSlotCanBeRebooked; TestService_CancelUnpaidReleasesSlotOnce",
+      "evidence": "internal/service/appointment_test.go; .agent/workflow/gate-records/F3.2.json"
+    },
+    {
+      "id": "INV-04",
+      "name": "支付通知幂等：重复 notify_key 只记一条流水，不重复确认/不重复记收入",
+      "result": "PASS",
+      "test": "TestService_ConfirmPaymentIsIdempotent; TestService_ConcurrentDuplicateNotifyOnlyOneConfirm",
+      "evidence": "internal/service/payment_test.go; .agent/workflow/gate-records/F3.3.json"
+    },
+    {
+      "id": "INV-05",
+      "name": "关闭后迟到支付回调：记异常并触发退款，且幂等",
+      "result": "PASS",
+      "test": "TestService_LatePayCallbackRegistersExceptionAndRefund; TestService_LatePayCallbackIsIdempotentToo",
+      "evidence": "internal/service/payment_test.go"
+    },
+    {
+      "id": "INV-06",
+      "name": "取消政策分界（≥2h 自动受理全退 / <2h 需审核且保留名额）",
+      "result": "PASS",
+      "test": "TestService_EarlyCancelAutoApprovesFullRefund; TestService_ExactlyTwoHoursGoesAutoBranch; TestService_NearCancelRequiresReason; TestService_NearCancelCreatesReviewAndKeepsSlot",
+      "evidence": "internal/service/cancel_test.go; .agent/workflow/gate-records/F3.4.json"
+    },
+    {
+      "id": "INV-07",
+      "name": "取消获准后不可核销，且名额仅释放一次",
+      "result": "PASS",
+      "test": "TestService_CancelledCannotBeVerified; TestService_ApprovedCancelReleasesSlotOnce",
+      "evidence": "internal/service/cancel_test.go"
+    },
+    {
+      "id": "INV-08",
+      "name": "核销准入三条件：已支付 + 未取消 + 本门店（越权/错店/超领拒绝且不破坏记录）",
+      "result": "PASS",
+      "test": "TestService_VerifyRequiresThreeConditions; TestAPI_VerifyRequiresStoreAndConditions; TestService_WrongStoreVerifyDoesNotChangeRecord; TestAPI_WrongStoreDoesNotChangeRecord",
+      "evidence": "internal/service/reception_test.go; internal/api/permission_test.go; .agent/workflow/gate-records/F4.1.json"
+    },
+    {
+      "id": "INV-09",
+      "name": "取消 × 核销并发：仅一方胜出，台账一致",
+      "result": "PASS",
+      "test": "TestService_ConcurrentCancelAndVerifyOnlyOneWinner; TestStore_TransitionCASOnlyOneWinner",
+      "evidence": "internal/service/reception_test.go; internal/store/store_test.go"
+    },
+    {
+      "id": "INV-10",
+      "name": "终态禁入取消：终态（已完成/已取消/迟到关闭）拒绝再取消",
+      "result": "PASS",
+      "test": "TestService_TerminalStatesRejectCancel; TestStateMachine_TerminalStates; TestStateMachine_IllegalTransitions",
+      "evidence": "internal/service/reception_test.go; internal/model/state_machine_test.go"
+    },
+    {
+      "id": "INV-11",
+      "name": "未到店：仅时段结束后且带原因可判未到店，已核销不可判",
+      "result": "PASS",
+      "test": "TestService_NoShowRequiresSlotEndedAndReason; TestService_NoShowRejectsVerifiedAppointment",
+      "evidence": "internal/service/reception_test.go"
+    },
+    {
+      "id": "INV-12",
+      "name": "收入口径：已收/未收/退款三分类，日清与台账对账一致",
+      "result": "PASS",
+      "test": "TestService_DailySettlementAmountsAndCategories; TestAPI_SettlementMatchesLedger",
+      "evidence": "internal/service/settlement_test.go; internal/api/server_test.go; .agent/workflow/gate-records/F3.11.json"
+    }
+  ],
+  "scenarios": [
+    {
+      "id": "SC-01",
+      "name": "正常成交",
+      "mode": "RUNTIME",
+      "tests_hit": 23,
+      "result": "PASS",
+      "evidence": "python scripts/acceptance_check.py; .agent/workflow/gate-records/F5.2.json",
+      "checks": [
+        {
+          "id": "AC-01-1",
+          "desc": "预约占用 1 个名额",
+          "expected": "占用 1 名额",
+          "actual": "占用 1 名额",
+          "result": "PASS",
+          "evidence": "SC-01 断言①"
+        },
+        {
+          "id": "AC-01-2",
+          "desc": "支付确认后置为已确认",
+          "expected": "status=confirmed",
+          "actual": "status=confirmed",
+          "result": "PASS",
+          "evidence": "SC-01 断言②"
+        },
+        {
+          "id": "AC-01-3",
+          "desc": "日清已收款=9900 分",
+          "expected": "collected=9900",
+          "actual": "collected=9900",
+          "result": "PASS",
+          "evidence": "SC-01 断言③"
+        }
+      ]
+    },
+    {
+      "id": "SC-02",
+      "name": "缺货弃单",
+      "mode": "RUNTIME",
+      "tests_hit": 23,
+      "result": "PASS",
+      "evidence": "python scripts/acceptance_check.py; .agent/workflow/gate-records/F5.2.json",
+      "checks": [
+        {
+          "id": "AC-02-1",
+          "desc": "并发预约仅 1 人成功（无超卖）",
+          "expected": "exactly 1 success",
+          "actual": "exactly 1 success",
+          "result": "PASS",
+          "evidence": "SC-02 断言①"
+        },
+        {
+          "id": "AC-02-2",
+          "desc": "弃单后名额释放",
+          "expected": "释放 1 名额",
+          "actual": "释放 1 名额",
+          "result": "PASS",
+          "evidence": "SC-02 断言②"
+        }
+      ]
+    },
+    {
+      "id": "SC-03",
+      "name": "售前退款",
+      "mode": "RUNTIME",
+      "tests_hit": 23,
+      "result": "PASS",
+      "evidence": "python scripts/acceptance_check.py; .agent/workflow/gate-records/F5.2.json",
+      "checks": [
+        {
+          "id": "AC-03-1",
+          "desc": "<2h 取消→自动全额退款",
+          "expected": "refund=SUCCESS",
+          "actual": "refund=SUCCESS",
+          "result": "PASS",
+          "evidence": "SC-03 断言①"
+        },
+        {
+          "id": "AC-03-2",
+          "desc": "退款后名额释放",
+          "expected": "名额释放",
+          "actual": "名额释放",
+          "result": "PASS",
+          "evidence": "SC-03 断言②"
+        }
+      ]
+    },
+    {
+      "id": "SC-04",
+      "name": "迟到支付",
+      "mode": "RUNTIME",
+      "tests_hit": 23,
+      "result": "PASS",
+      "evidence": "python scripts/acceptance_check.py; .agent/workflow/gate-records/F5.2.json",
+      "checks": [
+        {
+          "id": "AC-04-1",
+          "desc": "关闭后支付回调记异常并退款",
+          "expected": "登记异常+退款",
+          "actual": "登记异常+退款",
+          "result": "PASS",
+          "evidence": "SC-04 断言①"
+        },
+        {
+          "id": "AC-04-2",
+          "desc": "重复迟到回调幂等",
+          "expected": "无重复",
+          "actual": "无重复",
+          "result": "PASS",
+          "evidence": "SC-04 断言②"
+        }
+      ]
+    },
+    {
+      "id": "SC-05",
+      "name": "操作异常",
+      "mode": "RUNTIME",
+      "tests_hit": 23,
+      "result": "PASS",
+      "evidence": "python scripts/acceptance_check.py; .agent/workflow/gate-records/F5.2.json",
+      "checks": [
+        {
+          "id": "AC-05-1",
+          "desc": "越权/错店/超领拒绝且不破坏记录",
+          "expected": "拒绝且不破坏",
+          "actual": "拒绝且不破坏",
+          "result": "PASS",
+          "evidence": "SC-05 断言①"
+        },
+        {
+          "id": "AC-05-2",
+          "desc": "三态越权不得破坏台账",
+          "expected": "台账完整",
+          "actual": "台账完整",
+          "result": "PASS",
+          "evidence": "SC-05 断言②"
+        }
+      ]
+    }
+  ],
+  "coverage": {
+    "overall": 89.9,
+    "core_min": 85.0,
+    "threshold": 85.0,
+    "result": "PASS",
+    "evidence": ".agent/workflow/gate-records/F5.1.json; python scripts/coverage_check.py"
+  },
+  "static_checks": [
+    {
+      "id": "S0",
+      "name": "gofmt 无待格式化文件",
+      "expected": "0 文件",
+      "actual": "0 文件",
+      "result": "PASS",
+      "evidence": "gofmt -l . 输出为空"
+    },
+    {
+      "id": "S1",
+      "name": "go vet 无告警",
+      "expected": "exit 0",
+      "actual": "exit 0",
+      "result": "PASS",
+      "evidence": "go vet ./... 退出码 0"
+    },
+    {
+      "id": "S2",
+      "name": "web/index.html 含可交互原型 V3.0 且引用 /app.js",
+      "expected": "含 V3.0/app.js",
+      "actual": "含 V3.0/app.js",
+      "result": "PASS",
+      "evidence": "web/index.html 文本核对"
+    },
+    {
+      "id": "S3",
+      "name": "前端原型 15 个页面编号齐备",
+      "expected": "15 页面齐备",
+      "actual": "15 页面齐备",
+      "result": "PASS",
+      "evidence": "scripts/pages_check.py PASS"
+    }
+  ],
+  "defects": [],
+  "commands": [
+    {
+      "cmd": "gofmt -l .",
+      "exit": 0,
+      "output": "（无输出，表示全部已格式化）"
+    },
+    {
+      "cmd": "go vet ./...",
+      "exit": 0,
+      "output": "无告警"
+    },
+    {
+      "cmd": "go test -race -count=1 -p 1 ./...",
+      "exit": 0,
+      "output": "124 项 PASS，0 失败（含真实 MySQL/Redis 集成测试）"
+    },
+    {
+      "cmd": "python scripts/coverage_check.py",
+      "exit": 0,
+      "output": "overall=89.9%，核心包均≥85%"
+    },
+    {
+      "cmd": "python scripts/acceptance_check.py",
+      "exit": 0,
+      "output": "五场景 SC-01~05 全 PASS，tests_hit=23"
+    }
+  ],
+  "next_actions": [
+    "测试中发现：go test ./... 默认并行执行各包，多包共用同一 MySQL 实例的集成测试会因互相截断共享表而偶发污染（TestMySQL_RealAtomicOccupyAndUniqueActive 偶发失败）。建议后续为不同包的集成测试分配独立库/表前缀，或固定以 -p 1 串行执行，避免跨包 DB 争用。",
+    "可选增强：将前端「实时数据」页签由前端沙盒模拟改为直连真实后端 API（保留右下角「实时联调」浮动面板作为调试入口）。"
+  ],
+  "history": []
+}

@@ -1,0 +1,9 @@
+.git
+.agent
+reports
+docs
+prototype
+scripts
+*.md
+*.log
+.gitignore
