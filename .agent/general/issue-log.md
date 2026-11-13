@@ -76,3 +76,12 @@
 - 解决：原型期以 Ledger 隔离单据读写，语义与 SRS 5.2 E6/E8/E10 一致；后续接入 StateStore/MySQL 持久化并补集成测试，不影响当前闸门断言。
 - 是否上升为约束：否（标注为待办技术债，不修改现有约束）
 - 关联需求：SRS 5.2、FR-05 / FR-06 / FR-10、功能点 F3.3
+
+### [2026-11-13] F3.9 预检：并发输方走状态门禁分支时未留冲突日志
+- 分类标签：（#并发 #留痕 #状态门禁）
+- 现象：`TestService_ConcurrentCancelAndVerifyOnlyOneWinner` 的"并发冲突必须留痕"断言失败。
+- 复现步骤：`go test -race -count=1 ./internal/service -run TestService_ConcurrentCancelAndVerifyOnlyOneWinner`。
+- 根因：`logConflict` 原先只挂在 CAS 冲突分支；输方若在 CAS 之前读到已被对方改写的新状态，会走"非已确认"门禁分支直接返回，未写事件日志。约束（SRS 13 章 A8）本身已要求所有被拒并发操作留痕，属实现缺口。
+- 解决：`Verify` 与 `Cancel` 的状态门禁拒绝分支同样写只增不改的冲突事件；不改业务状态、不改断言。
+- 是否上升为约束：否（约束已存在，仅补实现）
+- 关联需求：SRS 8 章、13 章 A8、FR-13 / SC-04 / 功能点 F3.9
