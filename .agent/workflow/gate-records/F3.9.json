@@ -1,0 +1,47 @@
+{
+  "feature": "F3.9",
+  "result": "PASS",
+  "at": "2026-11-13T13:41:11+08:00",
+  "checks": [
+    {
+      "name": "S1 前置 F3.8 已通过",
+      "cmd": "read .agent\\workflow\\gate-records\\F3.8.json",
+      "exit": 0,
+      "detail": "",
+      "result": "PASS"
+    },
+    {
+      "name": "S2/S3 单测文件 internal/service/reception_test.go",
+      "cmd": "test -s internal/service/reception_test.go",
+      "exit": 0,
+      "detail": "",
+      "result": "PASS"
+    },
+    {
+      "name": "S4 gofmt -l 无输出",
+      "cmd": "gofmt -l .",
+      "exit": 0,
+      "detail": "",
+      "result": "PASS"
+    },
+    {
+      "name": "S4 go vet ./...",
+      "cmd": "go vet ./...",
+      "exit": 0,
+      "detail": "",
+      "result": "PASS"
+    },
+    {
+      "name": "S5 功能点专项单测",
+      "cmd": "go test -race -count=1 -v -run TestService_ConcurrentCancel|TestService_TerminalStates ./internal/service",
+      "exit": 0,
+      "detail": "命中顶层 PASS 测试 2 个",
+      "result": "PASS"
+    }
+  ],
+  "tests_hit": 2,
+  "requires": [
+    "F3.8"
+  ],
+  "notes": "F3.9 取消与核销并发只有一个胜者且状态/名额/金额自洽、冲突留痕；已核销/服务中/已完成禁入取消；预检发现的门禁分支漏留痕已按 issue-log 补齐。"
+}
