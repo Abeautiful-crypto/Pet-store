@@ -1,0 +1,47 @@
+{
+  "feature": "F3.4",
+  "result": "PASS",
+  "at": "2026-11-13T12:01:31+08:00",
+  "checks": [
+    {
+      "name": "S1 前置 F3.3 已通过",
+      "cmd": "read .agent\\workflow\\gate-records\\F3.3.json",
+      "exit": 0,
+      "detail": "",
+      "result": "PASS"
+    },
+    {
+      "name": "S2/S3 单测文件 internal/service/cancel_test.go",
+      "cmd": "test -s internal/service/cancel_test.go",
+      "exit": 0,
+      "detail": "",
+      "result": "PASS"
+    },
+    {
+      "name": "S4 gofmt -l 无输出",
+      "cmd": "gofmt -l .",
+      "exit": 0,
+      "detail": "",
+      "result": "PASS"
+    },
+    {
+      "name": "S4 go vet ./...",
+      "cmd": "go vet ./...",
+      "exit": 0,
+      "detail": "",
+      "result": "PASS"
+    },
+    {
+      "name": "S5 功能点专项单测",
+      "cmd": "go test -race -count=1 -v -run TestService_EarlyCancel|TestService_ExactlyTwoHours|TestService_CancelRejects ./internal/service",
+      "exit": 0,
+      "detail": "命中顶层 PASS 测试 5 个",
+      "result": "PASS"
+    }
+  ],
+  "tests_hit": 5,
+  "requires": [
+    "F3.3"
+  ],
+  "notes": "F3.4 提前取消自动受理（>=2h，等于 2h 走自动分支）、全额退款单 9900 分、名额释放一次、越权与未付款占位拒绝；TDD 红灯因 Cancel/审核单据未实现编译失败。"
+}
