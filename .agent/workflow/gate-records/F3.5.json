@@ -1,0 +1,47 @@
+{
+  "feature": "F3.5",
+  "result": "PASS",
+  "at": "2026-11-13T12:01:37+08:00",
+  "checks": [
+    {
+      "name": "S1 前置 F3.4 已通过",
+      "cmd": "read .agent\\workflow\\gate-records\\F3.4.json",
+      "exit": 0,
+      "detail": "",
+      "result": "PASS"
+    },
+    {
+      "name": "S2/S3 单测文件 internal/service/cancel_test.go",
+      "cmd": "test -s internal/service/cancel_test.go",
+      "exit": 0,
+      "detail": "",
+      "result": "PASS"
+    },
+    {
+      "name": "S4 gofmt -l 无输出",
+      "cmd": "gofmt -l .",
+      "exit": 0,
+      "detail": "",
+      "result": "PASS"
+    },
+    {
+      "name": "S4 go vet ./...",
+      "cmd": "go vet ./...",
+      "exit": 0,
+      "detail": "",
+      "result": "PASS"
+    },
+    {
+      "name": "S5 功能点专项单测",
+      "cmd": "go test -race -count=1 -v -run TestService_NearCancel|TestService_PendingReview|TestService_ReviewCancel ./internal/service",
+      "exit": 0,
+      "detail": "命中顶层 PASS 测试 5 个",
+      "result": "PASS"
+    }
+  ],
+  "tests_hit": 5,
+  "requires": [
+    "F3.4"
+  ],
+  "notes": "F3.5 临近取消(<2h)原因必填、转取消审核中且名额保持、待审核期间禁止核销、客服批准与拒绝结果不同并留痕（SC-03）。"
+}
