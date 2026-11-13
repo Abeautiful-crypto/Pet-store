@@ -207,3 +207,111 @@ func TestStore_AppendEventAndReset(t *testing.T) {
 		t.Fatalf("Reset 后事件流水应清空，实际 %d 条", len(logs))
 	}
 }
+
+// ---- F2.2 缓存写失效（tech-stack.md §2.2：写提交后失效，回滚不误失效）----
+
+type recordingInvalidator struct {
+	mu    sync.Mutex
+	slots []string
+	all   int
+}
+
+func (r *recordingInvalidator) InvalidateSlot(_ context.Context, slotID string) error {
+	r.mu.Lock()
+	defer r.mu.Unlock()
+	r.slots = append(r.slots, slotID)
+	return nil
+}
+
+func (r *recordingInvalidator) InvalidateAll(_ context.Context) error {
+	r.mu.Lock()
+	defer r.mu.Unlock()
+	r.all++
+	return nil
+}
+
+func (r *recordingInvalidator) reset() {
+	r.mu.Lock()
+	defer r.mu.Unlock()
+	r.slots = nil
+	r.all = 0
+}
+
+func (r *recordingInvalidator) snapshot() ([]string, int) {
+	r.mu.Lock()
+	defer r.mu.Unlock()
+	return append([]string(nil), r.slots...), r.all
+}
+
+func TestStore_Cache_WriteCommitInvalidatesSlot(t *testing.T) {
+	ctx := context.Background()
+	inv := &recordingInvalidator{}
+	s := newTestStore(t)
+	s.SetInvalidator(inv)
+	inv.reset()
+
+	if err := s.CreateAppointment(ctx, testAppointment("A1", "P1")); err != nil {
+		t.Fatal(err)
+	}
+	slots, all := inv.snapshot()
+	if len(slots) != 1 || slots[0] != "SL1" {
+		t.Fatalf("创建预约提交后应失效 slot:SL1，实际 %v", slots)
+	}
+	if all != 0 {
+		t.Fatal("单次写提交不应失效全部缓存")
+	}
+
+	inv.reset()
+	if err := s.ReleaseSlot(ctx, "A1"); err != nil {
+		t.Fatal(err)
+	}
+	slots, _ = inv.snapshot()
+	if len(slots) != 1 || slots[0] != "SL1" {
+		t.Fatalf("名额释放提交后应失效 slot:SL1，实际 %v", slots)
+	}
+}
+
+func TestStore_Cache_RollbackDoesNotInvalidate(t *testing.T) {
+	ctx := context.Background()
+	inv := &recordingInvalidator{}
+	s := newTestStore(t)
+	s.SetInvalidator(inv)
+	if err := s.CreateAppointment(ctx, testAppointment("A1", "P1")); err != nil {
+		t.Fatal(err)
+	}
+	inv.reset()
+
+	if err := s.CreateAppointment(ctx, testAppointment("A2", "P1")); !errors.Is(err, ErrDuplicateActive) {
+		t.Fatalf("重复预约应失败: %v", err)
+	}
+	missing := testAppointment("A3", "P3")
+	missing.SlotID = "NOPE"
+	if err := s.CreateAppointment(ctx, missing); !errors.Is(err, ErrSlotNotFound) {
+		t.Fatalf("时段不存在应失败: %v", err)
+	}
+	slots, all := inv.snapshot()
+	if len(slots) != 0 || all != 0 {
+		t.Fatalf("回滚/失败的写不得失效缓存: slots=%v all=%d", slots, all)
+	}
+}
+
+func TestStore_Cache_ResetInvalidatesAll(t *testing.T) {
+	ctx := context.Background()
+	inv := &recordingInvalidator{}
+	s := newTestStore(t)
+	s.SetInvalidator(inv)
+	if err := s.CreateAppointment(ctx, testAppointment("A1", "P1")); err != nil {
+		t.Fatal(err)
+	}
+	inv.reset()
+	if err := s.Reset(ctx); err != nil {
+		t.Fatal(err)
+	}
+	slots, all := inv.snapshot()
+	if all != 1 {
+		t.Fatalf("Reset 必须失效全部缓存，实际 all=%d", all)
+	}
+	if len(slots) != 0 {
+		t.Fatalf("Reset 只需失效全部，不应逐个失效: %v", slots)
+	}
+}

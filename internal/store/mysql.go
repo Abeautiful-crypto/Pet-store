@@ -5,6 +5,7 @@ import (
 	"database/sql"
 	"errors"
 	"fmt"
+	"sync"
 	"time"
 
 	"github.com/Abeautiful-crypto/Pet-store/internal/model"
@@ -38,7 +39,9 @@ const (
 
 // MySQLStore 以 MySQL 为真相源，Redis 只做缓存/去重，不参与名额计数。
 type MySQLStore struct {
-	db *sql.DB
+	mu          sync.Mutex
+	db          *sql.DB
+	invalidator SlotCacheInvalidator
 }
 
 // NewMySQLStore 用已建好连接池的 *sql.DB 装配存储层。
@@ -48,13 +51,41 @@ func NewMySQLStore(db *sql.DB) *MySQLStore {
 
 var _ StateStore = (*MySQLStore)(nil)
 
+func (s *MySQLStore) SetInvalidator(inv SlotCacheInvalidator) {
+	s.mu.Lock()
+	defer s.mu.Unlock()
+	s.invalidator = inv
+}
+
+func (s *MySQLStore) currentInvalidator() SlotCacheInvalidator {
+	s.mu.Lock()
+	defer s.mu.Unlock()
+	return s.invalidator
+}
+
+func (s *MySQLStore) invalidateSlot(ctx context.Context, slotID string) {
+	if inv := s.currentInvalidator(); inv != nil {
+		_ = inv.InvalidateSlot(ctx, slotID)
+	}
+}
+
+func (s *MySQLStore) invalidateAll(ctx context.Context) {
+	if inv := s.currentInvalidator(); inv != nil {
+		_ = inv.InvalidateAll(ctx)
+	}
+}
+
 func (s *MySQLStore) CreateSlot(ctx context.Context, slot model.Slot) error {
 	if err := slot.Validate(); err != nil {
 		return err
 	}
 	_, err := s.db.ExecContext(ctx, SQLInsertSlot, slot.ID, slot.StoreID, slot.ServiceItemID,
 		slot.StartAt, slot.EndAt, slot.Capacity, slot.OccupiedCount)
-	return err
+	if err != nil {
+		return err
+	}
+	s.invalidateSlot(ctx, slot.ID)
+	return nil
 }
 
 func (s *MySQLStore) GetSlot(ctx context.Context, slotID string) (model.Slot, error) {
@@ -128,6 +159,8 @@ func (s *MySQLStore) CreateAppointment(ctx context.Context, appt *model.Appointm
 		return err
 	}
 	committed = true
+	// 仅在事务提交成功后失效缓存；任何回滚路径都不得误失效。
+	s.invalidateSlot(ctx, appt.SlotID)
 	return nil
 }
 
@@ -180,6 +213,11 @@ func (s *MySQLStore) Transition(ctx context.Context, appointmentID string, from 
 }
 
 func (s *MySQLStore) ReleaseSlot(ctx context.Context, appointmentID string) error {
+	// 尽力取时段用于缓存失效；查询失败不阻塞释放，正确性由条件更新与 slot_released 守卫保证。
+	slotID := ""
+	if appt, err := s.GetAppointment(ctx, appointmentID); err == nil {
+		slotID = appt.SlotID
+	}
 	res, err := s.db.ExecContext(ctx, SQLReleaseSlot, appointmentID)
 	if err != nil {
 		return err
@@ -190,6 +228,9 @@ func (s *MySQLStore) ReleaseSlot(ctx context.Context, appointmentID string) erro
 	}
 	if affected == 0 {
 		return ErrAlreadyReleased
+	}
+	if slotID != "" {
+		s.invalidateSlot(ctx, slotID)
 	}
 	return nil
 }
@@ -225,5 +266,6 @@ func (s *MySQLStore) Reset(ctx context.Context) error {
 			return err
 		}
 	}
+	s.invalidateAll(ctx)
 	return nil
 }

@@ -24,6 +24,13 @@ var (
 	ErrAlreadyReleased = errors.New("名额已释放")
 )
 
+// SlotCacheInvalidator 是存储层写提交后的名额读缓存失效钩子。
+// Cache-Aside 写失效：先更新真相源（事务提交成功），再失效变化的 slot:{id}（tech-stack.md §2.2）。
+type SlotCacheInvalidator interface {
+	InvalidateSlot(ctx context.Context, slotID string) error
+	InvalidateAll(ctx context.Context) error
+}
+
 // StateStore 定义共享状态的唯一访问接口。
 // 所有角色读写同一条 appointment 记录；状态变更只有 Transition 一个写入点。
 type StateStore interface {

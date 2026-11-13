@@ -17,6 +17,7 @@ type MemoryStore struct {
 	appointments map[string]model.Appointment
 	released     map[string]bool
 	events       []model.EventLog
+	invalidator  SlotCacheInvalidator
 }
 
 // NewMemoryStore 创建空的内存存储。
@@ -30,16 +31,49 @@ func NewMemoryStore() *MemoryStore {
 
 var _ StateStore = (*MemoryStore)(nil)
 
-func (s *MemoryStore) CreateSlot(_ context.Context, slot model.Slot) error {
+// SetInvalidator 注入缓存失效钩子；未注入时存储层仍可独立工作。
+func (s *MemoryStore) SetInvalidator(inv SlotCacheInvalidator) {
+	s.mu.Lock()
+	defer s.mu.Unlock()
+	s.invalidator = inv
+}
+
+// 缓存失效在锁外调用，避免外部缓存阻塞业务写入。
+func (s *MemoryStore) invalidateSlot(ctx context.Context, slotID string) {
+	s.mu.Lock()
+	inv := s.invalidator
+	s.mu.Unlock()
+	if inv != nil {
+		_ = inv.InvalidateSlot(ctx, slotID)
+	}
+}
+
+func (s *MemoryStore) invalidateAll(ctx context.Context) {
+	s.mu.Lock()
+	inv := s.invalidator
+	s.mu.Unlock()
+	if inv != nil {
+		_ = inv.InvalidateAll(ctx)
+	}
+}
+
+func (s *MemoryStore) CreateSlot(ctx context.Context, slot model.Slot) error {
 	if err := slot.Validate(); err != nil {
 		return err
 	}
-	s.mu.Lock()
-	defer s.mu.Unlock()
-	if _, exists := s.slots[slot.ID]; exists {
-		return fmt.Errorf("时段已存在: %s", slot.ID)
+	err := func() error {
+		s.mu.Lock()
+		defer s.mu.Unlock()
+		if _, exists := s.slots[slot.ID]; exists {
+			return fmt.Errorf("时段已存在: %s", slot.ID)
+		}
+		s.slots[slot.ID] = slot
+		return nil
+	}()
+	if err != nil {
+		return err
 	}
-	s.slots[slot.ID] = slot
+	s.invalidateSlot(ctx, slot.ID)
 	return nil
 }
 
@@ -53,33 +87,40 @@ func (s *MemoryStore) GetSlot(_ context.Context, slotID string) (model.Slot, err
 	return slot, nil
 }
 
-func (s *MemoryStore) CreateAppointment(_ context.Context, appt *model.Appointment) error {
+func (s *MemoryStore) CreateAppointment(ctx context.Context, appt *model.Appointment) error {
 	if appt == nil {
 		return errors.New("预约不能为空")
 	}
 	if err := appt.Validate(); err != nil {
 		return err
 	}
-	s.mu.Lock()
-	defer s.mu.Unlock()
+	err := func() error {
+		s.mu.Lock()
+		defer s.mu.Unlock()
 
-	// 事务等价：以下任一校验失败都不写入任何状态。
-	slot, ok := s.slots[appt.SlotID]
-	if !ok {
-		return ErrSlotNotFound
-	}
-	if slot.OccupiedCount >= slot.Capacity {
-		return ErrSlotFull
-	}
-	for _, existing := range s.appointments {
-		if existing.PetID == appt.PetID && existing.SlotID == appt.SlotID && model.IsActive(existing.Status) {
-			return ErrDuplicateActive
+		// 事务等价：以下任一校验失败都不写入任何状态。
+		slot, ok := s.slots[appt.SlotID]
+		if !ok {
+			return ErrSlotNotFound
 		}
+		if slot.OccupiedCount >= slot.Capacity {
+			return ErrSlotFull
+		}
+		for _, existing := range s.appointments {
+			if existing.PetID == appt.PetID && existing.SlotID == appt.SlotID && model.IsActive(existing.Status) {
+				return ErrDuplicateActive
+			}
+		}
+		slot.OccupiedCount++
+		s.slots[slot.ID] = slot
+		s.appointments[appt.ID] = *appt
+		return nil
+	}()
+	if err != nil {
+		return err
 	}
-
-	slot.OccupiedCount++
-	s.slots[slot.ID] = slot
-	s.appointments[appt.ID] = *appt
+	// 写提交成功后才失效；失败/回滚路径不误失效。
+	s.invalidateSlot(ctx, appt.SlotID)
 	return nil
 }
 
@@ -121,28 +162,36 @@ func (s *MemoryStore) Transition(_ context.Context, appointmentID string, from m
 	appt.Status = to
 	appt.Version++
 	s.appointments[appointmentID] = appt
+	// 状态迁移不改变名额占用数，名额由 ReleaseSlot 单独释放并失效缓存。
 	return to, appt.Version, nil
 }
 
-func (s *MemoryStore) ReleaseSlot(_ context.Context, appointmentID string) error {
-	s.mu.Lock()
-	defer s.mu.Unlock()
-	appt, ok := s.appointments[appointmentID]
-	if !ok {
-		return ErrAppointmentNotFound
+func (s *MemoryStore) ReleaseSlot(ctx context.Context, appointmentID string) error {
+	slotID, err := func() (string, error) {
+		s.mu.Lock()
+		defer s.mu.Unlock()
+		appt, ok := s.appointments[appointmentID]
+		if !ok {
+			return "", ErrAppointmentNotFound
+		}
+		if s.released[appointmentID] {
+			return "", ErrAlreadyReleased
+		}
+		slot, ok := s.slots[appt.SlotID]
+		if !ok {
+			return "", ErrSlotNotFound
+		}
+		if slot.OccupiedCount > 0 {
+			slot.OccupiedCount--
+			s.slots[slot.ID] = slot
+		}
+		s.released[appointmentID] = true
+		return slot.ID, nil
+	}()
+	if err != nil {
+		return err
 	}
-	if s.released[appointmentID] {
-		return ErrAlreadyReleased
-	}
-	slot, ok := s.slots[appt.SlotID]
-	if !ok {
-		return ErrSlotNotFound
-	}
-	if slot.OccupiedCount > 0 {
-		slot.OccupiedCount--
-		s.slots[slot.ID] = slot
-	}
-	s.released[appointmentID] = true
+	s.invalidateSlot(ctx, slotID)
 	return nil
 }
 
@@ -161,12 +210,13 @@ func (s *MemoryStore) ListEvents(_ context.Context) ([]model.EventLog, error) {
 	return out, nil
 }
 
-func (s *MemoryStore) Reset(_ context.Context) error {
+func (s *MemoryStore) Reset(ctx context.Context) error {
 	s.mu.Lock()
-	defer s.mu.Unlock()
 	s.slots = map[string]model.Slot{}
 	s.appointments = map[string]model.Appointment{}
 	s.released = map[string]bool{}
 	s.events = nil
+	s.mu.Unlock()
+	s.invalidateAll(ctx)
 	return nil
 }

@@ -232,3 +232,50 @@ func TestMySQL_RealIntegrationSkippedWithoutDSN(t *testing.T) {
 	}
 	t.Log("真实 DSN 已配置：名额条件更新与唯一索引需在引入 MySQL 驱动后联调")
 }
+
+// ---- F2.2 MySQL 事务提交/回滚与缓存失效 ----
+
+func TestMySQL_Cache_CommitInvalidatesSlot(t *testing.T) {
+	conn := &fakeConn{}
+	s := NewMySQLStore(newFakeDB(t, conn))
+	inv := &recordingInvalidator{}
+	s.SetInvalidator(inv)
+	if err := s.CreateAppointment(context.Background(), mysqlTestAppointment()); err != nil {
+		t.Fatal(err)
+	}
+	slots, all := inv.snapshot()
+	if len(slots) != 1 || slots[0] != "SL1" {
+		t.Fatalf("事务提交后应失效变化的 slot:SL1，实际 %v", slots)
+	}
+	if all != 0 {
+		t.Fatal("单次提交不应失效全部缓存")
+	}
+}
+
+func TestMySQL_Cache_RollbackDoesNotInvalidate(t *testing.T) {
+	conn := &fakeConn{results: map[string]int64{SQLOccupySlot: 0}}
+	s := NewMySQLStore(newFakeDB(t, conn))
+	inv := &recordingInvalidator{}
+	s.SetInvalidator(inv)
+	if err := s.CreateAppointment(context.Background(), mysqlTestAppointment()); !errors.Is(err, ErrSlotFull) {
+		t.Fatalf("名额不足应回滚: %v", err)
+	}
+	slots, all := inv.snapshot()
+	if len(slots) != 0 || all != 0 {
+		t.Fatalf("事务回滚不得误失效缓存: slots=%v all=%d", slots, all)
+	}
+}
+
+func TestMySQL_Cache_ResetInvalidatesAll(t *testing.T) {
+	conn := &fakeConn{}
+	s := NewMySQLStore(newFakeDB(t, conn))
+	inv := &recordingInvalidator{}
+	s.SetInvalidator(inv)
+	if err := s.Reset(context.Background()); err != nil {
+		t.Fatal(err)
+	}
+	_, all := inv.snapshot()
+	if all != 1 {
+		t.Fatalf("Reset 必须失效全部缓存，实际 all=%d", all)
+	}
+}
