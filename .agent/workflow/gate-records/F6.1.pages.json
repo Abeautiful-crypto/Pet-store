@@ -1,0 +1,48 @@
+{
+  "feature": "F6.1",
+  "check": "S6 场景断言：高保真原型逐页核对与联调契约",
+  "cmd": "python scripts/pages_check.py",
+  "result": "PASS",
+  "at": "2026-11-13T14:43:00+08:00",
+  "pages": 15,
+  "roles": 5,
+  "checks": [
+    {
+      "name": "web/index.html 含新高保真视觉基准",
+      "result": "PASS"
+    },
+    {
+      "name": "web/index.html 含 15 个页面编号",
+      "result": "PASS"
+    },
+    {
+      "name": "web/index.html 引入 /app.js",
+      "result": "PASS"
+    },
+    {
+      "name": "web/app.js 含 requireRole 守卫",
+      "result": "PASS"
+    },
+    {
+      "name": "web/app.js 金额只做分→元格式化",
+      "result": "PASS"
+    },
+    {
+      "name": "web/app.js 禁用 innerHTML 拼接",
+      "result": "PASS"
+    },
+    {
+      "name": "web/app.js 覆盖全部写操作接口",
+      "result": "PASS"
+    },
+    {
+      "name": "frontend/permission.md 含 15 个页面映射",
+      "result": "PASS"
+    },
+    {
+      "name": "frontend/permission.md 含五类角色分配",
+      "result": "PASS"
+    }
+  ],
+  "notes": "以毛球驿站高保真原型为视觉基准；写操作角色守卫由 web/app.js requireRole 与 internal/api require 双重校验。"
+}
