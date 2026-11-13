@@ -1,0 +1,4 @@
+﻿provider,request_id,session,agent,model,stage,time,definition,total_tokens,included,evidence
+WorkBuddy,WB-08,2026-11-13-petstore,WorkBuddy,glm-5.3-flash,planning,2026-11-13 16:15:00,上下文处理,4,True,"[""E30""]"
+WorkBuddy,WB-09,2026-11-13-petstore,WorkBuddy,glm-5.3-flash,planning,2026-11-13 16:03:00,继续,182,True,"[""E30""]"
+WorkBuddy,WB-10,2026-11-13-petstore,WorkBuddy,glm-5.3,planning,2026-11-13 16:03:00,继续,40,True,"[""E30""]"

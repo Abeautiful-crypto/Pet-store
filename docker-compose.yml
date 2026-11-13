@@ -1,0 +1,27 @@
+# 宠物门店预约系统 · 应用容器化部署
+# 复用本机已有的 mysql / redis 容器（其内已存在 pet_store 库）。
+# 部署前请先创建共享网络并把现有容器接入：
+#   docker network create petstore-net
+#   docker network connect petstore-net mysql
+#   docker network connect petstore-net redis
+services:
+  app:
+    build: .
+    image: petstore-app:latest
+    container_name: petstore-app
+    restart: unless-stopped
+    environment:
+      APP_ENV: "prod"
+      STORE_DRIVER: "mysql"
+      HTTP_ADDR: ":8080"
+      # 同网络内直接用服务名 mysql/redis 解析（现有容器名即为 mysql / redis）
+      MYSQL_DSN: "root:root@tcp(mysql:3306)/pet_store?parseTime=true&charset=utf8mb4"
+      REDIS_ADDR: "redis:6379"
+    ports:
+      - "8080:8080"
+    networks:
+      - petstore-net
+
+networks:
+  petstore-net:
+    external: true

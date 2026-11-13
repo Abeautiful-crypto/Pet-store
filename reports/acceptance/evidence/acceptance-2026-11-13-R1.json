@@ -1,0 +1,461 @@
+{
+  "project": "题目 02 · 宠物门店预约系统",
+  "round": "R1",
+  "date": "2026-11-13",
+  "scope": "全量验收（RUNTIME）：题面 8 规则 / 20 FR / 五场景 / 15 页 / 七类硬错误 / 金额口径，引用 Agent 测试《测试报告》作为测试证据",
+  "mode": "RUNTIME",
+  "basis": [
+    ".agent/general/acceptance.md（题面 8 规则 / 20 FR / 五场景断言 / 金额口径权威文本）",
+    ".agent/general/feature-gate.md（逐功能点闸门 S1-S7）",
+    ".agent/general/unit-test.md（模块单测清单 + 12 条必测不变量）",
+    ".agent/workflow/feature-points.md（25 功能点矩阵）",
+    ".agent/workflow/gate-records/（F0.1~F5.3 + F6.x 闸门证据）",
+    "reports/test/测试报告-2026-11-13-R1.md（Agent 测试 Skill 产物，结论 PASS）",
+    "web/index.html（高保真可交互原型 V3.0，15 页编号齐备）",
+    "prototype/宠物门店预约系统-角色页面原型.html"
+  ],
+  "overall_result": "PASS",
+  "conclusion": "项目以 RUNTIME 模式完成全量验收：四维度（需求实现 / 异常路径 / 测试证据 / 部署结果）全部 PASS；五必演场景 SC-01~05 全部断言 PASS；七类硬错误（超卖 / 重复收款退款 / 重复释放 / 越权 / 收入虚增 / 退款失败复活 / 未到店自动退款）全部为「无」；金额口径经测试核对（已收款 39600、已退款 9900、未退款 29700、已完成服务收入 9900，等式 39600-9900=29700 成立，未把 39600 当收入）；测试证据由 Agent 测试 Skill《测试报告》提供（25 功能点闸门全 PASS、覆盖率 89.9% 且核心包均 ≥85%、go test -race 124 项全绿含真实 MySQL/Redis 集成）。业务规则（名额不超卖、支付幂等、取消政策分界、核销准入、收入三分类对账、未到店不退款）均经自动化测试守护，无未关闭高危缺陷，判定可交付。",
+  "dimensions": [
+    {
+      "id": "D1",
+      "name": "需求实现",
+      "result": "PASS",
+      "items": [
+        {
+          "id": "D1.1",
+          "desc": "八条规则 → 20 条 FR 逐条有实现载体 + 断言",
+          "expected": "20 条 FR 均可追溯到规则与用例",
+          "actual": "已落地：R1 时段/名额(FR-01~04, store 原子更新+uk_pet_slot_active)；R2 5分钟占位/9900全款/支付幂等/迟到回调(FR-04~06,FR-20, appointment+payment)；R3 ≥2h自动/<2h审核(FR-07~08, cancel)；R4 全额/独立/重试(FR-09~10,FR-20, refund)；R5 核销三条件/服务/收入一次(FR-11~12,FR-19, reception)；R6 取消×核销唯一/幂等/终态(FR-13~14, service+store CAS)；R7 未到店标记+原因+不退款(FR-15~16, reception)；R8 日清五类/金额反查(FR-17~18, settlement)",
+          "result": "PASS",
+          "evidence": ".agent/general/acceptance.md 第2/6章；.agent/workflow/feature-points.md；reports/test/测试报告-2026-11-13-R1.md 不变量 INV-01~12"
+        },
+        {
+          "id": "D1.2",
+          "desc": "四模块 / 五角色 15 页 / 五类 Skill / 同一份记录",
+          "expected": "U1-4/F1-3/C1-3/M1-4/P1 齐备且权限不串",
+          "actual": "web/index.html(V3.0) 含 15 页编号 U1-4/F1-3/C1-3/M1-4/P1；角色权限由 API requireRole(X-Role) 守卫；所有角色读写同一 appointment",
+          "result": "PASS",
+          "evidence": "web/index.html；internal/api/server.go requireRole；scripts/pages_check.py(pages=15,roles=5)"
+        },
+        {
+          "id": "D1.3",
+          "desc": "范围守护：无优惠/会员/排班/多店结算/档案编辑/争议裁决/未到店自动退款/真实支付通道",
+          "expected": "不出现范围外功能",
+          "actual": "代码中无上述范围外模块；未到店仅写原因不退款（HE-7 覆盖），模拟支付仅本地实现",
+          "result": "PASS",
+          "evidence": "全局检索无相关实现；INV-11/HE-7 测试覆盖"
+        }
+      ]
+    },
+    {
+      "id": "D2",
+      "name": "异常路径",
+      "result": "PASS",
+      "items": [
+        {
+          "id": "D2.1",
+          "desc": "E1 并发抢最后 1 个名额",
+          "expected": "恰好 1 人成功，occupied_count ≤ 3",
+          "actual": "TestStore_ConcurrentLastSlotOnlyOneSucceeds / TestService_ConcurrentLastSlotExactlyOneSucceeds 通过；SC-02 命中",
+          "result": "PASS",
+          "evidence": "internal/store/store_test.go；internal/service/appointment_test.go；F5.2 SC-02"
+        },
+        {
+          "id": "D2.2",
+          "desc": "E2 取消 × 核销并发",
+          "expected": "唯一胜者 + 冲突留痕",
+          "actual": "TestService_ConcurrentCancelAndVerifyOnlyOneWinner 通过；乐观锁 version CAS",
+          "result": "PASS",
+          "evidence": "internal/service/reception_test.go；internal/store CAS"
+        },
+        {
+          "id": "D2.3",
+          "desc": "E3 重复支付通知",
+          "expected": "只确认一次、不重复记收入",
+          "actual": "TestService_ConfirmPaymentIsIdempotent + Redis SETNX 去重 + notify_key 唯一索引兜底",
+          "result": "PASS",
+          "evidence": "internal/service/payment_test.go；internal/service/payment_dedup_test.go"
+        },
+        {
+          "id": "D2.4",
+          "desc": "E4 迟到支付成功回调",
+          "expected": "登记异常 + 退款，不恢复预约/名额",
+          "actual": "TestService_LatePayCallbackRegistersExceptionAndRefund 通过",
+          "result": "PASS",
+          "evidence": "internal/service/payment_test.go"
+        },
+        {
+          "id": "D2.5",
+          "desc": "E5 重复核销 / 重复完成",
+          "expected": "幂等拒绝，verify_at/finished_at/收入均不变",
+          "actual": "TestService_ServiceProgressIsIdempotent 通过",
+          "result": "PASS",
+          "evidence": "internal/service/reception_test.go"
+        },
+        {
+          "id": "D2.6",
+          "desc": "E6 退款失败 → 重试",
+          "expected": "状态链可查；预约不复活、名额不恢复",
+          "actual": "TestService_RefundFailureThenRetrySucceeds 通过",
+          "result": "PASS",
+          "evidence": "internal/service/refund_test.go；SC-03"
+        },
+        {
+          "id": "D2.7",
+          "desc": "E7 越权操作",
+          "expected": "403 拦截且记录未改",
+          "actual": "TestAPI_ThreeKindsOfOverreachDoNotBreakRecords / TestAPI_WrongStoreVerifyDoesNotChangeRecord 通过",
+          "result": "PASS",
+          "evidence": "internal/api/permission_test.go"
+        },
+        {
+          "id": "D2.8",
+          "desc": "E8 时段结束未到店",
+          "expected": "写原因、不生成退款单",
+          "actual": "TestService_NoShowRequiresSlotEndedAndReason / TestService_NoShowRejectsVerifiedAppointment 通过；MySQL service_records.no_show_reason 落库",
+          "result": "PASS",
+          "evidence": "internal/service/reception_test.go；HE-7"
+        },
+        {
+          "id": "D2.9",
+          "desc": "E9 终态禁入取消",
+          "expected": "已核销/服务中/已完成取消入口不可达并给原因",
+          "actual": "TestService_TerminalStatesRejectCancel / TestStateMachine_TerminalStates / IllegalTransitions 通过",
+          "result": "PASS",
+          "evidence": "internal/service/reception_test.go；internal/model/state_machine_test.go"
+        }
+      ]
+    },
+    {
+      "id": "D3",
+      "name": "测试证据",
+      "result": "PASS",
+      "items": [
+        {
+          "id": "D3.1",
+          "desc": "《测试报告》存在且结论 PASS",
+          "expected": "reports/test/*.md 存在且 PASS",
+          "actual": "reports/test/测试报告-2026-11-13-R1.md 存在，结论 PASS（25 闸门 / 7 模块 / 12 不变量 / 5 场景 / 覆盖率 89.9%）",
+          "result": "PASS",
+          "evidence": "reports/test/测试报告-2026-11-13-R1.md"
+        },
+        {
+          "id": "D3.2",
+          "desc": "25 功能点闸门 result==PASS",
+          "expected": "F0.1~F5.3 全部 PASS",
+          "actual": "gate-records 25 个 JSON 全部 result==PASS（含 F6.1~F6.5 扩展）",
+          "result": "PASS",
+          "evidence": ".agent/workflow/gate-records/"
+        },
+        {
+          "id": "D3.3",
+          "desc": "go test -race 全绿且命中 > 0",
+          "expected": "全绿，tests_hit>0",
+          "actual": "go test -race -count=1 -p 1 ./... = 124 PASS / 0 FAIL（含真实 MySQL/Redis 集成测试）；gofmt -l 无输出；go vet 退出码 0",
+          "result": "PASS",
+          "evidence": "reports/test/evidence/test-2026-11-13-R1.json；F5.3"
+        },
+        {
+          "id": "D3.4",
+          "desc": "覆盖率整体与核心包均 ≥85%",
+          "expected": "≥85%",
+          "actual": "整体 89.9%，核心包最低 88.0%（api94.2/app93.4/cache94.8/model88.1/service88.3/store88.0），均 ≥85%",
+          "result": "PASS",
+          "evidence": "F5.1.json；scripts/coverage_check.py"
+        },
+        {
+          "id": "D3.5",
+          "desc": "12 条必测不变量逐条有对应用例",
+          "expected": "INV-01~12 全覆盖",
+          "actual": "INV-01~12 均有真实测试覆盖（超卖/唯一预约/占位/幂等/迟到/取消政策/核销/并发/终态/未到店/收入口径）",
+          "result": "PASS",
+          "evidence": "reports/test/测试报告-2026-11-13-R1.md 不变量表"
+        }
+      ]
+    },
+    {
+      "id": "D4",
+      "name": "部署结果",
+      "result": "PASS",
+      "items": [
+        {
+          "id": "D4.1",
+          "desc": "可启动",
+          "expected": "启动命令/依赖/端口写清，冷启动无报错",
+          "actual": "go run ./cmd/server（env STORE_DRIVER=mysql / MYSQL_DSN / REDIS_ADDR / HTTP_ADDR）；依赖 MySQL(pet_store,9 表)+Redis；标准错误无报错",
+          "result": "PASS",
+          "evidence": "scripts/start-local.ps1；cmd/server/main.go"
+        },
+        {
+          "id": "D4.2",
+          "desc": "可访问",
+          "expected": "原型 15 页可切换；接口健康检查通过",
+          "actual": "http://127.0.0.1:8080/ 返回 200，V3.0 含 15 页；/api/slots 返回正常数据(slots=1)",
+          "result": "PASS",
+          "evidence": "本次 HTTP 检查 root=200 v3=True pages=True slots=1"
+        },
+        {
+          "id": "D4.3",
+          "desc": "可复现",
+          "expected": "演示数据可重置；五场景可再跑",
+          "actual": "启动 SeedSlots 注入 3 时段×3 只；scripts/acceptance_check.py 一键复跑 SC-01~05 + 硬错误",
+          "result": "PASS",
+          "evidence": "scripts/acceptance_check.py；internal/app/deps_test.go"
+        },
+        {
+          "id": "D4.4",
+          "desc": "可持久化",
+          "expected": "重启后名额/状态/金额自洽，不丢流水",
+          "actual": "MySQL 为真相源(appointments/slots/payments/refunds/cancel_requests/service_records)；端到端冒烟确认 payments/refunds/service_records/cancel_requests 真落 MySQL",
+          "result": "PASS",
+          "evidence": "F6.5 端到端冒烟；internal/store/mysql.go"
+        },
+        {
+          "id": "D4.5",
+          "desc": "可配置（模拟支付）",
+          "expected": "可制造 支付成功/重复通知/迟到回调/退款成功/退款失败",
+          "actual": "确认支付 / 重复 notify_key / 迟到回调 / 退款(成功+失败重试) 均有代码路径与测试",
+          "result": "PASS",
+          "evidence": "internal/service/payment.go；refund.go；payment_test.go；refund_test.go"
+        },
+        {
+          "id": "D4.6",
+          "desc": "边界（单店单日）",
+          "expected": "无多店数据混入",
+          "actual": "单店 STORE-1，无多店结算/跨店逻辑",
+          "result": "PASS",
+          "evidence": "cmd/server/main.go；INV 测试"
+        }
+      ]
+    }
+  ],
+  "scenarios": [
+    {
+      "id": "SC-01",
+      "name": "正常接待",
+      "result": "PASS",
+      "assertions": [
+        {
+          "id": "AC-01-1",
+          "desc": "状态顺序 待支付→已确认→已核销→服务中→已完成",
+          "expected": "顺序正确",
+          "actual": "TestAPI_AppointmentOutcomesVisible / TestService_ServiceProgressIsIdempotent 覆盖状态迁移",
+          "result": "PASS",
+          "evidence": "internal/api/server_test.go；internal/service/reception_test.go"
+        },
+        {
+          "id": "AC-01-2",
+          "desc": "收入恰好记一次 9900 分",
+          "expected": "revenue_fen=9900 且只写一次",
+          "actual": "settlement 仅已完成服务记录 revenue_fen 合计=9900；verify_at/finished_at 只写一次",
+          "result": "PASS",
+          "evidence": "TestService_DailySettlementAmountsAndCategories；TestService_ServiceProgressIsIdempotent"
+        },
+        {
+          "id": "AC-01-3",
+          "desc": "用户与店长看到的状态一致",
+          "expected": "U4 与 M3/M4 快照一致",
+          "actual": "同一 appointment，U4 与 M3/M4 读同一记录",
+          "result": "PASS",
+          "evidence": "TestAPI_AppointmentOutcomesVisible"
+        }
+      ]
+    },
+    {
+      "id": "SC-02",
+      "name": "名额循环",
+      "result": "PASS",
+      "assertions": [
+        {
+          "id": "AC-02-1",
+          "desc": "occupied_count ≤ 3 且并发抢最后 1 名额恰好 1 人成功",
+          "expected": "≤3 且恰 1 成功",
+          "actual": "TestStore_ConcurrentLastSlotOnlyOneSucceeds 等；SC-02 命中",
+          "result": "PASS",
+          "evidence": "internal/store/store_test.go；F5.2 SC-02"
+        },
+        {
+          "id": "AC-02-2",
+          "desc": "释放只发生一次；同宠物同时段不重复占",
+          "expected": "释放一次 + 唯一索引生效",
+          "actual": "TestStore_ReleaseSlotExactlyOnce / TestMySQL_DuplicateActiveAppointmentRollsBack",
+          "result": "PASS",
+          "evidence": "internal/store/store_test.go；internal/store/mysql_test.go"
+        },
+        {
+          "id": "AC-02-3",
+          "desc": "名额恢复后新用户可成功预约",
+          "expected": "可再预约",
+          "actual": "TestService_ExpiredSlotCanBeRebooked",
+          "result": "PASS",
+          "evidence": "internal/service/appointment_test.go"
+        }
+      ]
+    },
+    {
+      "id": "SC-03",
+      "name": "取消分支",
+      "result": "PASS",
+      "assertions": [
+        {
+          "id": "AC-03-1",
+          "desc": "提前自动 / 临近批准 / 临近拒绝 / 退款失败重试 四结果用户可分别查看",
+          "expected": "四结果可见",
+          "actual": "EarlyCancelAutoApprovesFullRefund / NearCancelCreatesReviewAndKeepsSlot / ReviewCancelApprove / ReviewCancelReject / RefundFailureThenRetrySucceeds",
+          "result": "PASS",
+          "evidence": "internal/service/cancel_test.go；refund_test.go"
+        },
+        {
+          "id": "AC-03-2",
+          "desc": "待审核期间名额保持、禁止核销",
+          "expected": "名额保持 + 禁止核销",
+          "actual": "NearCancelCreatesReviewAndKeepsSlot；CancelledCannotBeVerified（已批准才禁，待审核保持名额且禁止核销）",
+          "result": "PASS",
+          "evidence": "internal/service/cancel_test.go；reception_test.go"
+        },
+        {
+          "id": "AC-03-3",
+          "desc": "退款失败与重试全过程预约不复活、名额不恢复",
+          "expected": "不复活不恢复",
+          "actual": "TestService_RefundFailureThenRetrySucceeds",
+          "result": "PASS",
+          "evidence": "internal/service/refund_test.go"
+        }
+      ]
+    },
+    {
+      "id": "SC-04",
+      "name": "现场冲突",
+      "result": "PASS",
+      "assertions": [
+        {
+          "id": "AC-04-1",
+          "desc": "并发后预约只有一个合法状态，冲突留痕",
+          "expected": "唯一合法状态 + version",
+          "actual": "TestService_ConcurrentCancelAndVerifyOnlyOneWinner + version CAS",
+          "result": "PASS",
+          "evidence": "internal/service/reception_test.go；internal/store CAS"
+        },
+        {
+          "id": "AC-04-2",
+          "desc": "金额记录无重复、无丢失",
+          "expected": "payment/refund/service_record 仅记一次",
+          "actual": "幂等确认/核销；settlement 金额只记一次",
+          "result": "PASS",
+          "evidence": "internal/service/payment_test.go；settlement_test.go"
+        },
+        {
+          "id": "AC-04-3",
+          "desc": "被拒操作不改变任何记录",
+          "expected": "操作前后 diff 为空",
+          "actual": "TestAPI_ThreeKindsOfOverreachDoNotBreakRecords",
+          "result": "PASS",
+          "evidence": "internal/api/permission_test.go"
+        }
+      ]
+    },
+    {
+      "id": "SC-05",
+      "name": "收店核查",
+      "result": "PASS",
+      "assertions": [
+        {
+          "id": "AC-05-1",
+          "desc": "已服务 / 取消退款 / 未到店 / 退款失败 四类记录齐备且分类正确",
+          "expected": "四类齐备",
+          "actual": "TestAPI_SettlementMatchesLedger / DailySettlement 分类",
+          "result": "PASS",
+          "evidence": "internal/service/settlement_test.go；internal/api/server_test.go"
+        },
+        {
+          "id": "AC-05-2",
+          "desc": "金额三分类与逐笔记录可对账",
+          "expected": "A1~A4 逐笔可对账",
+          "actual": "39600/9900/29700/9900 三分类逐笔",
+          "result": "PASS",
+          "evidence": "internal/service/settlement_test.go；SC-05"
+        },
+        {
+          "id": "AC-05-3",
+          "desc": "已付款未被全部计作已完成服务收入",
+          "expected": "收入=9900 非 39600",
+          "actual": "service_revenue=9900（仅已完成服务记录），HE-5 覆盖",
+          "result": "PASS",
+          "evidence": "TestService_DailySettlementAmountsAndCategories"
+        }
+      ]
+    }
+  ],
+  "hard_errors": [
+    {
+      "id": "HE-1",
+      "name": "名额超卖",
+      "result": "无",
+      "evidence": "TestStore_ConcurrentLastSlotOnlyOneSucceeds + 真实 MySQL 原子条件更新(occupied_count<capacity)；SC-02"
+    },
+    {
+      "id": "HE-2",
+      "name": "重复收款 / 重复退款",
+      "result": "无",
+      "evidence": "notify_key/refund_id 唯一索引 + Redis SETNX 去重；TestService_ConfirmPaymentIsIdempotent；refund upsert"
+    },
+    {
+      "id": "HE-3",
+      "name": "名额重复释放",
+      "result": "无",
+      "evidence": "TestStore_ReleaseSlotExactlyOnce；释放用原子 -1 且幂等"
+    },
+    {
+      "id": "HE-4",
+      "name": "越权操作生效",
+      "result": "无",
+      "evidence": "TestAPI_ThreeKindsOfOverreachDoNotBreakRecords；requireRole 守卫"
+    },
+    {
+      "id": "HE-5",
+      "name": "收入虚增",
+      "result": "无",
+      "evidence": "settlement service_revenue=9900（仅已完成）；HE-5 测试 AC-05-3"
+    },
+    {
+      "id": "HE-6",
+      "name": "退款失败复活预约",
+      "result": "无",
+      "evidence": "TestService_RefundFailureThenRetrySucceeds；status 不回退、名额不恢复"
+    },
+    {
+      "id": "HE-7",
+      "name": "未到店自动退款",
+      "result": "无",
+      "evidence": "no_show 仅写 no_show_reason，无退款单生成；TestService_NoShow*"
+    }
+  ],
+  "amounts": {
+    "collected": 39600,
+    "refunded": 9900,
+    "unrefunded": 29700,
+    "service_revenue": 9900,
+    "verified": true,
+    "evidence": "TestService_DailySettlementAmountsAndCategories；SC-05 金额口径（39600-9900=29700，已完成服务收入=9900）"
+  },
+  "test_report": {
+    "path": "reports/test/测试报告-2026-11-13-R1.md",
+    "exists": true,
+    "result": "PASS",
+    "summary": "RUNTIME 全量回归：25 闸门 / 7 模块 / 12 不变量 / 5 场景全 PASS；覆盖率 89.9%；124 项 -race 单测全绿（含真实 MySQL/Redis 集成）"
+  },
+  "deployment": {
+    "status": "就绪",
+    "url": "http://127.0.0.1:8080/",
+    "reproduce": "powershell -File scripts/start-local.ps1（或 go run ./cmd/server，env STORE_DRIVER=mysql MYSQL_DSN REDIS_ADDR HTTP_ADDR）；访问首页即高保真原型，右下角「实时联调」直连后端",
+    "evidence": "本次 HTTP 检查 root=200 v3=True pages=True slots=1；scripts/start-local.ps1"
+  },
+  "issues": [],
+  "next_actions": [
+    "测试中发现：go test ./... 默认并行跑各包，多包共用同一 MySQL 实例的集成测试会因互相截断共享表而偶发污染（TestMySQL_RealAtomicOccupyAndUniqueActive 偶发失败）。建议后续为不同包的集成测试分配独立库/表前缀，或固定以 -p 1 串行执行。",
+    "高保真原型「实时数据」页签当前为前端沙盒内置数据（纯演示）；真正对接后端 API 的能力在右下角「实时联调」浮动面板。如需把实时数据页签接成真实后端请求，可作为后续增强。",
+    "Payment.PaidAt/CallbackAt 时间字段未落库（001 迁移的 payments 表无时间列），如对账需持久化时间，可补一条迁移列。"
+  ],
+  "history": []
+}
