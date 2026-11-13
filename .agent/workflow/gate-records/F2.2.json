@@ -1,0 +1,54 @@
+{
+  "feature": "F2.2",
+  "result": "PASS",
+  "at": "2026-11-13T11:38:02+08:00",
+  "checks": [
+    {
+      "name": "S1 前置 F2.1 已通过",
+      "cmd": "read .agent\\workflow\\gate-records\\F2.1.json",
+      "exit": 0,
+      "detail": "",
+      "result": "PASS"
+    },
+    {
+      "name": "S2/S3 单测文件 internal/store/store_test.go",
+      "cmd": "test -s internal/store/store_test.go",
+      "exit": 0,
+      "detail": "",
+      "result": "PASS"
+    },
+    {
+      "name": "S2/S3 单测文件 internal/store/mysql_test.go",
+      "cmd": "test -s internal/store/mysql_test.go",
+      "exit": 0,
+      "detail": "",
+      "result": "PASS"
+    },
+    {
+      "name": "S4 gofmt -l 无输出",
+      "cmd": "gofmt -l .",
+      "exit": 0,
+      "detail": "",
+      "result": "PASS"
+    },
+    {
+      "name": "S4 go vet ./...",
+      "cmd": "go vet ./...",
+      "exit": 0,
+      "detail": "",
+      "result": "PASS"
+    },
+    {
+      "name": "S5 功能点专项单测",
+      "cmd": "go test -race -count=1 -v -run TestStore_Cache|TestMySQL_Cache ./internal/store",
+      "exit": 0,
+      "detail": "命中顶层 PASS 测试 6 个",
+      "result": "PASS"
+    }
+  ],
+  "tests_hit": 6,
+  "requires": [
+    "F2.1"
+  ],
+  "notes": "F2.2 内存回退与缓存写失效：写提交后失效变化的 slot:{id}、事务回滚/失败不误失效、Reset 失效全部；MemoryStore 与 MySQLStore 均注入 SlotCacheInvalidator；TDD 红灯因 SetInvalidator 未实现编译失败。"
+}
