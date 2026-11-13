@@ -67,3 +67,12 @@
 - 解决：末尾改为赋值 `slot, _ = ...`；仅修本功能点测试文件，不改实现、不放宽断言、不跳过依赖，重跑原闸门。
 - 是否上升为约束：否
 - 关联需求：功能点 F2.1 / `general/feature-gate.md` 第 6 节
+
+### [2026-11-13] F3.3 业务单据账本暂为内存实现（与真相源约定的偏差）
+- 分类标签：（#技术债 #账本 #真相源）
+- 现象：支付单/退款单/异常登记放在 internal/service.Ledger（内存），tech-stack.md 第 1 节要求业务记录以 MySQL 为真相源。
+- 复现步骤：查看 internal/service/ledger.go 与 migrations/001_init.up.sql（payments/refunds/event_logs 表已建但服务层未写入）。
+- 根因：阶段 3 优先保证 8 条业务规则与 20 条 FR 的可验证闭环；继续扩张 StateStore 接口会拖慢逐功能点闸门。
+- 解决：原型期以 Ledger 隔离单据读写，语义与 SRS 5.2 E6/E8/E10 一致；后续接入 StateStore/MySQL 持久化并补集成测试，不影响当前闸门断言。
+- 是否上升为约束：否（标注为待办技术债，不修改现有约束）
+- 关联需求：SRS 5.2、FR-05 / FR-06 / FR-10、功能点 F3.3
