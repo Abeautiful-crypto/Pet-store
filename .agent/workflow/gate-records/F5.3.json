@@ -1,0 +1,40 @@
+{
+  "feature": "F5.3",
+  "result": "PASS",
+  "at": "2026-11-13T14:08:22+08:00",
+  "checks": [
+    {
+      "name": "S1 前置 F5.2 已通过",
+      "cmd": "read .agent\\workflow\\gate-records\\F5.2.json",
+      "exit": 0,
+      "detail": "",
+      "result": "PASS"
+    },
+    {
+      "name": "gofmt -l 无输出",
+      "cmd": "gofmt -l .",
+      "exit": 0,
+      "detail": "exit=0\n",
+      "result": "PASS"
+    },
+    {
+      "name": "go vet ./...",
+      "cmd": "go vet ./...",
+      "exit": 0,
+      "detail": "exit=0\n",
+      "result": "PASS"
+    },
+    {
+      "name": "go test -race -count=1 ./...",
+      "cmd": "go test -race -count=1 ./...",
+      "exit": 0,
+      "detail": "exit=0\nfiles]\nok  \tgithub.com/Abeautiful-crypto/Pet-store/internal/api\t3.002s\nok  \tgithub.com/Abeautiful-crypto/Pet-store/internal/app\t1.861s\nok  \tgithub.com/Abeautiful-crypto/Pet-store/internal/cache\t1.907s\nok  \tgithub.com/Abeautiful-crypto/Pet-store/internal/model\t1.953s\nok  \tgithub.com/Abeautiful-crypto/Pet-store/internal/service\t1.998s\nok  \tgithub.com/Abeautiful-crypto/Pet-store/internal/store\t2.028s",
+      "result": "PASS"
+    }
+  ],
+  "tests_hit": 0,
+  "requires": [
+    "F5.2"
+  ],
+  "notes": "全量回归为命令级门禁（非单测正则）；F5.1 覆盖率与 F5.2 五场景证据另存。"
+}
