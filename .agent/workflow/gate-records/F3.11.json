@@ -1,0 +1,47 @@
+{
+  "feature": "F3.11",
+  "result": "PASS",
+  "at": "2026-11-13T13:41:49+08:00",
+  "checks": [
+    {
+      "name": "S1 前置 F3.10 已通过",
+      "cmd": "read .agent\\workflow\\gate-records\\F3.10.json",
+      "exit": 0,
+      "detail": "",
+      "result": "PASS"
+    },
+    {
+      "name": "S2/S3 单测文件 internal/service/settlement_test.go",
+      "cmd": "test -s internal/service/settlement_test.go",
+      "exit": 0,
+      "detail": "",
+      "result": "PASS"
+    },
+    {
+      "name": "S4 gofmt -l 无输出",
+      "cmd": "gofmt -l .",
+      "exit": 0,
+      "detail": "",
+      "result": "PASS"
+    },
+    {
+      "name": "S4 go vet ./...",
+      "cmd": "go vet ./...",
+      "exit": 0,
+      "detail": "",
+      "result": "PASS"
+    },
+    {
+      "name": "S5 功能点专项单测",
+      "cmd": "go test -race -count=1 -v -run TestService_DailySettlement ./internal/service",
+      "exit": 0,
+      "detail": "命中顶层 PASS 测试 1 个",
+      "result": "PASS"
+    }
+  ],
+  "tests_hit": 1,
+  "requires": [
+    "F3.10"
+  ],
+  "notes": "F3.11 日清五类查询与金额三分类：A1-A4 演示数据对账 39600/9900/29700/9900，已完成服务收入只认已完成服务记录，已付款未全计收入（SC-05）。"
+}
