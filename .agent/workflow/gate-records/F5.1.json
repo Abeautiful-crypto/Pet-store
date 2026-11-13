@@ -1,0 +1,98 @@
+{
+  "feature": "F5.1",
+  "result": "PASS",
+  "at": "2026-11-13T14:06:14+08:00",
+  "checks": [
+    {
+      "name": "S1 前置 F4.5 已通过",
+      "cmd": "read .agent\\workflow\\gate-records\\F4.5.json",
+      "exit": 0,
+      "detail": "",
+      "result": "PASS"
+    },
+    {
+      "name": "S4 gofmt -l 无输出",
+      "cmd": "gofmt -l .",
+      "exit": 0,
+      "detail": "",
+      "result": "PASS"
+    },
+    {
+      "name": "S4 go vet ./...",
+      "cmd": "go vet ./...",
+      "exit": 0,
+      "detail": "",
+      "result": "PASS"
+    },
+    {
+      "name": "T8 覆盖率采集",
+      "cmd": "go test ./... -count=1 -covermode=atomic -coverprofile=coverage.out",
+      "exit": 0,
+      "detail": " of statements\nok  \tgithub.com/Abeautiful-crypto/Pet-store/internal/cache\t1.293s\tcoverage: 98.3% of statements\nok  \tgithub.com/Abeautiful-crypto/Pet-store/internal/model\t1.139s\tcoverage: 88.1% of statements\nok  \tgithub.com/Abeautiful-crypto/Pet-store/internal/service\t1.339s\tcoverage: 89.4% of statements\nok  \tgithub.com/Abeautiful-crypto/Pet-store/internal/store\t1.539s\tcoverage: 87.6% of statements",
+      "result": "PASS"
+    },
+    {
+      "name": "T8 整体覆盖率 >=85%（核心业务包）",
+      "cmd": "parse coverage.out",
+      "exit": 0,
+      "detail": "overall=90.4%",
+      "result": "PASS"
+    },
+    {
+      "name": "T8 internal/api >=85%",
+      "cmd": "parse coverage.out",
+      "exit": 0,
+      "detail": "internal/api=94.2%",
+      "result": "PASS"
+    },
+    {
+      "name": "T8 internal/app >=85%",
+      "cmd": "parse coverage.out",
+      "exit": 0,
+      "detail": "internal/app=100.0%",
+      "result": "PASS"
+    },
+    {
+      "name": "T8 internal/cache >=85%",
+      "cmd": "parse coverage.out",
+      "exit": 0,
+      "detail": "internal/cache=98.3%",
+      "result": "PASS"
+    },
+    {
+      "name": "T8 internal/model >=85%",
+      "cmd": "parse coverage.out",
+      "exit": 0,
+      "detail": "internal/model=88.1%",
+      "result": "PASS"
+    },
+    {
+      "name": "T8 internal/service >=85%",
+      "cmd": "parse coverage.out",
+      "exit": 0,
+      "detail": "internal/service=89.4%",
+      "result": "PASS"
+    },
+    {
+      "name": "T8 internal/store >=85%",
+      "cmd": "parse coverage.out",
+      "exit": 0,
+      "detail": "internal/store=87.6%",
+      "result": "PASS"
+    }
+  ],
+  "coverage": {
+    "internal/api": 94.2,
+    "internal/app": 100.0,
+    "internal/cache": 98.3,
+    "internal/model": 88.1,
+    "internal/service": 89.4,
+    "internal/store": 87.6
+  },
+  "overall": 90.4,
+  "tests_hit": 0,
+  "requires": [
+    "F4.5"
+  ],
+  "notes": "覆盖率为门禁对象（非单测正则）；main.go 按 unit-test.md 豁免清单排除；阈值 85% 不得调低。"
+}
