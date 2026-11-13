@@ -49,3 +49,21 @@
 - 解决：F0.1 基线自检把该差异记为观察项并写入 `gate-records/F0.1.json` 的 notes；不修改 SRS 原文（需求基线由题目给定），后续实现与验收以第 10 章已定义的 `AC-02-1`~`AC-02-3` 为准。
 - 是否上升为约束：否
 - 关联需求：SRS 第 10 章 SC-02、第 12 章追溯矩阵 / 功能点 F0.1
+
+### [2026-11-13] F2.1 单测预检：满名额场景掩盖唯一性冲突断言
+- 分类标签：（#名额 #唯一性 #测试场景）
+- 现象：`TestStore_FailedCreateDoesNotChangeState` 先把 3 个名额占满，再用同一宠物发起预约，期望 `ErrDuplicateActive`，实际得到 `ErrSlotFull`。
+- 复现步骤：`go test ./internal/store -run TestStore_FailedCreateDoesNotChangeState`。
+- 根因：测试场景把两个互斥前置混在一起；存储实现按"时段存在 → 名额条件更新 → 唯一索引"的顺序判定，MySQL 真相源与内存回退实现均应先报名额不足，属于一致的合法行为，非产品缺陷。
+- 解决：拆成两个场景——名额未满时验证 `ErrDuplicateActive` 且名额不增，占满后再验证 `ErrSlotFull`；断言强度不变，实现不改，保证两种 `StateStore` 行为一致。
+- 是否上升为约束：否
+- 关联需求：SRS 6.2 FR-02 / FR-03、规则 1 / 功能点 F2.1
+
+### [2026-11-13] F2.1 闸门 FAIL：拆分测试场景后短变量重复声明
+- 分类标签：（#编译 #闸门 #测试场景）
+- 现象：F2.1 闸门 S4 `go vet ./...` 与 S5 专项单测 FAIL，`internal/store/store_test.go:177:10: no new variables on left side of :=`。
+- 复现步骤：`python scripts/gate.py --feature F2.1 ...`。
+- 根因：为验证唯一性冲突新增 `slot, _ := s.GetSlot(...)`，与该函数末尾原有的同名短变量声明冲突，且左侧无新变量。
+- 解决：末尾改为赋值 `slot, _ = ...`；仅修本功能点测试文件，不改实现、不放宽断言、不跳过依赖，重跑原闸门。
+- 是否上升为约束：否
+- 关联需求：功能点 F2.1 / `general/feature-gate.md` 第 6 节
