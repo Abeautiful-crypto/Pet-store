@@ -1,0 +1,47 @@
+{
+  "feature": "F3.7",
+  "result": "PASS",
+  "at": "2026-11-13T13:41:00+08:00",
+  "checks": [
+    {
+      "name": "S1 前置 F3.6 已通过",
+      "cmd": "read .agent\\workflow\\gate-records\\F3.6.json",
+      "exit": 0,
+      "detail": "",
+      "result": "PASS"
+    },
+    {
+      "name": "S2/S3 单测文件 internal/service/refund_test.go",
+      "cmd": "test -s internal/service/refund_test.go",
+      "exit": 0,
+      "detail": "",
+      "result": "PASS"
+    },
+    {
+      "name": "S4 gofmt -l 无输出",
+      "cmd": "gofmt -l .",
+      "exit": 0,
+      "detail": "",
+      "result": "PASS"
+    },
+    {
+      "name": "S4 go vet ./...",
+      "cmd": "go vet ./...",
+      "exit": 0,
+      "detail": "",
+      "result": "PASS"
+    },
+    {
+      "name": "S5 功能点专项单测",
+      "cmd": "go test -race -count=1 -v -run TestService_RefundFailure|TestService_RetryOnlyFailed ./internal/service",
+      "exit": 0,
+      "detail": "命中顶层 PASS 测试 3 个",
+      "result": "PASS"
+    }
+  ],
+  "tests_hit": 3,
+  "requires": [
+    "F3.6"
+  ],
+  "notes": "F3.7 退款状态独立于预约状态：渠道失败记失败待跟进、客服重试成功、失败-重试-成功状态链可查，全程预约不复活、名额不恢复；TDD 红灯因实现缺失编译失败。"
+}
