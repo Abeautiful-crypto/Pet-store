@@ -1,0 +1,27 @@
+{
+  "feature": "F4.1",
+  "check": "S6 场景断言：15 页原型逐页核对",
+  "cmd": "python scripts/pages_check.py",
+  "result": "PASS",
+  "at": "2026-11-13T13:53:53+08:00",
+  "pages": 15,
+  "roles": 5,
+  "checks": [
+    {
+      "name": "web/index.html 存在且含 15 个页面编号",
+      "result": "PASS",
+      "missing": []
+    },
+    {
+      "name": "frontend/permission.md 含 15 个页面映射",
+      "result": "PASS",
+      "missing": []
+    },
+    {
+      "name": "frontend/permission.md 含五类角色分配",
+      "result": "PASS",
+      "missing": []
+    }
+  ],
+  "notes": "前端为中保真 HTML 单文件原型，未引入 JS 测试框架；写操作的角色守卫由 internal/api 的 requireRole 独立校验。"
+}
