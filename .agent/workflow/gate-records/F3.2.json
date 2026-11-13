@@ -1,0 +1,47 @@
+{
+  "feature": "F3.2",
+  "result": "PASS",
+  "at": "2026-11-13T11:49:27+08:00",
+  "checks": [
+    {
+      "name": "S1 前置 F3.1 已通过",
+      "cmd": "read .agent\\workflow\\gate-records\\F3.1.json",
+      "exit": 0,
+      "detail": "",
+      "result": "PASS"
+    },
+    {
+      "name": "S2/S3 单测文件 internal/service/appointment_test.go",
+      "cmd": "test -s internal/service/appointment_test.go",
+      "exit": 0,
+      "detail": "",
+      "result": "PASS"
+    },
+    {
+      "name": "S4 gofmt -l 无输出",
+      "cmd": "gofmt -l .",
+      "exit": 0,
+      "detail": "",
+      "result": "PASS"
+    },
+    {
+      "name": "S4 go vet ./...",
+      "cmd": "go vet ./...",
+      "exit": 0,
+      "detail": "",
+      "result": "PASS"
+    },
+    {
+      "name": "S5 功能点专项单测",
+      "cmd": "go test -race -count=1 -v -run TestService_Expire|TestService_Expired|TestService_CancelUnpaid ./internal/service",
+      "exit": 0,
+      "detail": "命中顶层 PASS 测试 4 个",
+      "result": "PASS"
+    }
+  ],
+  "tests_hit": 4,
+  "requires": [
+    "F3.1"
+  ],
+  "notes": "F3.2 5 分钟占位：未到期不释放、到点精确关闭并释放一次、重复扫描不二次扣减、释放后可重新预约（SC-02）、未付款主动取消与越权拦截；新增 store.ListAppointments 供服务端时钟扫描 pay_deadline_at；TDD 红灯因 ExpireHolds/CancelUnpaid 未实现编译失败。"
+}
