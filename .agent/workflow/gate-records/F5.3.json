@@ -1,7 +1,7 @@
 {
   "feature": "F5.3",
   "result": "PASS",
-  "at": "2026-11-13T14:08:22+08:00",
+  "at": "2026-11-13T14:13:53+08:00",
   "checks": [
     {
       "name": "S1 前置 F5.2 已通过",
@@ -28,7 +28,7 @@
       "name": "go test -race -count=1 ./...",
       "cmd": "go test -race -count=1 ./...",
       "exit": 0,
-      "detail": "exit=0\nfiles]\nok  \tgithub.com/Abeautiful-crypto/Pet-store/internal/api\t3.002s\nok  \tgithub.com/Abeautiful-crypto/Pet-store/internal/app\t1.861s\nok  \tgithub.com/Abeautiful-crypto/Pet-store/internal/cache\t1.907s\nok  \tgithub.com/Abeautiful-crypto/Pet-store/internal/model\t1.953s\nok  \tgithub.com/Abeautiful-crypto/Pet-store/internal/service\t1.998s\nok  \tgithub.com/Abeautiful-crypto/Pet-store/internal/store\t2.028s",
+      "detail": "exit=0\nfiles]\nok  \tgithub.com/Abeautiful-crypto/Pet-store/internal/api\t2.956s\nok  \tgithub.com/Abeautiful-crypto/Pet-store/internal/app\t1.973s\nok  \tgithub.com/Abeautiful-crypto/Pet-store/internal/cache\t1.895s\nok  \tgithub.com/Abeautiful-crypto/Pet-store/internal/model\t1.944s\nok  \tgithub.com/Abeautiful-crypto/Pet-store/internal/service\t2.019s\nok  \tgithub.com/Abeautiful-crypto/Pet-store/internal/store\t2.065s",
       "result": "PASS"
     }
   ],
