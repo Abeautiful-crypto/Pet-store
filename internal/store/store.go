@@ -41,6 +41,7 @@ type StateStore interface {
 	// 任一失败整体回滚，名额与预约记录都不留半成品（规则 1 / SRS 8 章）。
 	CreateAppointment(ctx context.Context, appt *model.Appointment) error
 	GetAppointment(ctx context.Context, appointmentID string) (model.Appointment, error)
+	ListAppointments(ctx context.Context) ([]model.Appointment, error)
 	HasActiveAppointment(ctx context.Context, petID, slotID string) (bool, error)
 
 	// Transition 以 from + version 做 CAS，返回目标状态与新版本号。
