@@ -1,0 +1,62 @@
+{
+  "feature": "F2.1",
+  "result": "PASS",
+  "at": "2026-11-13T11:33:56+08:00",
+  "checks": [
+    {
+      "name": "S1 前置 F1.1 已通过",
+      "cmd": "read .agent\\workflow\\gate-records\\F1.1.json",
+      "exit": 0,
+      "detail": "",
+      "result": "PASS"
+    },
+    {
+      "name": "S1 前置 F1.2 已通过",
+      "cmd": "read .agent\\workflow\\gate-records\\F1.2.json",
+      "exit": 0,
+      "detail": "",
+      "result": "PASS"
+    },
+    {
+      "name": "S2/S3 单测文件 internal/store/store_test.go",
+      "cmd": "test -s internal/store/store_test.go",
+      "exit": 0,
+      "detail": "",
+      "result": "PASS"
+    },
+    {
+      "name": "S2/S3 单测文件 internal/store/mysql_test.go",
+      "cmd": "test -s internal/store/mysql_test.go",
+      "exit": 0,
+      "detail": "",
+      "result": "PASS"
+    },
+    {
+      "name": "S4 gofmt -l 无输出",
+      "cmd": "gofmt -l .",
+      "exit": 0,
+      "detail": "",
+      "result": "PASS"
+    },
+    {
+      "name": "S4 go vet ./...",
+      "cmd": "go vet ./...",
+      "exit": 0,
+      "detail": "",
+      "result": "PASS"
+    },
+    {
+      "name": "S5 功能点专项单测",
+      "cmd": "go test -race -count=1 -v -run TestStore|TestMySQL ./internal/store",
+      "exit": 0,
+      "detail": "命中顶层 PASS 测试 13 个",
+      "result": "PASS"
+    }
+  ],
+  "tests_hit": 13,
+  "requires": [
+    "F1.1",
+    "F1.2"
+  ],
+  "notes": "F2.1 名额原子条件更新 WHERE occupied<capacity、同一 pet+slot 唯一有效预约、version CAS、释放一次性、跨表事务失败整体回滚；内存回退与 MySQL SQL 契约双实现；TDD 红灯因实现缺失编译失败；两处问题（测试场景歧义、短变量重复声明）已按 issue-log 修复后重跑原闸门。"
+}
