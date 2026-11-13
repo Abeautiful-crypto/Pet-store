@@ -1,0 +1,54 @@
+{
+  "feature": "F6.2",
+  "result": "PASS",
+  "at": "2026-11-13T14:30:46+08:00",
+  "checks": [
+    {
+      "name": "S1 前置 F5.3 已通过",
+      "cmd": "read .agent\\workflow\\gate-records\\F5.3.json",
+      "exit": 0,
+      "detail": "",
+      "result": "PASS"
+    },
+    {
+      "name": "S2/S3 单测文件 internal/app/deps_test.go",
+      "cmd": "test -s internal/app/deps_test.go",
+      "exit": 0,
+      "detail": "",
+      "result": "PASS"
+    },
+    {
+      "name": "S2/S3 单测文件 internal/store/mysql_integration_test.go",
+      "cmd": "test -s internal/store/mysql_integration_test.go",
+      "exit": 0,
+      "detail": "",
+      "result": "PASS"
+    },
+    {
+      "name": "S4 gofmt -l 无输出",
+      "cmd": "gofmt -l .",
+      "exit": 0,
+      "detail": "",
+      "result": "PASS"
+    },
+    {
+      "name": "S4 go vet ./...",
+      "cmd": "go vet ./...",
+      "exit": 0,
+      "detail": "",
+      "result": "PASS"
+    },
+    {
+      "name": "S5 功能点专项单测",
+      "cmd": "go test -race -count=1 -v -run TestDeps|TestMySQL_Real ./internal/app ./internal/store",
+      "exit": 0,
+      "detail": "命中顶层 PASS 测试 9 个",
+      "result": "PASS"
+    }
+  ],
+  "tests_hit": 9,
+  "requires": [
+    "F5.3"
+  ],
+  "notes": "F6.2 本地 MySQL 真相源接入：DSN 必填/生产守卫、连接池与 Ping、版本化幂等迁移；真实 pet_store 库上验证名额原子条件更新并发不超卖与 uk_pet_slot_active 唯一索引冲突整体回滚；PETSTORE_TEST_DSN 已在本机设置，集成测试真实执行而非 skip。"
+}
