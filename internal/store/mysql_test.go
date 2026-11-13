@@ -97,6 +97,11 @@ func (c *fakeConn) QueryContext(_ context.Context, query string, _ []driver.Name
 	c.mu.Lock()
 	defer c.mu.Unlock()
 	c.queries = append(c.queries, query)
+	for fragment, err := range c.failSQL {
+		if strings.Contains(query, fragment) {
+			return nil, err
+		}
+	}
 	return &fakeRows{}, nil
 }
 
