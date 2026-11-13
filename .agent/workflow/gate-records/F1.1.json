@@ -1,0 +1,54 @@
+{
+  "feature": "F1.1",
+  "result": "PASS",
+  "at": "2026-11-13T11:20:59+08:00",
+  "checks": [
+    {
+      "name": "S1 前置 F0.1 已通过",
+      "cmd": "read .agent\\workflow\\gate-records\\F0.1.json",
+      "exit": 0,
+      "detail": "",
+      "result": "PASS"
+    },
+    {
+      "name": "S2/S3 单测文件 internal/model/state_machine_test.go",
+      "cmd": "test -s internal/model/state_machine_test.go",
+      "exit": 0,
+      "detail": "",
+      "result": "PASS"
+    },
+    {
+      "name": "S2/S3 单测文件 internal/model/model_test.go",
+      "cmd": "test -s internal/model/model_test.go",
+      "exit": 0,
+      "detail": "",
+      "result": "PASS"
+    },
+    {
+      "name": "S4 gofmt -l 无输出",
+      "cmd": "gofmt -l .",
+      "exit": 0,
+      "detail": "",
+      "result": "PASS"
+    },
+    {
+      "name": "S4 go vet ./...",
+      "cmd": "go vet ./...",
+      "exit": 0,
+      "detail": "",
+      "result": "PASS"
+    },
+    {
+      "name": "S5 功能点专项单测",
+      "cmd": "go test -race -count=1 -v -run TestStateMachine|TestModel ./internal/model",
+      "exit": 0,
+      "detail": "命中顶层 PASS 测试 13 个",
+      "result": "PASS"
+    }
+  ],
+  "tests_hit": 13,
+  "requires": [
+    "F0.1"
+  ],
+  "notes": "F1.1 预约主状态机 9 态与领域实体；合法/非法迁移、终态门禁、9900 分 int64、5 分钟占位与 2 小时取消线常量；TDD 红灯因实现缺失编译失败，绿灯为本次闸门。"
+}
