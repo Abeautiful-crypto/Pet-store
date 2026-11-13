@@ -31,6 +31,7 @@ type Config struct {
 // Service 编排预约、支付、取消、退款、核销、履约、未到店与日清。
 type Service struct {
 	store   store.StateStore
+	ledger  *Ledger
 	now     func() time.Time
 	newID   func(prefix string) string
 	ownsPet func(userID, petID string) bool
@@ -41,6 +42,7 @@ type Service struct {
 func New(cfg Config) *Service {
 	s := &Service{
 		store:   cfg.Store,
+		ledger:  NewLedger(),
 		now:     cfg.Now,
 		newID:   cfg.NewID,
 		ownsPet: cfg.OwnsPet,
