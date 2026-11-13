@@ -85,3 +85,12 @@
 - 解决：`Verify` 与 `Cancel` 的状态门禁拒绝分支同样写只增不改的冲突事件；不改业务状态、不改断言。
 - 是否上升为约束：否（约束已存在，仅补实现）
 - 关联需求：SRS 8 章、13 章 A8、FR-13 / SC-04 / 功能点 F3.9
+
+### [2026-11-13] F5.1 闸门 FAIL：覆盖率未达 85% 门禁
+- 分类标签：（#覆盖率 #闸门 #补测）
+- 现象：`python scripts/coverage_check.py` 首次运行 FAIL，整体 71.1%；`api 67.7%`、`service 75.7%`、`store 56.2%` 低于阈值；`view.go` / `list.go` / `slots.go` 为 0%。
+- 复现步骤：`python scripts/coverage_check.py`。
+- 根因：阶段 1-4 的单测按功能点正则跑，只覆盖该点主路径；跨包调用不计入被调包覆盖率（`service.Snapshot` 由 api 测试调用但 service 自身测试未覆盖），且 MySQLStore 查询/错误分支、API 错误映射、service 边界分支未系统补测。
+- 解决：按 `unit-test.md T8` 只补测试（不改实现、不改断言、不调低 85% 阈值）：新增 store/api/service 三个 `coverage_test.go`，覆盖查询路径、错误分支与默认装配，重跑原闸门。
+- 是否上升为约束：否
+- 关联需求：`unit-test.md T8`、`feature-gate.md` 第 6 节 / 功能点 F5.1
