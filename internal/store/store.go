@@ -36,6 +36,7 @@ type SlotCacheInvalidator interface {
 type StateStore interface {
 	CreateSlot(ctx context.Context, slot model.Slot) error
 	GetSlot(ctx context.Context, slotID string) (model.Slot, error)
+	ListSlots(ctx context.Context) ([]model.Slot, error)
 
 	// CreateAppointment 在单个事务内完成：原子占名额 + 写预约主记录 + 写事件流水。
 	// 任一失败整体回滚，名额与预约记录都不留半成品（规则 1 / SRS 8 章）。
