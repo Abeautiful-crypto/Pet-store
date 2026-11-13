@@ -12,9 +12,8 @@ import (
 )
 
 var (
-	// ErrReasonRequired 表示临近取消未提交原因（FR-08）。
-	ErrReasonRequired = errors.New("临近取消必须提交原因")
-	// ErrCancelRequestNotFound 表示审核的取消申请不存在。
+	// ErrReasonRequired 表示临近取消/未到店未提交原因（FR-08、FR-15）。
+	ErrReasonRequired        = errors.New("原因必填")
 	ErrCancelRequestNotFound = errors.New("取消申请不存在")
 	// ErrCancelAlreadyReviewed 表示重复审核，避免名额二次释放（规则 4）。
 	ErrCancelAlreadyReviewed = errors.New("取消申请已处理")
@@ -32,6 +31,7 @@ func (s *Service) Cancel(ctx context.Context, appointmentID, userID, reason stri
 	}
 	// 终态门禁：已核销/服务中/已完成/已取消均不得再走取消退款流程（规则 6 / FR-14）。
 	if appt.Status != model.StatusConfirmed {
+		s.logConflict(ctx, appointmentID, "cancel")
 		return nil, fmt.Errorf("%w: 仅已确认预约可发起取消退款，当前 %s",
 			model.ErrIllegalTransition, appt.Status)
 	}
@@ -53,6 +53,9 @@ func (s *Service) Cancel(ctx context.Context, appointmentID, userID, reason stri
 func (s *Service) autoCancel(ctx context.Context, appt model.Appointment, reason string, lead time.Duration) (*model.Refund, error) {
 	if _, _, err := s.store.Transition(ctx, appt.ID, model.StatusConfirmed,
 		model.EventCancelEarly, appt.Version); err != nil {
+		if errors.Is(err, store.ErrVersionConflict) {
+			s.logConflict(ctx, appt.ID, "cancel")
+		}
 		return nil, err
 	}
 	if err := s.store.ReleaseSlot(ctx, appt.ID); err != nil && !errors.Is(err, store.ErrAlreadyReleased) {
@@ -96,7 +99,6 @@ func (s *Service) applyNearCancel(ctx context.Context, appt model.Appointment, r
 }
 
 // ReviewCancel 客服批准或拒绝临近取消申请（FR-08 / SC-03）。
-// 批准才释放名额并退款；拒绝回到已确认且名额保持，用户可见不同结果。
 func (s *Service) ReviewCancel(ctx context.Context, requestID, reviewer string, approve bool) (*model.Refund, error) {
 	req, ok := s.ledger.CancelRequestByID(requestID)
 	if !ok {
@@ -126,6 +128,9 @@ func (s *Service) ReviewCancel(ctx context.Context, requestID, reviewer string, 
 	req.Status = model.CancelRequestApproved
 	if _, _, err := s.store.Transition(ctx, appt.ID, model.StatusCancelReview,
 		model.EventCancelApprove, appt.Version); err != nil {
+		if errors.Is(err, store.ErrVersionConflict) {
+			s.logConflict(ctx, appt.ID, "cancel_review")
+		}
 		return nil, err
 	}
 	if err := s.store.ReleaseSlot(ctx, appt.ID); err != nil && !errors.Is(err, store.ErrAlreadyReleased) {
@@ -138,12 +143,13 @@ func (s *Service) ReviewCancel(ctx context.Context, requestID, reviewer string, 
 }
 
 // newRefund 生成 9900 分全额退款单；状态独立于预约主记录（规则 4 / FR-10）。
+// 模拟渠道失败时记为"失败待跟进"，由客服重试，不改变任何预约状态。
 func (s *Service) newRefund(appointmentID string, now time.Time) model.Refund {
 	paymentID := ""
 	if payment, ok := s.ledger.PaymentOf(appointmentID); ok {
 		paymentID = payment.ID
 	}
-	return model.Refund{
+	refund := model.Refund{
 		ID:            s.newID("RFD"),
 		AppointmentID: appointmentID,
 		PaymentID:     paymentID,
@@ -152,4 +158,11 @@ func (s *Service) newRefund(appointmentID string, now time.Time) model.Refund {
 		CreatedAt:     now,
 		FinishedAt:    &now,
 	}
+	if !s.refundOK.Load() {
+		refund.Status = model.RefundFailed
+		refund.LastError = "模拟渠道退款失败"
+		refund.FinishedAt = nil
+	}
+	s.ledger.AppendRefundEvent(refund)
+	return refund
 }

@@ -30,12 +30,13 @@ type Config struct {
 
 // Service 编排预约、支付、取消、退款、核销、履约、未到店与日清。
 type Service struct {
-	store   store.StateStore
-	ledger  *Ledger
-	now     func() time.Time
-	newID   func(prefix string) string
-	ownsPet func(userID, petID string) bool
-	seq     atomic.Int64
+	store    store.StateStore
+	ledger   *Ledger
+	now      func() time.Time
+	newID    func(prefix string) string
+	ownsPet  func(userID, petID string) bool
+	seq      atomic.Int64
+	refundOK atomic.Bool
 }
 
 // New 创建业务服务；未注入的时钟/ID/宠物归属使用安全默认值。
@@ -58,17 +59,21 @@ func New(cfg Config) *Service {
 	if s.ownsPet == nil {
 		s.ownsPet = func(string, string) bool { return false }
 	}
+	s.refundOK.Store(true) // 模拟渠道默认退款成功
 	return s
 }
 
+// SetRefundOutcome 配置模拟支付渠道的退款结果，用于制造失败与重试（FR-10 / FR-20）。
+func (s *Service) SetRefundOutcome(succeeds bool) {
+	s.refundOK.Store(succeeds)
+}
+
 // PublishSlot 店长发布带明确起止时间的时段（FR-01 / 规则 1）。
-// 起止时间合法性由 model.Slot.Validate 在存储层统一校验。
 func (s *Service) PublishSlot(ctx context.Context, slot model.Slot) error {
 	return s.store.CreateSlot(ctx, slot)
 }
 
 // CreateAppointment 用户为自己的宠物创建待支付占位预约（FR-02、FR-03 / 规则 1、2）。
-// 校验顺序：宠物归属 → 时段存在且未开始（服务端时钟）→ 原子占名额 + 唯一有效预约。
 func (s *Service) CreateAppointment(ctx context.Context, userID, petID, slotID string) (*model.Appointment, error) {
 	if !s.ownsPet(userID, petID) {
 		return nil, ErrPetNotOwned
@@ -80,8 +85,6 @@ func (s *Service) CreateAppointment(ctx context.Context, userID, petID, slotID s
 	if !s.now().Before(slot.StartAt) {
 		return nil, ErrSlotStarted
 	}
-
-	// 规则 1/2：占名额与写预约在同一事务，名额条件更新 + 唯一有效预约由存储层保证。
 	appt := model.NewAppointment(s.newID("APPT"), model.StoreID, slotID, userID, petID, s.now())
 	if err := s.store.CreateAppointment(ctx, appt); err != nil {
 		return nil, err

@@ -6,16 +6,18 @@ import (
 	"github.com/Abeautiful-crypto/Pet-store/internal/model"
 )
 
-// Ledger 保存支付单、退款单、取消申请与异常登记，流水只增不改。
-// 原型期为内存实现，状态语义与 SRS 5.2 E6/E7/E8/E10 一致；后续可替换为 MySQL 真相源。
+// Ledger 保存支付单、退款单、取消申请、服务履约记录与异常登记，流水只增不改。
+// 原型期为内存实现，状态语义与 SRS 5.2 E6~E10 一致；后续可替换为 MySQL 真相源。
 type Ledger struct {
 	mu              sync.Mutex
 	payments        map[string]model.Payment
 	paymentByNotify map[string]string
 	refunds         map[string]model.Refund
 	refundByAppt    map[string]string
+	refundEvents    []model.Refund
 	cancelRequests  map[string]model.CancelRequest
 	requestByAppt   map[string]string
+	serviceRecords  map[string]model.ServiceRecord
 	exceptions      []model.EventLog
 }
 
@@ -27,10 +29,10 @@ func NewLedger() *Ledger {
 		refundByAppt:    map[string]string{},
 		cancelRequests:  map[string]model.CancelRequest{},
 		requestByAppt:   map[string]string{},
+		serviceRecords:  map[string]model.ServiceRecord{},
 	}
 }
 
-// SavePayment 以 notify_key 幂等；返回 false 表示重复通知，不新增流水。
 func (l *Ledger) SavePayment(p model.Payment) bool {
 	l.mu.Lock()
 	defer l.mu.Unlock()
@@ -70,7 +72,6 @@ func (l *Ledger) Payments() []model.Payment {
 	return out
 }
 
-// SaveRefund 记录退款单；退款状态独立于预约状态（规则 4 / FR-10）。
 func (l *Ledger) SaveRefund(refund model.Refund) {
 	l.mu.Lock()
 	defer l.mu.Unlock()
@@ -99,7 +100,19 @@ func (l *Ledger) Refunds() []model.Refund {
 	return out
 }
 
-// SaveCancelRequest 记录取消申请；按 appointmentID 建立索引供审核与查询回显。
+// AppendRefundEvent 记录退款状态的每次变化，形成失败→重试→成功的可查状态链（FR-10）。
+func (l *Ledger) AppendRefundEvent(refund model.Refund) {
+	l.mu.Lock()
+	defer l.mu.Unlock()
+	l.refundEvents = append(l.refundEvents, refund)
+}
+
+func (l *Ledger) RefundEvents() []model.Refund {
+	l.mu.Lock()
+	defer l.mu.Unlock()
+	return append([]model.Refund(nil), l.refundEvents...)
+}
+
 func (l *Ledger) SaveCancelRequest(req model.CancelRequest) {
 	l.mu.Lock()
 	defer l.mu.Unlock()
@@ -125,6 +138,29 @@ func (l *Ledger) CancelRequestOf(appointmentID string) (model.CancelRequest, boo
 	return req, ok
 }
 
+func (l *Ledger) SaveServiceRecord(record model.ServiceRecord) {
+	l.mu.Lock()
+	defer l.mu.Unlock()
+	l.serviceRecords[record.AppointmentID] = record
+}
+
+func (l *Ledger) ServiceRecordOf(appointmentID string) (model.ServiceRecord, bool) {
+	l.mu.Lock()
+	defer l.mu.Unlock()
+	record, ok := l.serviceRecords[appointmentID]
+	return record, ok
+}
+
+func (l *Ledger) ServiceRecords() []model.ServiceRecord {
+	l.mu.Lock()
+	defer l.mu.Unlock()
+	out := make([]model.ServiceRecord, 0, len(l.serviceRecords))
+	for _, record := range l.serviceRecords {
+		out = append(out, record)
+	}
+	return out
+}
+
 func (l *Ledger) AppendException(event model.EventLog) {
 	l.mu.Lock()
 	defer l.mu.Unlock()
@@ -144,7 +180,9 @@ func (l *Ledger) Reset() {
 	l.paymentByNotify = map[string]string{}
 	l.refunds = map[string]model.Refund{}
 	l.refundByAppt = map[string]string{}
+	l.refundEvents = nil
 	l.cancelRequests = map[string]model.CancelRequest{}
 	l.requestByAppt = map[string]string{}
+	l.serviceRecords = map[string]model.ServiceRecord{}
 	l.exceptions = nil
 }
