@@ -1,0 +1,55 @@
+{
+  "feature": "F1.2",
+  "result": "PASS",
+  "at": "2026-11-13T11:23:28+08:00",
+  "checks": [
+    {
+      "name": "S1 前置 F0.1 已通过",
+      "cmd": "read .agent\\workflow\\gate-records\\F0.1.json",
+      "exit": 0,
+      "detail": "",
+      "result": "PASS"
+    },
+    {
+      "name": "S1 前置 F1.1 已通过",
+      "cmd": "read .agent\\workflow\\gate-records\\F1.1.json",
+      "exit": 0,
+      "detail": "",
+      "result": "PASS"
+    },
+    {
+      "name": "S2/S3 单测文件 internal/app/app_test.go",
+      "cmd": "test -s internal/app/app_test.go",
+      "exit": 0,
+      "detail": "",
+      "result": "PASS"
+    },
+    {
+      "name": "S4 gofmt -l 无输出",
+      "cmd": "gofmt -l .",
+      "exit": 0,
+      "detail": "",
+      "result": "PASS"
+    },
+    {
+      "name": "S4 go vet ./...",
+      "cmd": "go vet ./...",
+      "exit": 0,
+      "detail": "",
+      "result": "PASS"
+    },
+    {
+      "name": "S5 功能点专项单测",
+      "cmd": "go test -race -count=1 -v -run TestApp ./internal/app",
+      "exit": 0,
+      "detail": "命中顶层 PASS 测试 6 个",
+      "result": "PASS"
+    }
+  ],
+  "tests_hit": 6,
+  "requires": [
+    "F0.1",
+    "F1.1"
+  ],
+  "notes": "F1.2 配置解析与启动/生产守卫；必需配置缺失、未知取值、生产模式拒绝内存存储、MySQL DSN 必填；TDD 红灯因实现缺失编译失败，绿灯为本次闸门。"
+}
